@@ -1,2 +1,4 @@
 - Karaktärer -
 P1- Player 1
+
+-Plattformar -

@@ -1,7 +1,6 @@
 ﻿package  as3.game.gameobject.player{
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
-	import flash.events.Event;
 	
 	import assets.gameObjects.P1;
 	

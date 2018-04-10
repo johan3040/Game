@@ -1,7 +1,5 @@
 ﻿package  as3.game.gameobject.player{
 	
-	//import flash.events.Event;
-	
 	import as3.game.gameobject.GameObject;
 	import as3.game.gameobject.platforms.Platform;
 	import as3.game.gameobject.platforms.WeakPlatform;
@@ -18,12 +16,12 @@
 		private var speed:int = 12;
 		
 		private var velocity:Number;
-		private const DEFAULT_VELOCITY:Number = 18;
+		private const DEFAULT_VELOCITY:Number = 20;
 		private const PWR_VELOCITY:Number = 22; // För power-ups
 		
 		private var falling:Boolean = false;
 		private var onPlat:Boolean = false;
-		private var currentPlat:Platform;
+		private var currentPlat:GameObject;
 		private var pv:Vector.<Platform>;
 		
 		private var timeoutWP:uint;
@@ -46,11 +44,11 @@
 			
 		override public function update():void{
 			if(this.onGround == false) jump();
-			checkKeys();
-			checkPlat();
+			updateControllers();
+			if(this.currentPlat) checkCurrentPlat();
 			}
 			
-		private function checkKeys():void{
+		private function updateControllers():void{
 			
 			if(Input.keyboard.pressed(this.m_controls.PLAYER_RIGHT)){
 				if(this.x <= 800) this.x += this.speed;
@@ -69,8 +67,21 @@
 			}
 			}
 			
-		private function checkPlat():void{
+		private function checkCurrentPlat():void{
 			
+			if((this.x + this.obj_width) < this.currentPlat.x || this.x > (this.currentPlat.x + this.currentPlat.obj_width)){
+				this.velocity = 0;
+				this.onGround = false;
+			}
+			
+			
+			//Ful lösning, men funkar atm
+			if(this.currentPlat.y != (this.y + this.obj_height + 0.45)){
+				this.velocity = 0;
+				this.onGround = false;
+			}
+			
+			/*
 			for(var i:int = 0; i<this.pv.length; i++){
 				
 				if(this.falling == true && (this.hitTestObject(this.pv[i]) && this.y <= this.pv[i].y)){
@@ -95,11 +106,20 @@
 						this.onGround = false;
 					}
 				}
+			}*/
+			
+		}
+		
+		
+		public function setCurrentPlat(plat:GameObject):void{
+			if(this.falling){
+				this.onGround = true;
+				this.y = plat.y - this.height;
+				this.currentPlat = plat;
 			}
 			
 		}
 		
-			
 		private function jump():void{
 			this.velocity < 0 ? this.falling = true : this.falling = false;
 			this.currentPlat = null;

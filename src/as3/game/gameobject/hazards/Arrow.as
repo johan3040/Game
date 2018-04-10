@@ -3,29 +3,32 @@
 
 	import flash.display.Sprite;
 	
+	import as3.game.gameobject.GameObject;
+	
 	import assets.gameObjects.Hazard_Arrow;
 	
 	public class Arrow extends Hazard{
 		
 		private var arrow:Hazard_Arrow;
+		private var callback:Function;
+		private var target:GameObject;
 		
-		public function Arrow() {
+		public function Arrow(callback, target) {
 			super();
-			lethal = true;
+			this.callback = callback;
+			this.target = target;
 			initArrow();
 		}
 		
 		private function initArrow():void{
 			this.arrow = new Hazard_Arrow();
 			this.x = 800;
-			this.y = 570;
+			this.y = this.target.y + 10;
 			
 			this.hitBox = new Sprite();
 			hitBox.graphics.beginFill(0x00FF00);
 			hitBox.graphics.drawRect(0,0,10,10);
 			hitBox.graphics.endFill();
-			
-			trace(hitBox.width);
 			
 			addChild(this.arrow);
 			addChild(this.hitBox);
@@ -36,10 +39,12 @@
 		}
 			
 		private function moveArrow():void{
+			
 			this.x-=5;
 			if(this.x < 0){
 				this.parent.removeChild(this);
 				this.arrow = null;
+				this.callback(this);
 				}
 			}
 			

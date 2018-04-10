@@ -7,21 +7,21 @@
 	
 	public class Explorer extends Player{
 		
-		public var player:P1;
-		
-		
 		public function Explorer(v) {
 			super(v, 0);
 			initExplorer();
 		}
 		
 		private function initExplorer():void{
-			this.player = new P1();
+			player = new P1();
 			hitBox = new Sprite();
 			hitBox.graphics.beginFill(0x00FF00);
 			hitBox.graphics.drawRect(10, 10, 20, 20);
-			
 			hitBox.graphics.endFill();
+			
+			obj_height = this.player.height;
+			obj_width = this.player.width;
+			
 			addChild(this.player);
 			addChild(hitBox);
 			}

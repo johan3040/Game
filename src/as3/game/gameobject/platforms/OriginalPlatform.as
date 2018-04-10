@@ -13,7 +13,7 @@
 		private var callback:Function;
 		private var vec:Vector.<Array>;
 		
-		private var hitBox:Sprite;
+		//private var hitBox:Sprite;
 		
 		public function OriginalPlatform(callback) {
 			super();
@@ -26,10 +26,13 @@
 			this.platform = new OrgPlat();
 			this.platform.gotoAndStop(1);
 			
-			this.hitBox = new Sprite();
+			hitBox = new Sprite();
 			hitBox.graphics.beginFill(0x00FF00);
 			hitBox.graphics.drawRect(2,3, 65, 3);
 			hitBox.graphics.endFill();
+			
+			obj_width = this.platform.width;
+			obj_height = this.platform.height;
 			
 			addChild(this.platform);
 			addChild(hitBox);

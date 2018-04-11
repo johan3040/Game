@@ -1,13 +1,16 @@
-- Karaktärer -
+---- KARAKTÄRER ----
 P1- Player 1
 
 KEYFRAME LABELS
 idle
 walk
+jump (statisk)
 
--Plattformar -
+---- PLATTFORMAR ----
+OrgPlatGFX- Orginal plattform
+WeakPlatGFX- Svag plattform
 
 KEYFRAME LABELS
-static- Stilla
-breaking- Börjar förstöras
-break- Förstörande animation
+static- Stilla (Org,Weak)
+breaking- Börjar förstöras (Org)
+break- Förstörande animation (Org,Weak)

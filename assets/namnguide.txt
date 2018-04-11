@@ -1,6 +1,10 @@
 - Karaktärer -
 P1- Player 1
 
+KEYFRAME LABELS
+idle
+walk
+
 -Plattformar -
 
 KEYFRAME LABELS

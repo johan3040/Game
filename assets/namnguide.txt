@@ -2,3 +2,8 @@
 P1- Player 1
 
 -Plattformar -
+
+KEYFRAME LABELS
+static- Stilla
+breaking- Börjar förstöras
+break- Förstörande animation

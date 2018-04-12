@@ -14,3 +14,11 @@ KEYFRAME LABELS
 static- Stilla (Org,Weak)
 breaking- Börjar förstöras (Org)
 break- Förstörande animation (Org,Weak)
+
+---- HAZARDS ----
+HazardArrow
+HazardCoconut
+
+KEYFRAME LABELS
+static
+spin (coconut)

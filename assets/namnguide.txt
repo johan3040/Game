@@ -22,3 +22,8 @@ HazardCoconut
 KEYFRAME LABELS
 static
 spin (coconut)
+
+---- BACKGROUND ----
+island1
+island2
+ocean

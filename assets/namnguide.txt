@@ -8,7 +8,7 @@ jump (statisk)
 
 ---- PLATTFORMAR ----
 OrgPlatGFX- Orginal plattform
-WeakPlatGFX- Svag plattform
+WeakPlatGFX- Svag plattform (frame 1 statisk, resten break)
 
 KEYFRAME LABELS
 static- Stilla (Org,Weak)

@@ -23,6 +23,10 @@ KEYFRAME LABELS
 static
 spin (coconut)
 
+---- GEMS ----
+RubyGFX
+EmeraldGFX
+
 ---- BACKGROUND ----
 island1
 island2

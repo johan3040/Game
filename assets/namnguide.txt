@@ -27,3 +27,7 @@ spin (coconut)
 island1
 island2
 ocean
+sideBar (om man vill använda samma på båda sidor)
+sideBarLeft
+sideBarRight (x-pos: 769,7)
+hudBase- Basen till top-HUD

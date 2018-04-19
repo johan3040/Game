@@ -12,7 +12,7 @@
 		public function GameBoard() {
 			
 			this.gb = new Sprite();
-			this.gb.graphics.beginFill(0xFFFFFF);
+			this.gb.graphics.beginFill(0x7DC8DB);
 			this.gb.graphics.drawRect(0,0,800,600);
 			this.gb.graphics.endFill();
 			addChild(this.gb);

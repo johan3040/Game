@@ -1,49 +1,45 @@
 ﻿package  as3.game.gameobject.platforms{
 	
-	import flash.display.Sprite;
-	import flash.utils.setTimeout;
-	import assets.gameObjects.OrgPlat;
+	
+	import assets.gameObjects.OrgPlatGFX;
+	import se.lnu.stickossdk.system.Session;
 	
 	public class OriginalPlatform extends Platform{
 		
-		private var platform:OrgPlat;
-		private var lifespan:uint;
+		private var platform:OrgPlatGFX;
 		private var delay:int;
-		private var setWarning:int;
 		private var callback:Function;
 		private var vec:Vector.<Array>;
-		
-		//private var hitBox:Sprite;
 		
 		public function OriginalPlatform(callback) {
 			super();
 			this.callback = callback;
-			//this.vec = filledSpaces;
 			initOriginalPlat();
 		}
 		
 		private function initOriginalPlat():void{
-			this.platform = new OrgPlat();
+			this.platform = new OrgPlatGFX();
 			this.platform.gotoAndStop(1);
-			
-			hitBox = new Sprite();
-			hitBox.graphics.beginFill(0x00FF00);
-			hitBox.graphics.drawRect(2,3, 65, 3);
-			hitBox.graphics.endFill();
-			
-			obj_width = this.platform.width;
+			setHitbox();
+			obj_width = 70;
 			obj_height = this.platform.height;
 			
 			addChild(this.platform);
 			addChild(hitBox);
 			setLifespan();
-			}
+		}
+		
+		private function setHitbox():void{
+			//hitBox.graphics.beginFill(0x00FF00);
+			hitBox.graphics.drawRect(0,1, 70, 6);
+			//hitBox.graphics.endFill();
+		}
 
 			
 		private function setLifespan():void{
 			this.delay = Math.floor(Math.random() * (10000 - 4000) + 4000);
-			this.setWarning = setTimeout(warning, (this.delay - 2000));
-			this.lifespan = setTimeout(rePosition, this.delay);
+			Session.timer.create((this.delay - 2000), warning);
+			Session.timer.create(this.delay, rePosition);
 			}
 			
 		private function rePosition():void{
@@ -54,8 +50,13 @@
 			}
 			
 		private function warning():void{
-			this.platform.gotoAndPlay(2);
+			this.platform.gotoAndStop(2);
 			}
+		
+		public function immidiateReposition():void{
+			super.setData();
+			this.callback(this);
+		}
 
 	}
 	

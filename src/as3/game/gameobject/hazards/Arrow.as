@@ -1,54 +1,127 @@
 ﻿package  as3.game.gameobject.hazards{
 	
-
-	import flash.display.Sprite;
-	
 	import as3.game.gameobject.GameObject;
 	
-	import assets.gameObjects.Hazard_Arrow;
+	import assets.gameObjects.CannibalGFX;
+	import assets.gameObjects.HazardArrow;
+	
+	import se.lnu.stickossdk.system.Session;
+	import se.lnu.stickossdk.tween.easing.Strong;
 	
 	public class Arrow extends Hazard{
 		
-		private var arrow:Hazard_Arrow;
+		private var arrow:HazardArrow;
+		private var warningCannibal:CannibalGFX;
 		private var callback:Function;
 		private var target:GameObject;
+		private var delay:int = 1500;		
+		private var shootArrow:Boolean = false;
+		private var fromRight:int = 0;
+		
 		
 		public function Arrow(callback, target) {
 			super();
 			this.callback = callback;
 			this.target = target;
+			this.arrow = new HazardArrow();
+			this.warningCannibal = new CannibalGFX();
+			this.arrow.scaleX = 0.5;
+			this.arrow.scaleY = 0.5;
+			initHitBox();
 			initArrow();
+			addChild(this.warningCannibal);
+			addChild(this.arrow);
+			addChild(this.hitBox);
 		}
 		
-		private function initArrow():void{
-			this.arrow = new Hazard_Arrow();
-			this.x = 800;
-			this.y = this.target.y + 10;
-			
-			this.hitBox = new Sprite();
+		private function initHitBox():void{
+		
 			hitBox.graphics.beginFill(0x00FF00);
 			hitBox.graphics.drawRect(0,0,10,10);
 			hitBox.graphics.endFill();
+		
+		}
+		
+		private function initArrow():void{
 			
-			addChild(this.arrow);
-			addChild(this.hitBox);
+			this.fromRight = Math.round(Math.random());
+			this.y = this.target.y + 10;
+			if(this.fromRight == 0){
+				this.scaleX = 1;
+				this.x = 800;
+			}else{
+				this.scaleX = -1;
+				this.x = 0;
 			}
+			this.warningCannibal.visible = true;
+			
+			this.moveWarningIn();
+		}
 		
 		override public function update():void{
-			moveArrow();
+			
+			if(this.shootArrow == true && this.fromRight == 0)this.moveArrowLeft();
+			if(this.shootArrow == true && this.fromRight == 1)this.moveArrowRight();
+		}
+		
+		private function moveWarningIn():void{
+			
+			Session.tweener.add(this.warningCannibal, {
+				x: -65,
+				duration: 600,
+				transition: Strong.easeIn,
+				onComplete: setWarningTimeout
+			});
+			
+		}
+		
+		private function setWarningTimeout():void{
+		
+			Session.timer.create(500, moveWarningOut);
+		
+		}
+		
+		private function moveWarningOut():void{
+			
+			Session.tweener.add(this.warningCannibal, {
+				x: 0,
+				duration: 600,
+				transition: Strong.easeIn,
+				onComplete: setBoolean
+			});
+			
+		}
+		
+		private function setBoolean():void{
+			
+			this.shootArrow = true;
+			this.warningCannibal.visible = false;
+			
 		}
 			
-		private function moveArrow():void{
+		private function moveArrowLeft():void{
 			
 			this.x-=5;
-			if(this.x < 0){
-				this.parent.removeChild(this);
-				this.arrow = null;
-				this.callback(this);
+			if(this.x  <= -40){
+				resetArrow();
 				}
-			}
-			
+		}
 		
+		private function moveArrowRight():void{
+		
+			this.x+=5;
+			if(this.x >= 840){
+				resetArrow();
+			}
+		}
+		
+		private function resetArrow():void{
+		
+			this.shootArrow = false;
+			Session.timer.create(this.delay, initArrow);
+			this.delay <= 1500 ? this.delay = 1500 : this.delay -= 1000;
+			
+		}
 
 	}
 	

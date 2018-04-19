@@ -6,7 +6,7 @@
 		
 		private var xVal:int;
 		private var yVal:int;
-		protected var platPosX:Array = [70, 140, 210, 280, 350, 420, 490, 560, 620];
+		protected var platPosX:Array = [60, 160, 260, 360, 460, 560, 660];
 		protected var platPosY:Array = [120, 240, 360, 480];
 		
 		public function Platform() {

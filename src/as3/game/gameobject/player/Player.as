@@ -1,8 +1,11 @@
 ﻿package  as3.game.gameobject.player{
 	
+	import flash.display.MovieClip;
+	import flash.display.Sprite;
+	
 	import as3.game.gameobject.GameObject;
-	import as3.game.gameobject.platforms.Platform;
-	import as3.game.gameobject.platforms.WeakPlatform;
+	import as3.game.gameobject.platforms.LeftBase;
+	import as3.game.gameobject.platforms.RightBase;
 	
 	import se.lnu.stickossdk.input.EvertronControls;
 	import se.lnu.stickossdk.input.Input;
@@ -12,30 +15,29 @@
 		
 		private var m_controls:EvertronControls;
 		private var ctrl:int;
-		private var onGround:Boolean = true;
-		private var speed:int = 12;
-		
-		private var velocity:Number;
-		private const DEFAULT_VELOCITY:Number = 20;
-		private const PWR_VELOCITY:Number = 22; // För power-ups
-		
-		private var falling:Boolean = false;
+		private var speed:int = 6;
+		public var velocity:Number;
+		private const DEFAULT_VELOCITY:Number = 14;
+		private const GRAVITY:Number = 0.9;
+		private var onGround:Boolean = false;
+		public var falling:Boolean = false;
 		private var onPlat:Boolean = false;
 		private var currentPlat:GameObject;
-		private var pv:Vector.<Platform>;
+		public var bottomHitBox:Sprite;
+		public var bonusPoints:int = 0;
 		
-		private var timeoutWP:uint;
-		private var isOnWeak:Boolean = false;
+		// För att jämföra currentplat.y - om den ändras i Y-led
+		private var currentY:int;
+		public var m_skin:MovieClip;
 		
-		/*Om man ska tweaka fysiken för "jump", kika på att använda nedanstående variabler
-		/var acceleration:int = 2;
-		/var dt:Number = 0.16;
-		/var gravity:int = 10;
-		*/
-		public function Player(vector, ctrl) {
-			this.pv = new Vector.<Platform>();
-			this.pv = vector;
+		//Power-ups
+		public var immortal:Boolean;
+		private const PWR_VELOCITY:Number = 22; // För power-ups
+
+		
+		public function Player(ctrl) {
 			this.ctrl = ctrl;
+			this.velocity = 0;
 		}
 		
 		override public function init():void{
@@ -43,6 +45,7 @@
 		}
 			
 		override public function update():void{
+			
 			if(this.onGround == false) jump();
 			updateControllers();
 			if(this.currentPlat) checkCurrentPlat();
@@ -50,87 +53,109 @@
 			
 		private function updateControllers():void{
 			
-			if(Input.keyboard.pressed(this.m_controls.PLAYER_RIGHT)){
-				if(this.x <= 800) this.x += this.speed;
-			}
+			if(Input.keyboard.pressed(this.m_controls.PLAYER_RIGHT)) 	this.m_goRight();
 			
-			if(Input.keyboard.pressed(this.m_controls.PLAYER_LEFT)){
-				if(this.x>=0) this.x -= this.speed;
-			}
+			if(Input.keyboard.pressed(this.m_controls.PLAYER_LEFT)) 	this.m_goLeft();
 			
-			if(Input.keyboard.pressed(this.m_controls.PLAYER_UP)){
-				if(this.onGround){
-					this.velocity = DEFAULT_VELOCITY;
-					this.onGround = false;
-					jump();
-				}
-			}
-			}
+			if(Input.keyboard.pressed(this.m_controls.PLAYER_BUTTON_1)) this.m_jump();
 			
-		private function checkCurrentPlat():void{
+			if(Input.keyboard.justReleased(this.m_controls.PLAYER_RIGHT)) this.m_skin.gotoAndStop("idle");
 			
-			if((this.x + this.obj_width) < this.currentPlat.x || this.x > (this.currentPlat.x + this.currentPlat.obj_width)){
-				this.velocity = 0;
-				this.onGround = false;
-			}
-			
-			
-			//Ful lösning, men funkar atm
-			if(this.currentPlat.y != (this.y + this.obj_height + 0.45)){
-				this.velocity = 0;
-				this.onGround = false;
-			}
-			
-			/*
-			for(var i:int = 0; i<this.pv.length; i++){
-				
-				if(this.falling == true && (this.hitTestObject(this.pv[i]) && this.y <= this.pv[i].y)){
-					this.onGround = true;
-					this.y = this.pv[i].y - this.height;
-					this.currentPlat = this.pv[i];
-					//trace(this.currentPlat);
-					if(this.currentPlat is WeakPlatform){
-						
-						this.isOnWeak = true;
-						//this.currentPlat.removeWeakPlat();
-						this.currentPlat = null;
-						//this.onGround = false;
-						
-						}
-					
-				}
-			
-				if(this.currentPlat){
-					if(this.x + this.width < this.currentPlat.x || this.x > this.currentPlat.x + this.currentPlat.width){
-						this.velocity = 0;
-						this.onGround = false;
-					}
-				}
-			}*/
+			if(Input.keyboard.justReleased(this.m_controls.PLAYER_LEFT)) this.m_skin.gotoAndStop("idle");
 			
 		}
+			
+		private function m_goRight():void{
+			this.scaleX = 1;
+			if(this.x <= 760) {
+				this.x += this.speed;
+				if(this.onGround == true){
+					if(this.m_skin.currentFrame != 2) this.m_skin.gotoAndStop("walk");
+				}
+				
+			}
+		}
 		
+		private function m_goLeft():void{
+			this.scaleX = -1;
+			if(this.x>=40){ 
+				this.x -= this.speed;
+				if(this.onGround == true){
+					if(this.m_skin.currentFrame != 2) this.m_skin.gotoAndStop("walk");
+				}
+			}
+		}
 		
+		private function m_jump():void{
+			if(this.onGround){
+				this.m_skin.gotoAndStop("jump");
+				this.velocity = DEFAULT_VELOCITY;
+				this.onGround = false;
+				jump();
+			}
+		}
+
 		public function setCurrentPlat(plat:GameObject):void{
-			if(this.falling){
-				this.onGround = true;
-				this.y = plat.y - this.height;
-				this.currentPlat = plat;
+			
+			this.onGround = true;
+			this.currentPlat = plat;
+			this.currentY = this.currentPlat.y;
+			if(plat is LeftBase || plat is RightBase){
+				this.y = this.currentPlat.y - this.height + 10;
+			}else{
+				this.y = this.currentPlat.y - this.height;
+			}
+				
+			this.velocity = 0;
+			this.m_skin.gotoAndStop("idle");
+
+		}
+		
+		private function checkCurrentPlat():void{
+			
+			if((this.x + this.width/2) < this.currentPlat.x 					||
+				this.x  > (this.currentPlat.x + this.currentPlat.obj_width) 	||
+				this.currentPlat.exists == false								||
+				this.currentPlat.y != this.currentY){				
+				this.velocity = 0;
+				this.onGround = false;
+				this.currentPlat = null;
 			}
 			
 		}
 		
 		private function jump():void{
+			
 			this.velocity < 0 ? this.falling = true : this.falling = false;
 			this.currentPlat = null;
 			this.y -= this.velocity;
-			this.velocity -= 1.8;
+			
+			this.velocity -= this.GRAVITY;
 			if(this.y + this.height >= 600){
 				this.onGround = true;
 				this.y = 600 - this.height;
-				}
-			
+				this.velocity = 0;
 			}
+			
+		}
+		
+		public function setBonusPoints(point:int):void{
+			this.bonusPoints+=point;
+		}
+		
+		
+		//Methods for power-ups
+		public function setVelocity():void{
+		
+			
+		
+		}
+		
+		public function setImmortality():void{
+		
+			
+		
+		}
 
 	}
 	

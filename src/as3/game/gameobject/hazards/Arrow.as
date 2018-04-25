@@ -4,7 +4,7 @@
 	
 	import assets.gameObjects.CannibalGFX;
 	import assets.gameObjects.HazardArrow;
-	
+	import se.lnu.stickossdk.media.SoundObject;
 	import se.lnu.stickossdk.system.Session;
 	import se.lnu.stickossdk.tween.easing.Strong;
 	
@@ -12,16 +12,18 @@
 		
 		private var arrow:HazardArrow;
 		private var warningCannibal:CannibalGFX;
-		private var callback:Function;
 		private var target:GameObject;
 		private var delay:int = 1500;		
 		private var shootArrow:Boolean = false;
 		private var fromRight:int = 0;
 		
+		[Embed(source = "../../../../../assets/audio/PlatBreakAU.mp3")] 
+		private const ARROW_AUDIO:Class;
 		
-		public function Arrow(callback, target) {
+		private var arrowAudioSound:SoundObject;
+		
+		public function Arrow(target) {
 			super();
-			this.callback = callback;
 			this.target = target;
 			this.arrow = new HazardArrow();
 			this.warningCannibal = new CannibalGFX();
@@ -29,6 +31,7 @@
 			this.arrow.scaleY = 0.5;
 			initHitBox();
 			initArrow();
+			initAudio();
 			addChild(this.warningCannibal);
 			addChild(this.arrow);
 			addChild(this.hitBox);
@@ -56,6 +59,13 @@
 			this.warningCannibal.visible = true;
 			
 			this.moveWarningIn();
+		}
+		
+		private function initAudio():void{
+		
+			Session.sound.soundChannel.sources.add("platformBreak", ARROW_AUDIO);
+			this.arrowAudioSound = Session.sound.soundChannel.get("platformBreak", true, true);
+		
 		}
 		
 		override public function update():void{
@@ -93,7 +103,7 @@
 		}
 		
 		private function setBoolean():void{
-			
+			//this.arrowAudioSound.play();
 			this.shootArrow = true;
 			this.warningCannibal.visible = false;
 			

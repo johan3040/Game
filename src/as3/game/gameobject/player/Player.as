@@ -17,7 +17,7 @@
 		private var ctrl:int;
 		private var speed:int = 6;
 		public var velocity:Number;
-		private const DEFAULT_VELOCITY:Number = 14;
+		private const DEFAULT_VELOCITY:Number = 10;
 		private const GRAVITY:Number = 0.9;
 		private var onGround:Boolean = false;
 		public var falling:Boolean = false;
@@ -25,6 +25,7 @@
 		private var currentPlat:GameObject;
 		public var bottomHitBox:Sprite;
 		public var bonusPoints:int = 0;
+		private var numJumps:int = 0;
 		
 		// För att jämföra currentplat.y - om den ändras i Y-led
 		private var currentY:int;
@@ -45,11 +46,10 @@
 		}
 			
 		override public function update():void{
-			
 			if(this.onGround == false) jump();
 			updateControllers();
 			if(this.currentPlat) checkCurrentPlat();
-			}
+		}
 			
 		private function updateControllers():void{
 			
@@ -57,7 +57,9 @@
 			
 			if(Input.keyboard.pressed(this.m_controls.PLAYER_LEFT)) 	this.m_goLeft();
 			
-			if(Input.keyboard.pressed(this.m_controls.PLAYER_BUTTON_1)) this.m_jump();
+			if(Input.keyboard.pressed(this.m_controls.PLAYER_DOWN)) 	this.m_goDown();
+			
+			if(Input.keyboard.justPressed(this.m_controls.PLAYER_BUTTON_1)) this.m_jump();
 			
 			if(Input.keyboard.justReleased(this.m_controls.PLAYER_RIGHT)) this.m_skin.gotoAndStop("idle");
 			
@@ -86,17 +88,26 @@
 			}
 		}
 		
+		private function m_goDown():void{
+			
+			if(this.currentPlat){
+				// Go down trough plat
+			}
+		
+		}
+		
 		private function m_jump():void{
-			if(this.onGround){
+			if(this.onGround || this.numJumps<2){
 				this.m_skin.gotoAndStop("jump");
 				this.velocity = DEFAULT_VELOCITY;
 				this.onGround = false;
 				jump();
+				this.numJumps++;
 			}
 		}
 
 		public function setCurrentPlat(plat:GameObject):void{
-			
+			this.numJumps = 0;
 			this.onGround = true;
 			this.currentPlat = plat;
 			this.currentY = this.currentPlat.y;
@@ -113,9 +124,9 @@
 		
 		private function checkCurrentPlat():void{
 			
-			if((this.x + this.width/2) < this.currentPlat.x 					||
-				this.x  > (this.currentPlat.x + this.currentPlat.obj_width) 	||
-				this.currentPlat.exists == false								||
+			if((this.x + this.width/2) < this.currentPlat.x ||
+				this.x-this.width/2  > (this.currentPlat.x + this.currentPlat.obj_width) 	||
+				this.currentPlat.exists == false			||
 				this.currentPlat.y != this.currentY){				
 				this.velocity = 0;
 				this.onGround = false;
@@ -154,6 +165,14 @@
 		public function setImmortality():void{
 		
 			
+		
+		}
+		
+		override public function dispose():void{
+			
+			this.m_controls = null;
+			this.currentPlat = null;
+			this.bottomHitBox = null;
 		
 		}
 

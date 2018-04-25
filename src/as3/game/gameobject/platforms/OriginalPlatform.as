@@ -9,10 +9,10 @@
 		private var platform:OrgPlatGFX;
 		private var delay:int;
 		private var callback:Function;
-		private var vec:Vector.<Array>;
 		
-		public function OriginalPlatform(callback) {
-			super();
+		public function OriginalPlatform(pos, callback) {
+			super(pos);
+			this.pos = pos;
 			this.callback = callback;
 			initOriginalPlat();
 		}
@@ -20,19 +20,20 @@
 		private function initOriginalPlat():void{
 			this.platform = new OrgPlatGFX();
 			this.platform.gotoAndStop(1);
+			this.scaleX = 0.8;
+			this.scaleY = 0.8;
 			setHitbox();
-			obj_width = 70;
+			obj_width = 65;
 			obj_height = this.platform.height;
-			
 			addChild(this.platform);
 			addChild(hitBox);
 			setLifespan();
 		}
 		
 		private function setHitbox():void{
-			//hitBox.graphics.beginFill(0x00FF00);
-			hitBox.graphics.drawRect(0,1, 70, 6);
-			//hitBox.graphics.endFill();
+			hitBox.graphics.beginFill(0x00FF00);
+			hitBox.graphics.drawRect(3,1, 65, 6);
+			hitBox.graphics.endFill();
 		}
 
 			
@@ -40,22 +41,16 @@
 			this.delay = Math.floor(Math.random() * (10000 - 4000) + 4000);
 			Session.timer.create((this.delay - 2000), warning);
 			Session.timer.create(this.delay, rePosition);
-			}
+		}
 			
 		private function rePosition():void{
 			this.platform.gotoAndStop(1);
-			super.setData();
 			this.callback(this);
 			setLifespan();
-			}
-			
+		}
+		
 		private function warning():void{
 			this.platform.gotoAndStop(2);
-			}
-		
-		public function immidiateReposition():void{
-			super.setData();
-			this.callback(this);
 		}
 
 	}

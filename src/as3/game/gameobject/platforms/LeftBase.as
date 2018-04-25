@@ -7,15 +7,15 @@ package as3.game.gameobject.platforms{
 		
 		private var platform:island1;
 		
-		public function LeftBase(){
-			super();
+		public function LeftBase(pos){
+			super(pos);
 			initLeftBase();
 		}
 		
-		override protected function setData():void{
+		/*override protected function setData():void{
 			this.x = 140;
 			this.y = 550;
-		}
+		}*/
 		
 		private function initLeftBase():void{
 		
@@ -36,13 +36,13 @@ package as3.game.gameobject.platforms{
 			
 		}
 		
-		override public function getX():int{
+		/*override public function getX():int{
 			return this.x;
 		}
 		
 		override public function getY():int{
 			return this.y;
-		}
+		}*/
 		
 	}
 }

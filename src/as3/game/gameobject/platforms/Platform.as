@@ -6,35 +6,32 @@
 		
 		private var xVal:int;
 		private var yVal:int;
-		protected var platPosX:Array = [60, 160, 260, 360, 460, 560, 660];
-		protected var platPosY:Array = [120, 240, 360, 480];
+		public var pos:Array;
+		//public var lastPosition:Array;
 		
-		public function Platform() {
-			setData();
+		public function Platform(pos){
+			super();
+			this.setData(pos);
+			
 		}
 			
-		protected function setData():void{
-			this.xVal = setX();
-			this.yVal = setY();
-			}	
-			
-		private function setX():int{
-			var index:int = Math.floor(Math.random() * platPosX.length);
-			return platPosX[index];
-			}
-			
-		private function setY():int{
-			var index:int = Math.floor(Math.random() * platPosY.length);
-			return platPosY[index];
-			}	
+		protected function setData(pos):void{
+			this.xVal = pos[1];
+			this.yVal = pos[0];
+		}	
 		
 		public function getX():int{
 			return this.xVal;
-			}
-		
+		}
+	
 		public function getY():int{
 			return this.yVal;
-			}
+		}
+		
+		public function setNewData(arr:Array):void{
+			this.pos = arr;
+			this.setData(arr);
+		}
 			
 
 	}

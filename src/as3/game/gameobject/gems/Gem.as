@@ -1,6 +1,6 @@
 package as3.game.gameobject.gems
 {
-	
+	//import se.lnu.stickossdk.system.Session;
 	import as3.game.gameobject.GameObject;
 	
 	public class Gem extends GameObject{
@@ -29,9 +29,11 @@ package as3.game.gameobject.gems
 			return this.yCoor;
 		}
 		
-		public function remove():void{
+		public function prepareReposition(callback):void{
 		
-			this.parent.removeChild(this);
+			//this.parent.removeChild(this);
+			this.setCoordinates();
+			callback(this);
 			
 		}
 		

@@ -30,9 +30,9 @@ package as3.game.gameobject.hazards{
 		
 		private function initHitBox():void{
 		
-			//hitBox.graphics.beginFill(0xFF0000);
-			hitBox.graphics.drawRect(0, -20, 800, 100);
-			//hitBox.graphics.endFill();
+			hitBox.graphics.beginFill(0xFF0000);
+			hitBox.graphics.drawRect(0, -15, 800, 100);
+			hitBox.graphics.endFill();
 			
 		}
 		
@@ -50,6 +50,13 @@ package as3.game.gameobject.hazards{
 				transition: Sine.easeInOut,
 				onComplete: goTween
 			});
+		
+		}
+		
+		override public function dispose():void{
+		
+			this.hazard_ocean = null;
+			hitBox = null;
 		
 		}
 		

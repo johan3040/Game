@@ -2,8 +2,8 @@ package as3.game.gameobject.platforms{
 	
 	public class Bungalow extends Platform{
 		
-		public function Bungalow(){
-			super();
+		public function Bungalow(pos){
+			super(pos);
 		}
 		
 		override public function init():void{

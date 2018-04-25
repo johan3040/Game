@@ -57,8 +57,8 @@
 		
 		override public function dispose():void{
 			this.m_skin = null;
-			this.hitBox = null;
 			this.bottomHitBox = null;
+			hitBox = null;
 		}
 
 	}

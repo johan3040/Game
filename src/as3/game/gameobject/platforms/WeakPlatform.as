@@ -2,7 +2,10 @@
 	
 	
 	import assets.gameObjects.WeakPlatGFX;
+	
+	import se.lnu.stickossdk.media.SoundObject;
 	import se.lnu.stickossdk.system.Session;
+	
 	
 	public class WeakPlatform extends Platform{
 		
@@ -10,11 +13,17 @@
 		private var callback:Function; // Callback method to reposition method in Main
 		private var removeCallback:Function;
 		
-		public function WeakPlatform(callback) {
-			super();
+		[Embed(source = "../../../../../assets/audio/PlatBreakAU.mp3")]
+		private const BREAK_AUDIO:Class;
+		private var breakAudioSound:SoundObject;
+		
+		public function WeakPlatform(pos, callback) {
+			super(pos);
 			this.callback = callback;
-			//this.remove = remove;
-			initWeakPlat();
+			this.pos = pos;
+			this.initWeakPlat();
+			this.initAudio();
+			
 		}
 		
 		private function initWeakPlat():void{
@@ -35,10 +44,17 @@
 			hitBox.graphics.drawRect(0, 1, 70, 6);
 			//hitBox.graphics.endFill();
 		}
+		
+		private function initAudio():void{
+		
+			Session.sound.soundChannel.sources.add("platformBreak", BREAK_AUDIO);
+			this.breakAudioSound = Session.sound.soundChannel.get("platformBreak", true, true);
 			
-		public function removePlat(removeCallback):void{
-			//this.removeCallback = removeCallback;
-			removeCallback(this);
+		}
+			
+		public function removePlat():void{
+			this.breakAudioSound.play();
+			//removeCallback(this);
 			this.exists = false;
 			this.platform.gotoAndPlay(2);
 			}
@@ -51,19 +67,19 @@
 			} 
 		}
 		
-		public function immidiateReposition():void{
-			super.setData();
-			this.callback(this);
-		}
-		
 		private function reSpawn():void{
 			this.platform.gotoAndStop(1);
-			this.exists = true;
-			super.setData();
-			this.platform.visible = true;
 			this.callback(this);
+			this.exists = true;
+			this.platform.visible = true;
 		
 		}
+		/*
+		public function setNewData(arr:Array):void{
+		
+			super.setData(arr);
+			
+		}*/
 
 	}
 	

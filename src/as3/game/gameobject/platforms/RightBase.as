@@ -7,15 +7,15 @@ package as3.game.gameobject.platforms{
 		
 		private var platform:island2;
 		
-		public function RightBase(){
-			super();
+		public function RightBase(pos){
+			super(pos);
 			initRightBase();
 		}
 		
-		override protected function setData():void{
+		/*override protected function setData():void{
 			this.x = 500;
 			this.y = 550;
-		}
+		}*/
 		
 		private function initRightBase():void{
 			
@@ -35,14 +35,14 @@ package as3.game.gameobject.platforms{
 			hitBox.graphics.endFill();
 		
 		}
-		
+		/*
 		override public function getX():int{
 			return this.x;
 		}
 		
 		override public function getY():int{
 			return this.y;
-		}
+		}*/
 		
 	}
 }

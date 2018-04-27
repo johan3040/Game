@@ -75,7 +75,7 @@ package scene
 	private function initMenuBtns():void {		
 		this.m_btns = new menuBtns();
 		
-		m_btns.x = ((Session.application.width) / 2) - (m_btns.width / 2);
+		m_btns.x = 269.35;
 		m_btns.y = 190.9;
 		
 		this.m_btns.gotoAndStop("single");

@@ -14,5 +14,9 @@ package as3.game.UI
 			this.scaleY = 0.6;
 			addChild(this.topbar);
 		}
+		
+		override public function dispose():void{
+			this.topbar = null;
+		}
 	}
 }

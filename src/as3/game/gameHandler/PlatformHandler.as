@@ -133,28 +133,28 @@ package as3.game.gameHandler
 			this.platformVector.push(this.rb);
 		}
 		
-		public function update():void{
+		public function update(player):void{
 		
-			this.m_updatePlatformCollission();
+			this.m_updatePlatformCollission(player);
 		
 		}
 		
-		private function m_updatePlatformCollission():void{
+		private function m_updatePlatformCollission(player):void{
 			
 			var a:Rectangle;
-			for(var j:int = 0; j<this.playerVector.length; j++){
+			//for(var j:int = 0; j<this.playerVector.length; j++){
 				
 				// If velocity is < 0, check against body hitbox (larger), else if going up in a jump(velocity > 0), check against foot hitbox
-				this.playerVector[j].velocity < 0 ? a = this.playerVector[j].hitBox.getRect(this.game.gameLayer) : a = this.playerVector[j].bottomHitBox.getRect(this.game.gameLayer);
+				player.velocity < 0 ? a = player.hitBox.getRect(this.game.gameLayer) : a = player.bottomHitBox.getRect(this.game.gameLayer);
 				
 				for(var i:int = 0; i<this.platformVector.length; i++){
 					this.tempPlatRect = this.platformVector[i].hitBox.getRect(this.game.gameLayer);
 					if(a.intersects(this.tempPlatRect)){
-						this.platformCollission(this.platformVector[i], this.playerVector[j]);
+						this.platformCollission(this.platformVector[i], player);
 						break;
 					}//End if intersect
 				}//End platformloop
-			}//End playerloop
+			//}//End playerloop
 		}//End function
 		
 		

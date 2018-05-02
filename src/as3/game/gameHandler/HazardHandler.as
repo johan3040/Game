@@ -14,6 +14,7 @@ package as3.game.gameHandler
 		private var ocean:Wave;
 		private var arr:Arrow;
 		private var coco:Coconut;
+		private var gameOver:Boolean = false;
 		
 		public function HazardHandler(game){
 			super();
@@ -26,10 +27,10 @@ package as3.game.gameHandler
 			// Inithazards
 			this.initWave();
 			this.initCoconut();
-			//Session.timer.create(10000, this.initCoconut);
+			Session.timer.create(10000, this.initCoconut);
 			this.initArrow();
-			//Session.timer.create(5000, this.initArrow);
-			//Session.timer.create(10000, this.initArrow);
+			Session.timer.create(5000, this.initArrow);
+			Session.timer.create(10000, this.initArrow);
 			
 		}
 		
@@ -60,6 +61,10 @@ package as3.game.gameHandler
 		private function getPlayerAsTarget():GameObject{
 			return this.game.playerVector.length == 1 ? this.game.playerVector[0] : this.game.playerVector[Math.round(Math.random())];
 			
+		}
+		
+		public function setGameState():void{
+			this.gameOver = true;
 		}
 		
 		public function dispose():void{

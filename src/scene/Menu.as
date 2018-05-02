@@ -24,7 +24,7 @@ package scene
 		
 		public function Menu(){
 			super();
-			this.m_controls = new EvertronControls(1);
+			this.m_controls = new EvertronControls(0);
 		}
 		
 	override public function init():void{		
@@ -126,11 +126,11 @@ package scene
 	
 	private function btnPress():void {
 		if (m_btns.currentLabel == "single") {
-			Session.application.displayState = new Game();
+			Session.application.displayState = new Game(1);
 		}
 		
 		if (m_btns.currentLabel == "multi") {
-
+			Session.application.displayState = new Game(2);
 		}
 	}
 	

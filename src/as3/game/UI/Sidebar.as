@@ -1,9 +1,8 @@
 package as3.game.UI{
 	
+	import assets.gameObjects.sideBar;
 	
-	public class Sidebar extends Hud{
-		
-		import assets.gameObjects.sideBar;
+	public class Sidebar extends Hud{	
 		
 		private var sidebar:sideBar;
 		
@@ -17,6 +16,10 @@ package as3.game.UI{
 			
 			addChild(this.sidebar);
 		
+		}
+		
+		override public function dispose():void{
+			this.sidebar = null;
 		}
 	}
 }

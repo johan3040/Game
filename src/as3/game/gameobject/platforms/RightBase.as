@@ -30,19 +30,17 @@ package as3.game.gameobject.platforms{
 		
 		private function initHitBox():void{
 			
-			hitBox.graphics.beginFill(0x0000FF);
-			hitBox.graphics.drawRect(4,10,200,10);
-			hitBox.graphics.endFill();
+			//hitBox.graphics.beginFill(0x0000FF);
+			hitBox.graphics.drawRect(4,10,200,20);
+			//hitBox.graphics.endFill();
 		
 		}
-		/*
-		override public function getX():int{
-			return this.x;
-		}
 		
-		override public function getY():int{
-			return this.y;
-		}*/
+		override public function dispose():void{
+		
+			this.platform = null;
+		
+		}
 		
 	}
 }

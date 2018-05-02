@@ -20,14 +20,19 @@ package scene
 	import as3.game.gameobject.player.Cannibal;
 	import as3.game.gameobject.player.Explorer;
 	import as3.game.gameobject.player.Player;
+	import as3.game.gameobject.powerups.Immortality;
+	import as3.game.gameobject.powerups.PowerUp;
+	import as3.game.gameobject.powerups.Superjump;
 	
 	import se.lnu.stickossdk.display.DisplayState;
 	import se.lnu.stickossdk.display.DisplayStateLayer;
+	import se.lnu.stickossdk.fx.Flicker;
 	import se.lnu.stickossdk.media.SoundObject;
 	import se.lnu.stickossdk.system.Session;
 	
 	public class Game extends DisplayState{
 		
+		private var mode:int; // 0 = singleplayer 1 = multiplayer
 		private var m_gameBackgroundLayer:DisplayStateLayer;
 		public var gameLayer:DisplayStateLayer;
 		private var m_gameHudLayer:DisplayStateLayer;
@@ -40,6 +45,8 @@ package scene
 		private var player1:Player;
 		private var player2:Player;
 		private var lb_bungalow:Bungalow;
+		private var pu_superjump:Superjump;
+		private var pu_immortal:Immortality;
 		
 		//------------------------------------------
 		// Public vectors
@@ -62,8 +69,9 @@ package scene
 		private var platformhandler:PlatformHandler;
 		private var hazardhandler:HazardHandler;
 		
-		public function Game(){
+		public function Game(num:int){
 			super();
+			this.mode = num;
 			//this.gameObjectVec = new Vector.<GameObject>;
 			this.playerVector = new Vector.<GameObject>;
 			this.hazardVector = new Vector.<GameObject>;
@@ -73,13 +81,15 @@ package scene
 		override public function init():void{
 			this.m_initLayers();
 			this.initBackground();
-			this.initPlayer();
+			this.mode == 1 ? this.singleplayerGame() : this.multiplayerGame();
+			/*this.initPlayer();
 			this.platformhandler = new PlatformHandler(this, this.playerVector);
 			this.hazardhandler = new HazardHandler(this);
 			//this.initPlayer2();
 			this.initGems();
+			this.initPowerUps();
 			this.initHud();
-			this.initAudio();
+			this.initAudio();*/
 		}
 		
 		private function initAudio():void{
@@ -101,18 +111,37 @@ package scene
 			this.m_gameBackgroundLayer.addChild(this.gb);
 		}
 		
+		private function singleplayerGame():void{
+			this.initPlayer();
+			this.platformhandler = new PlatformHandler(this, this.playerVector);
+			this.hazardhandler = new HazardHandler(this);
+			this.initGems();
+			this.initPowerUps();
+			this.initHud();
+		}
+		
+		private function multiplayerGame():void{
+			this.initPlayer();
+			this.initPlayer2();
+			this.platformhandler = new PlatformHandler(this, this.playerVector);
+			this.hazardhandler = new HazardHandler(this);
+			this.initGems();
+			this.initPowerUps();
+			this.initHud();
+		}
+		
 		private function initPlayer():void{
 			this.player1 = new Explorer();
 			this.player1.x = 160;
-			this.player1.y = 520 - this.player1.height;
+			this.player1.y = 560 - this.player1.height;
 			this.m_playerLayer.addChild(this.player1);
 			this.playerVector.push(this.player1);
 		}
 		
 		private function initPlayer2():void{
 			this.player2 = new Cannibal();
-			this.player2.x = 100;
-			this.player2.y = 600 - this.player2.height;
+			this.player2.x = 600;
+			this.player2.y = 560 - this.player2.height;
 			this.m_playerLayer.addChild(this.player2);
 			this.playerVector.push(this.player2);
 		}
@@ -134,7 +163,7 @@ package scene
 		
 		private function initRuby():void{
 		
-			this.gem_ruby = new Ruby();
+			this.gem_ruby = new Ruby(this.player1);
 			this.positionGems(this.gem_ruby);
 			this.gameLayer.addChild(this.gem_ruby);
 			this.hazardVector.push(this.gem_ruby);
@@ -143,7 +172,7 @@ package scene
 		
 		private function initSapphire():void{
 		
-			this.gem_emerald = new Emerald();
+			this.gem_emerald = new Emerald(this.player1);
 			this.positionGems(this.gem_emerald);
 			this.gameLayer.addChild(this.gem_emerald);
 			this.addGemToVector(this.gem_emerald);
@@ -163,10 +192,20 @@ package scene
 		
 		}
 		
+		private function initPowerUps():void{
+			this.pu_superjump = new Superjump();			
+			this.collidableObjects.push(this.pu_superjump);
+			this.gameLayer.addChild(this.pu_superjump);
+			
+			this.pu_immortal = new Immortality();
+			this.collidableObjects.push(this.pu_immortal);
+			this.gameLayer.addChild(this.pu_immortal);
+		}
+		
 		private function initHud():void{
 			
 			this.initSidebars();
-			this.initGameTimer();
+			//this.initGameTimer();
 			this.initGameBonusPoints();
 			this.initTopBase();
 		}
@@ -204,14 +243,18 @@ package scene
 		}
 		
 		override public function update():void{
-			m_updateCollission();
-			this.platformhandler.update();
+			for(var i:int = 0; i<this.playerVector.length; i++){
+				if(this.playerVector[i].alive){
+					m_updateCollission(this.playerVector[i]);
+					this.platformhandler.update(this.playerVector[i]);
+					if(this.playerVector[i].y >= 600) this.prepareGameOver(this.playerVector[i]);
+				}
+			}
 		}
 		
-		private function m_updateCollission():void{
+		private function m_updateCollission(player):void{
 			
-			for(var j:int = 0; j<this.playerVector.length; j++){
-				var a:Rectangle = this.playerVector[j].hitBox.getRect(this.gameLayer);
+				var a:Rectangle = player.hitBox.getRect(this.gameLayer);
 				
 				for(var i:int = 0; i<this.collidableObjects.length; i++){
 					
@@ -219,23 +262,41 @@ package scene
 					
 					if(a.intersects(this.tempHazardRect)){
 						if(this.collidableObjects[i] is Hazard){
-							this.hazardCollission(this.playerVector[j], this.collidableObjects[i]);
+							this.hazardCollission(player, this.collidableObjects[i]);
 							break;
 						}
 						if(this.collidableObjects[i] is Gem){
-							this.gemCollission(this.playerVector[j], this.collidableObjects[i]);
+							this.gemCollission(player, this.collidableObjects[i]);
+							break;
+						}
+						if(this.collidableObjects[i] is PowerUp){
+							this.powerCollission(player, this.collidableObjects[i]);
 							break;
 						}
 						
 					}//End if intersect
 				}//End hazardloop
-			}//End playerloop
 		}//End function
 		
 		private function hazardCollission(player, hazard):void{
-		
 			//this.gameOverAudio.play();
-			Session.application.displayState = new GameOver();
+			if(player.immortal != true && hazard.lethal == true){
+				this.prepareGameOver(player);
+			}
+		}
+		
+		private function prepareGameOver(player):void{
+			player.alive = false;
+			Session.timer.dispose();
+			Session.tweener.dispose();
+			var go_delay:int = 1000;
+			Session.effects.add(new Flicker(player, go_delay, 30, true));
+			Session.timer.create(go_delay, gameOver, 0);
+		}
+		
+		private function gameOver():void{
+			
+			Session.application.displayState = new GameOver(this.player1, mode);
 		
 		}
 		
@@ -249,11 +310,9 @@ package scene
 		
 		}
 		
-		
-		
-		private function removeFromVector(obj:GameObject):void{
-			//var index:int = platformVector.indexOf(obj);
-			//this.platformVector.splice(index, 1);
+		private function powerCollission(player, pw):void{
+			pw.reposition();
+			player.setPowerUp(pw);
 		}
 		
 		override public function dispose():void{

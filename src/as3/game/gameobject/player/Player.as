@@ -6,39 +6,48 @@
 	import as3.game.gameobject.GameObject;
 	import as3.game.gameobject.platforms.LeftBase;
 	import as3.game.gameobject.platforms.RightBase;
+	import as3.game.gameobject.powerups.Immortality;
+	import as3.game.gameobject.powerups.PowerUp;
+	import as3.game.gameobject.powerups.Superjump;
 	
+	import se.lnu.stickossdk.fx.Flicker;
 	import se.lnu.stickossdk.input.EvertronControls;
 	import se.lnu.stickossdk.input.Input;
+	import se.lnu.stickossdk.system.Session;
 	
 	
 	public class Player extends GameObject {
 		
 		private var m_controls:EvertronControls;
+		public var m_skin:MovieClip;
 		private var ctrl:int;
 		private var speed:int = 6;
-		public var velocity:Number;
-		private const DEFAULT_VELOCITY:Number = 10;
-		private const GRAVITY:Number = 0.9;
+		private var current_velocity:Number;
 		private var onGround:Boolean = false;
-		public var falling:Boolean = false;
 		private var onPlat:Boolean = false;
 		private var currentPlat:GameObject;
+		private var numJumps:int = 0;
+		private var gravity:Number;
+		private var currentY:int; // För att jämföra currentplat.y - om den ändras i Y-led
+		
+		private const DEFAULT_VELOCITY:Number = 10;
+		private const PWR_VELOCITY:Number = 14; // För power-ups
+		private const DEFAULT_GRAVITY:Number = 0.9;
+		private const PWR_GRAVITY:Number = 0.6;
+		
+		public var falling:Boolean = false;
+		public var velocity:Number;
+		public var alive:Boolean = true;
 		public var bottomHitBox:Sprite;
 		public var bonusPoints:int = 0;
-		private var numJumps:int = 0;
-		
-		// För att jämföra currentplat.y - om den ändras i Y-led
-		private var currentY:int;
-		public var m_skin:MovieClip;
-		
-		//Power-ups
-		public var immortal:Boolean;
-		private const PWR_VELOCITY:Number = 22; // För power-ups
+		public var immortal:Boolean = false;
 
 		
 		public function Player(ctrl) {
 			this.ctrl = ctrl;
 			this.velocity = 0;
+			this.gravity = this.DEFAULT_GRAVITY;
+			this.current_velocity = this.DEFAULT_VELOCITY;
 		}
 		
 		override public function init():void{
@@ -46,9 +55,11 @@
 		}
 			
 		override public function update():void{
-			if(this.onGround == false) jump();
-			updateControllers();
-			if(this.currentPlat) checkCurrentPlat();
+			if(this.alive){
+				if(this.onGround == false) jump();
+				updateControllers();
+				if(this.currentPlat) checkCurrentPlat();
+			}
 		}
 			
 		private function updateControllers():void{
@@ -99,7 +110,7 @@
 		private function m_jump():void{
 			if(this.onGround || this.numJumps<2){
 				this.m_skin.gotoAndStop("jump");
-				this.velocity = DEFAULT_VELOCITY;
+				this.velocity = current_velocity;
 				this.onGround = false;
 				jump();
 				this.numJumps++;
@@ -137,16 +148,14 @@
 		
 		private function jump():void{
 			
+			if(this.y <= 5){
+				this.y = 5;
+				this.velocity -= 1.3;
+			} 
 			this.velocity < 0 ? this.falling = true : this.falling = false;
 			this.currentPlat = null;
 			this.y -= this.velocity;
-			
-			this.velocity -= this.GRAVITY;
-			if(this.y + this.height >= 600){
-				this.onGround = true;
-				this.y = 600 - this.height;
-				this.velocity = 0;
-			}
+			this.velocity -= this.gravity;
 			
 		}
 		
@@ -156,15 +165,33 @@
 		
 		
 		//Methods for power-ups
-		public function setVelocity():void{
 		
-			
-		
+		public function setPowerUp(pw:PowerUp):void{
+			if(pw is Superjump) this.setVelocity();
+			if(pw is Immortality) this.setImmortality();
 		}
 		
-		public function setImmortality():void{
-		
+		private function setVelocity():void{
 			
+			if(this.current_velocity != this.PWR_VELOCITY){
+				this.current_velocity = this.PWR_VELOCITY;
+				this.gravity = this.PWR_GRAVITY;
+				Session.timer.create(4000, this.setVelocity);
+			}else{
+				this.current_velocity = this.DEFAULT_VELOCITY;
+				this.gravity = this.DEFAULT_GRAVITY;
+			}
+		}
+		
+		private function setImmortality():void{
+		
+			if(this.immortal){
+				this.immortal = false;
+			}else{
+				this.immortal = true;
+				Session.effects.add(new Flicker(this.m_skin, 4000, 30, true));
+				Session.timer.create(4000, this.setImmortality);
+			}
 		
 		}
 		

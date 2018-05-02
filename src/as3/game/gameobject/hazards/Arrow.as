@@ -25,13 +25,11 @@
 		public function Arrow(target) {
 			super();
 			this.target = target;
-			this.arrow = new HazardArrow();
-			this.warningCannibal = new CannibalGFX();
-			this.arrow.scaleX = 0.5;
-			this.arrow.scaleY = 0.5;
-			initHitBox();
-			initArrow();
-			initAudio();
+			
+			this.initArrow();
+			this.initHitBox();
+			this.initPosition();
+			this.initAudio();
 			addChild(this.warningCannibal);
 			addChild(this.arrow);
 			addChild(this.hitBox);
@@ -39,14 +37,21 @@
 		
 		private function initHitBox():void{
 		
-			hitBox.graphics.beginFill(0x00FF00);
+			//hitBox.graphics.beginFill(0x00FF00);
 			hitBox.graphics.drawRect(0,0,10,10);
-			hitBox.graphics.endFill();
+			//hitBox.graphics.endFill();
 		
 		}
 		
 		private function initArrow():void{
+			this.arrow = new HazardArrow();
+			this.warningCannibal = new CannibalGFX();
+			this.arrow.scaleX = 0.5;
+			this.arrow.scaleY = 0.5;
 			
+		}
+		
+		private function initPosition():void{
 			this.fromRight = Math.round(Math.random());
 			this.y = this.target.y + 10;
 			if(this.fromRight == 0){
@@ -72,6 +77,7 @@
 			
 			if(this.shootArrow == true && this.fromRight == 0)this.moveArrowLeft();
 			if(this.shootArrow == true && this.fromRight == 1)this.moveArrowRight();
+			
 		}
 		
 		private function moveWarningIn():void{
@@ -128,9 +134,17 @@
 		private function resetArrow():void{
 		
 			this.shootArrow = false;
-			Session.timer.create(this.delay, initArrow);
+			Session.timer.create(this.delay, initPosition);
 			this.delay <= 1500 ? this.delay = 1500 : this.delay -= 1000;
 			
+		}
+		
+		override public function dispose():void{
+		
+			this.arrow = null;
+			this.warningCannibal = null;
+			this.target = null;
+		
 		}
 
 	}

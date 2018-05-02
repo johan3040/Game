@@ -2,6 +2,8 @@ package scene
 {
 	import flash.display.Sprite;
 	
+	import as3.game.gameobject.player.Explorer;
+	
 	import assets.gameObjects.gameoverBottom;
 	import assets.gameObjects.gameoverBtns;
 	import assets.gameObjects.gameoverHighscoreDisplay;
@@ -13,8 +15,7 @@ package scene
 	import se.lnu.stickossdk.input.Input;
 	import se.lnu.stickossdk.system.Session;
 	
-	public class GameOver extends DisplayState
-	{
+	public class GameOver extends DisplayState{
 		
 		private var go_menuLayer:DisplayStateLayer;
 		private var go_background:Sprite;
@@ -25,11 +26,14 @@ package scene
 		private var go_title:gameoverTitle;
 		private var go_highscoreDisplay:gameoverHighscoreDisplay;
 		private var go_bottom:gameoverBottom;
+		private var player:Explorer;
+		private var mode:int; // 0 = singelplayer 1 = multiplayer
 		
-		public function GameOver()
-		{
+		public function GameOver(player, mode){
 			super();
-			this.go_controls = new EvertronControls(1);
+			this.player = player;
+			this.mode = mode;
+			this.go_controls = new EvertronControls(0);
 		}
 		
 	override public function init():void{		
@@ -126,7 +130,7 @@ package scene
 	
 	private function btnPress():void {
 		if (go_btns.currentLabel == "replay") {
-			Session.application.displayState = new Game();
+			Session.application.displayState = new Game(mode);
 		}
 		
 		if (go_btns.currentLabel == "menu") {

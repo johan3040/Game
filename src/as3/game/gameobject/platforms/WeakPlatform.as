@@ -74,12 +74,15 @@
 			this.platform.visible = true;
 		
 		}
-		/*
-		public function setNewData(arr:Array):void{
 		
-			super.setData(arr);
-			
-		}*/
+		override public function dispose():void{
+		
+			this.platform = null;
+			this.callback = null;
+			this.removeCallback = null;
+			this.breakAudioSound = null;
+		
+		}
 
 	}
 	

@@ -31,9 +31,9 @@
 		}
 		
 		private function setHitbox():void{
-			hitBox.graphics.beginFill(0x00FF00);
+			//hitBox.graphics.beginFill(0x00FF00);
 			hitBox.graphics.drawRect(3,1, 65, 6);
-			hitBox.graphics.endFill();
+			//hitBox.graphics.endFill();
 		}
 
 			
@@ -51,6 +51,13 @@
 		
 		private function warning():void{
 			this.platform.gotoAndStop(2);
+		}
+		
+		override public function dispose():void{
+		
+			this.platform = null;
+			this.callback = null;
+			
 		}
 
 	}

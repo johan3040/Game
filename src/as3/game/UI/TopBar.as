@@ -2,7 +2,9 @@ package as3.game.UI
 {
 	import assets.gameObjects.hudBase;
 	
-	public class TopBar extends Hud{
+	import se.lnu.stickossdk.display.DisplayStateLayerSprite;
+	
+	public class TopBar extends DisplayStateLayerSprite{
 		
 		private var topbar:hudBase;
 		

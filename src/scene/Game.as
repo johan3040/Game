@@ -7,8 +7,7 @@ package scene
 	import as3.game.UI.GameBonusPoints;
 	import as3.game.UI.GameTimer;
 	import as3.game.UI.Hud;
-	import as3.game.UI.Sidebar;
-	import as3.game.UI.TopBar;
+	import as3.game.UI.MultiplayerHud;
 	import as3.game.gameHandler.HazardHandler;
 	import as3.game.gameHandler.PlatformHandler;
 	import as3.game.gameobject.GameObject;
@@ -16,7 +15,6 @@ package scene
 	import as3.game.gameobject.gems.Gem;
 	import as3.game.gameobject.gems.Ruby;
 	import as3.game.gameobject.hazards.Hazard;
-	import as3.game.gameobject.platforms.Bungalow;
 	import as3.game.gameobject.player.Cannibal;
 	import as3.game.gameobject.player.Explorer;
 	import as3.game.gameobject.player.Player;
@@ -38,33 +36,45 @@ package scene
 		private var m_gameHudLayer:DisplayStateLayer;
 		private var m_playerLayer:DisplayStateLayer;
 		private var m_hud:Hud;
-		private var m_gameTimer:GameTimer;
+		//private var m_gameTimer:GameTimer;
 		private var m_gameBonusPoints:GameBonusPoints;
-		private var m_hudTopBar:TopBar;
 		private var gb:GameBoard;
 		private var player1:Player;
 		private var player2:Player;
-		private var lb_bungalow:Bungalow;
 		private var pu_superjump:Superjump;
 		private var pu_immortal:Immortality;
+		private var tempHazardRect:Rectangle;
+		private var gem_ruby:Ruby;
+		private var gem_emerald:Emerald;
+		private var mp_winner:Player;
+		
+		//------------------------------------------
+		//MP hud
+		//------------------------------------------
+		private var p1_leaf:MultiplayerHud;
+		private var p2_leaf:MultiplayerHud;
 		
 		//------------------------------------------
 		// Public vectors
 		//------------------------------------------
-		public var playerVector:Vector.<GameObject>;
-		//public var gameObjectVec:Vector.<GameObject>;
+		public var playerVector:Vector.<Player>;
 		public var hazardVector:Vector.<GameObject>;
 		public var collidableObjects:Vector.<GameObject>;
 		
-		private var tempHazardRect:Rectangle;
-		
-		private var gem_ruby:Ruby;
-		private var gem_emerald:Emerald;
-		
+		//------------------------------------------
 		// Audio
+		//------------------------------------------
 		[Embed(source = "../../assets/audio/gameOverAU.mp3")] 	// <-- this data..
 		private const GAME_OVER_AUDIO:Class;					// ..gets saved in this const
 		private var gameOverAudio:SoundObject;
+		
+		[Embed(source = "../../assets/audio/PowerupAU.mp3")] 	// <-- this data..
+		private const POWER_UP_AUDIO:Class;						// ..gets saved in this const
+		private var powerUpAudio:SoundObject;
+		
+		[Embed(source = "../../assets/audio/gameMusicAU.mp3")] 	// <-- this data..
+		private const GAME_MAIN_AUDIO:Class;					// ..gets saved in this const
+		private var mainAudio:SoundObject;
 		//
 		private var platformhandler:PlatformHandler;
 		private var hazardhandler:HazardHandler;
@@ -73,7 +83,7 @@ package scene
 			super();
 			this.mode = num;
 			//this.gameObjectVec = new Vector.<GameObject>;
-			this.playerVector = new Vector.<GameObject>;
+			this.playerVector = new Vector.<Player>;
 			this.hazardVector = new Vector.<GameObject>;
 			this.collidableObjects = new Vector.<GameObject>;
 		}
@@ -81,22 +91,22 @@ package scene
 		override public function init():void{
 			this.m_initLayers();
 			this.initBackground();
+			this.initAudio();
 			this.mode == 1 ? this.singleplayerGame() : this.multiplayerGame();
-			/*this.initPlayer();
-			this.platformhandler = new PlatformHandler(this, this.playerVector);
-			this.hazardhandler = new HazardHandler(this);
-			//this.initPlayer2();
-			this.initGems();
-			this.initPowerUps();
-			this.initHud();
-			this.initAudio();*/
 		}
 		
 		private function initAudio():void{
 		
 			Session.sound.soundChannel.sources.add("gameOver", GAME_OVER_AUDIO);
 			this.gameOverAudio = Session.sound.soundChannel.get("gameOver", true, true);
-		
+			Session.sound.soundChannel.sources.add("powerUp", POWER_UP_AUDIO);
+			this.powerUpAudio = Session.sound.soundChannel.get("powerUp", true, true);
+			Session.sound.soundChannel.sources.add("main", GAME_MAIN_AUDIO);
+			this.mainAudio = Session.sound.soundChannel.get("main", true, true);
+			
+			this.mainAudio.play(999); //Loopar musiken 999 gånger
+			this.mainAudio.volume = 0.5;
+			
 		}
 		
 		private function m_initLayers():void{
@@ -118,20 +128,21 @@ package scene
 			this.initGems();
 			this.initPowerUps();
 			this.initHud();
+			this.initSpUI();
 		}
 		
 		private function multiplayerGame():void{
 			this.initPlayer();
 			this.initPlayer2();
 			this.platformhandler = new PlatformHandler(this, this.playerVector);
-			this.hazardhandler = new HazardHandler(this);
-			this.initGems();
-			this.initPowerUps();
+			//this.hazardhandler = new HazardHandler(this);
+			//this.initPowerUps();
 			this.initHud();
+			this.initMpUI();
 		}
 		
 		private function initPlayer():void{
-			this.player1 = new Explorer();
+			this.player1 = new Explorer(this.playerPush);
 			this.player1.x = 160;
 			this.player1.y = 560 - this.player1.height;
 			this.m_playerLayer.addChild(this.player1);
@@ -139,26 +150,16 @@ package scene
 		}
 		
 		private function initPlayer2():void{
-			this.player2 = new Cannibal();
+			this.player2 = new Cannibal(this.playerPush);
 			this.player2.x = 600;
 			this.player2.y = 560 - this.player2.height;
 			this.m_playerLayer.addChild(this.player2);
 			this.playerVector.push(this.player2);
 		}
-		
-		private function initBungalows():void{
-			var pos:Array = [530,240];
-			this.lb_bungalow = new Bungalow(pos);
-			this.lb_bungalow.x = 240;
-			this.lb_bungalow.y = 530;
-			this.platformhandler.platformVector.push(this.lb_bungalow);
-			this.gameLayer.addChild(this.lb_bungalow);
-		}
 
 		private function initGems():void{
 			this.initRuby();
 			this.initSapphire();
-		
 		}
 		
 		private function initRuby():void{
@@ -203,42 +204,36 @@ package scene
 		}
 		
 		private function initHud():void{
-			
-			this.initSidebars();
-			//this.initGameTimer();
+			this.m_hud = new Hud(this.mode, this.playerVector);
+			this.m_gameHudLayer.addChild(this.m_hud);
+		}
+		
+		private function initSpUI():void{
 			this.initGameBonusPoints();
-			this.initTopBase();
 		}
 		
-		private function initSidebars():void{
-		
-			var leftSidebar:Sidebar = new Sidebar();
-			var rightSidebar:Sidebar = new Sidebar();
-			rightSidebar.scaleX = -1;
-			rightSidebar.x = 800 - rightSidebar.width;
-			this.m_gameHudLayer.addChild(leftSidebar);
-			this.m_gameHudLayer.addChild(rightSidebar);
-		
+		private function initMpUI():void{
+			this.p1_leaf = new MultiplayerHud(this.player1);
+			this.p2_leaf = new MultiplayerHud(this.player2);
+			this.m_gameHudLayer.addChild(this.p1_leaf);
+			this.m_gameHudLayer.addChild(this.p2_leaf);
 		}
 		
+		
+		/*
 		private function initGameTimer():void{
 		
 			this.m_gameTimer = new GameTimer();
 			this.m_gameHudLayer.addChild(this.m_gameTimer);
 		
 		}
+		*/
+		
 		
 		private function initGameBonusPoints():void{
 		
 			this.m_gameBonusPoints = new GameBonusPoints(this.player1);
 			this.m_gameHudLayer.addChild(this.m_gameBonusPoints);
-			
-		}
-		
-		private function initTopBase():void{
-		
-			this.m_hudTopBar = new TopBar();
-			this.m_gameHudLayer.addChild(this.m_hudTopBar);
 			
 		}
 		
@@ -248,11 +243,12 @@ package scene
 					m_updateCollission(this.playerVector[i]);
 					this.platformhandler.update(this.playerVector[i]);
 					if(this.playerVector[i].y >= 600) this.prepareGameOver(this.playerVector[i]);
+					if(this.mode == 1) this.updatePoints(this.playerVector[i]);
 				}
 			}
 		}
 		
-		private function m_updateCollission(player):void{
+		private function m_updateCollission(player:Player):void{
 			
 				var a:Rectangle = player.hitBox.getRect(this.gameLayer);
 				
@@ -278,14 +274,14 @@ package scene
 				}//End hazardloop
 		}//End function
 		
-		private function hazardCollission(player, hazard):void{
+		private function hazardCollission(player:*, hazard:*):void{
 			//this.gameOverAudio.play();
 			if(player.immortal != true && hazard.lethal == true){
 				this.prepareGameOver(player);
 			}
 		}
 		
-		private function prepareGameOver(player):void{
+		private function prepareGameOver(player:Player):void{
 			player.alive = false;
 			Session.timer.dispose();
 			Session.tweener.dispose();
@@ -300,25 +296,55 @@ package scene
 		
 		}
 		
-		private function gemCollission(player, gem):void{
-			
+		private function gemCollission(player:Player, gem:*):void{
 			player.setBonusPoints(gem.value);
 			this.m_gameBonusPoints.setVisibleBonusPoints(gem.value);
-			gem.prepareReposition(this.positionGems);
-			//this.collidableObjects.splice(this.collidableObjects.indexOf(gem),1);
-			//this.hazardVector.splice(this.hazardVector.indexOf(gem),1);
-		
+			gem.prepareReposition(this.positionGems);		
 		}
 		
-		private function powerCollission(player, pw):void{
+		private function powerCollission(player:Player, pw:*):void{
+			this.mainAudio.fade(0.2, 700, this.resetVolume);
+			this.powerUpAudio.play();
 			pw.reposition();
 			player.setPowerUp(pw);
+		}
+		
+		private function resetVolume():void{
+			this.mainAudio.fade(0.5, 700);
+		}
+		
+		private function playerPush(player:Player):void{
+			var opponent:Player;
+			player is Explorer ? opponent = this.player2 : opponent = this.player1;
+			if(	player.x > opponent.x - 25 &&
+				player.x < opponent.x + 25 &&
+				player.y > opponent.y - 25 &&
+				player.y < opponent.y + 25){
+				opponent.gotPushed(player.faceRight);
+			}
+		}
+		
+		private function updatePoints(player:Player):void{
+			if(player.numFlags == 6) this.prepareMpGameOver(player);
+		}
+		
+		private function prepareMpGameOver(player:Player):void{
+			this.mp_winner = player;
+			Session.timer.dispose();
+			Session.tweener.dispose();
+			var go_delay:int = 1000;
+			//Session.effects.add(new Flicker(player, go_delay, 30, true));
+			Session.timer.create(go_delay, gameOverMp, 0);
+		}
+		
+		private function gameOverMp():void{
+			Session.application.displayState = new GameOver(this.mp_winner, mode);
 		}
 		
 		override public function dispose():void{
 		
 			this.platformhandler.dispose();
-			this.hazardhandler.dispose();
+			if(this.hazardhandler != null) this.hazardhandler.dispose();
 			
 		}
 		

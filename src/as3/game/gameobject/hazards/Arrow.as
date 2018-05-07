@@ -1,9 +1,10 @@
 ﻿package  as3.game.gameobject.hazards{
 	
-	import as3.game.gameobject.GameObject;
+	import as3.game.gameobject.player.Player;
 	
 	import assets.gameObjects.CannibalGFX;
 	import assets.gameObjects.HazardArrow;
+	
 	import se.lnu.stickossdk.media.SoundObject;
 	import se.lnu.stickossdk.system.Session;
 	import se.lnu.stickossdk.tween.easing.Strong;
@@ -12,7 +13,7 @@
 		
 		private var arrow:HazardArrow;
 		private var warningCannibal:CannibalGFX;
-		private var target:GameObject;
+		private var target:Player;
 		private var delay:int = 1500;		
 		private var shootArrow:Boolean = false;
 		private var fromRight:int = 0;
@@ -22,7 +23,7 @@
 		
 		private var arrowAudioSound:SoundObject;
 		
-		public function Arrow(target) {
+		public function Arrow(target:Player) {
 			super();
 			this.target = target;
 			

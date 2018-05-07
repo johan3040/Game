@@ -7,10 +7,11 @@ package as3.game.UI
 	
 	import assets.gameObjects.hudLeafMiddle;
 	
+	import se.lnu.stickossdk.display.DisplayStateLayerSprite;
 	import se.lnu.stickossdk.system.Session;
 	import se.lnu.stickossdk.timer.Timer;
 	
-	public class GameTimer extends Hud{
+	public class GameTimer extends DisplayStateLayerSprite{
 		
 		private var tick:int = 0;
 		private var m_timer:Timer;

@@ -7,15 +7,14 @@
 		private var xVal:int;
 		private var yVal:int;
 		public var pos:Array;
-		//public var lastPosition:Array;
 		
-		public function Platform(pos){
+		public function Platform(pos:Array){
 			super();
 			this.setData(pos);
 			
 		}
 			
-		protected function setData(pos):void{
+		protected function setData(pos:Array):void{
 			this.xVal = pos[1];
 			this.yVal = pos[0];
 		}	

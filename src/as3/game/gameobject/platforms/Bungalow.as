@@ -2,7 +2,7 @@ package as3.game.gameobject.platforms{
 	
 	public class Bungalow extends Platform{
 		
-		public function Bungalow(pos){
+		public function Bungalow(pos:Array){
 			super(pos);
 		}
 		

@@ -5,6 +5,8 @@
 	
 	import as3.game.gameobject.GameObject;
 	import as3.game.gameobject.platforms.LeftBase;
+	import as3.game.gameobject.platforms.MpPlatform;
+	import as3.game.gameobject.platforms.Platform;
 	import as3.game.gameobject.platforms.RightBase;
 	import as3.game.gameobject.powerups.Immortality;
 	import as3.game.gameobject.powerups.PowerUp;
@@ -25,7 +27,7 @@
 		private var current_velocity:Number;
 		private var onGround:Boolean = false;
 		private var onPlat:Boolean = false;
-		private var currentPlat:GameObject;
+		public var currentPlat:Platform;
 		private var numJumps:int = 0;
 		private var gravity:Number;
 		private var currentY:int; // För att jämföra currentplat.y - om den ändras i Y-led
@@ -38,13 +40,22 @@
 		public var falling:Boolean = false;
 		public var velocity:Number;
 		public var alive:Boolean = true;
-		public var bottomHitBox:Sprite;
+		public var bottomHitBox:Sprite = new Sprite();
 		public var bonusPoints:int = 0;
-		public var immortal:Boolean = false;
+		public var immortal:Boolean = true; //--------------------------------------
+		
+		//For MP
+		private var pushCallback:Function;
+		public var numFlags:int = 0;
+		public var faceRight:Boolean = false;
+		private var pushPower:Number;
+		private const FRICTION:Number = 0.6;
+		private const DEFAULT_PUSH_POWER:int = 10;
 
 		
-		public function Player(ctrl) {
+		public function Player(ctrl:int, pushCallback:Function) {
 			this.ctrl = ctrl;
+			this.pushCallback = pushCallback;
 			this.velocity = 0;
 			this.gravity = this.DEFAULT_GRAVITY;
 			this.current_velocity = this.DEFAULT_VELOCITY;
@@ -53,7 +64,7 @@
 		override public function init():void{
 			this.m_controls = new EvertronControls(this.ctrl);
 		}
-			
+		
 		override public function update():void{
 			if(this.alive){
 				if(this.onGround == false) jump();
@@ -68,9 +79,11 @@
 			
 			if(Input.keyboard.pressed(this.m_controls.PLAYER_LEFT)) 	this.m_goLeft();
 			
-			if(Input.keyboard.pressed(this.m_controls.PLAYER_DOWN)) 	this.m_goDown();
+			//if(Input.keyboard.pressed(this.m_controls.PLAYER_DOWN)) 	this.m_goDown();
 			
 			if(Input.keyboard.justPressed(this.m_controls.PLAYER_BUTTON_1)) this.m_jump();
+			
+			if(Input.keyboard.justPressed(this.m_controls.PLAYER_BUTTON_2)) this.m_push();
 			
 			if(Input.keyboard.justReleased(this.m_controls.PLAYER_RIGHT)) this.m_skin.gotoAndStop("idle");
 			
@@ -82,6 +95,7 @@
 			this.scaleX = 1;
 			if(this.x <= 760) {
 				this.x += this.speed;
+				this.faceRight = true;
 				if(this.onGround == true){
 					if(this.m_skin.currentFrame != 2) this.m_skin.gotoAndStop("walk");
 				}
@@ -93,6 +107,7 @@
 			this.scaleX = -1;
 			if(this.x>=40){ 
 				this.x -= this.speed;
+				this.faceRight = false;
 				if(this.onGround == true){
 					if(this.m_skin.currentFrame != 2) this.m_skin.gotoAndStop("walk");
 				}
@@ -109,6 +124,7 @@
 		
 		private function m_jump():void{
 			if(this.onGround || this.numJumps<2){
+				if(this.currentPlat is MpPlatform) this.hey(this.currentPlat);
 				this.m_skin.gotoAndStop("jump");
 				this.velocity = current_velocity;
 				this.onGround = false;
@@ -116,16 +132,20 @@
 				this.numJumps++;
 			}
 		}
+		
+		private function m_push():void{
+			this.pushCallback(this);
+		}
 
-		public function setCurrentPlat(plat:GameObject):void{
+		public function setCurrentPlat(plat:Platform):void{
 			this.numJumps = 0;
 			this.onGround = true;
 			this.currentPlat = plat;
 			this.currentY = this.currentPlat.y;
 			if(plat is LeftBase || plat is RightBase){
-				this.y = this.currentPlat.y - this.height + 10;
+				this.y = this.currentPlat.y - this.obj_height + 10;
 			}else{
-				this.y = this.currentPlat.y - this.height;
+				this.y = this.currentPlat.y - this.obj_height;
 			}
 				
 			this.velocity = 0;
@@ -135,15 +155,20 @@
 		
 		private function checkCurrentPlat():void{
 			
-			if((this.x + this.width/2) < this.currentPlat.x ||
-				this.x-this.width/2  > (this.currentPlat.x + this.currentPlat.obj_width) 	||
+			if((this.x + this.obj_width/2) < this.currentPlat.x ||
+				this.x-this.obj_width/2  > (this.currentPlat.x + this.currentPlat.obj_width) 	||
 				this.currentPlat.exists == false			||
 				this.currentPlat.y != this.currentY){				
 				this.velocity = 0;
 				this.onGround = false;
+				if(this.currentPlat is MpPlatform) this.hey(this.currentPlat);
 				this.currentPlat = null;
 			}
 			
+		}
+		//---------------------------------arguments
+		private function hey(plat:*):void{
+			plat.hey(this);
 		}
 		
 		private function jump():void{
@@ -193,6 +218,22 @@
 				Session.timer.create(4000, this.setImmortality);
 			}
 		
+		}
+		//End power ups
+		
+		public function gotPushed(fromRight:Boolean):void{
+			this.pushPower = this.DEFAULT_PUSH_POWER;
+			fromRight ? Session.timer.create(10, this.movePushRight, 10) : Session.timer.create(10, this.movePushLeft, 10);
+		}
+		
+		private function movePushRight():void{
+			this.x += this.pushPower;
+			this.pushPower -= this.FRICTION;
+		}
+		
+		private function movePushLeft():void{
+			this.x -= this.pushPower;
+			this.pushPower -= this.FRICTION;
 		}
 		
 		override public function dispose():void{

@@ -19,6 +19,7 @@ package as3.game.gameobject.gems
 			this.initHitBox();
 			addChild(this.m_skin);
 			addChild(hitBox);
+			
 		}
 		
 		

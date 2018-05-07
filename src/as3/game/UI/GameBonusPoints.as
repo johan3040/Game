@@ -7,10 +7,11 @@ package as3.game.UI{
 	
 	import assets.gameObjects.hudLeafMiddle;
 	
+	import se.lnu.stickossdk.display.DisplayStateLayerSprite;
 	import se.lnu.stickossdk.system.Session;
 	
 	
-	public class GameBonusPoints extends Hud{
+	public class GameBonusPoints extends DisplayStateLayerSprite{
 		
 		private var player:Player;
 		private var m_bonusText:TextField;

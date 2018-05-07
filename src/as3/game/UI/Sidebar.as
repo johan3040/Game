@@ -2,18 +2,19 @@ package as3.game.UI{
 	
 	import assets.gameObjects.sideBar;
 	
-	public class Sidebar extends Hud{	
+	import se.lnu.stickossdk.display.DisplayStateLayerSprite;
+	
+	public class Sidebar extends DisplayStateLayerSprite{	
 		
 		private var sidebar:sideBar;
 		
 		public function Sidebar(){
-				
+			this.initSidebar();
 		}
 		
-		override public function init():void{
+		private function initSidebar():void{
 		
 			this.sidebar = new sideBar();
-			
 			addChild(this.sidebar);
 		
 		}

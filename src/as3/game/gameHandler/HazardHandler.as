@@ -1,11 +1,13 @@
 package as3.game.gameHandler
 {
-	import as3.game.gameobject.GameObject;
+	
 	import as3.game.gameobject.hazards.Arrow;
 	import as3.game.gameobject.hazards.Coconut;
 	import as3.game.gameobject.hazards.Wave;
+	import as3.game.gameobject.player.Player;
 	
 	import scene.Game;
+	
 	import se.lnu.stickossdk.system.Session;
 	
 	public class HazardHandler{
@@ -16,7 +18,7 @@ package as3.game.gameHandler
 		private var coco:Coconut;
 		private var gameOver:Boolean = false;
 		
-		public function HazardHandler(game){
+		public function HazardHandler(game:Game){
 			super();
 			this.game = game;
 			this.init();
@@ -58,7 +60,7 @@ package as3.game.gameHandler
 			this.game.collidableObjects.push(this.coco);
 		}
 		
-		private function getPlayerAsTarget():GameObject{
+		private function getPlayerAsTarget():Player{
 			return this.game.playerVector.length == 1 ? this.game.playerVector[0] : this.game.playerVector[Math.round(Math.random())];
 			
 		}

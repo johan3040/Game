@@ -7,6 +7,7 @@ package as3.game.gameobject.gems
 	
 	import se.lnu.stickossdk.system.Session;
 	import se.lnu.stickossdk.tween.easing.Back;
+
 	//import se.lnu.stickossdk.tween.easing.Bounce;
 	
 	public class Gem extends GameObject{
@@ -19,7 +20,7 @@ package as3.game.gameobject.gems
 		private var player:Explorer;
 		public var value:int;
 		
-		public function Gem(player){
+		public function Gem(player:Explorer){
 			
 			super();
 			this.player = player;
@@ -57,7 +58,7 @@ package as3.game.gameobject.gems
 			return this.yCoor;
 		}
 		
-		public function prepareReposition(callback):void{
+		public function prepareReposition(callback:Function):void{
 		
 			this.x = -100;
 			this.y = -100;

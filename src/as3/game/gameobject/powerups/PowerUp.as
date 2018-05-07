@@ -1,12 +1,10 @@
 package as3.game.gameobject.powerups
 {
 	import flash.display.MovieClip;
-	import flash.display.Sprite;
 	
 	import as3.game.gameobject.GameObject;
 	
 	import se.lnu.stickossdk.system.Session;
-	import se.lnu.stickossdk.tween.easing.Linear;
 	import se.lnu.stickossdk.tween.easing.Sine;
 	
 	public class PowerUp extends GameObject{
@@ -56,6 +54,13 @@ package as3.game.gameobject.powerups
 				transition: Sine.easeInOut,
 				onComplete: startTween
 			});
+		}
+		
+		public function reposition():void{
+			this.x = -100;
+			this.y = -100;
+			var delay:int = Math.floor(Math.random()*7000) + 7000;
+			Session.timer.create(delay, this.setPosition);
 		}
 		
 		protected function setPosition():void{

@@ -2,6 +2,7 @@ package as3.game.gameobject.hazards{
 	
 	import assets.gameObjects.ocean;
 	
+	import se.lnu.stickossdk.media.SoundObject;
 	import se.lnu.stickossdk.system.Session;
 	import se.lnu.stickossdk.tween.easing.Sine;
 	
@@ -12,6 +13,10 @@ package as3.game.gameobject.hazards{
 		private var duration:int = 2000;
 		private var transStartY:int = 610;
 		private var transEndY:int = 600;
+		// Audio
+		[Embed(source = "../../../../../assets/audio/wave.mp3")] 	// <-- this data..
+		private const WAVE_AUDIO:Class;						// ..gets saved in this const
+		private var waveAudio:SoundObject;
 		
 		public function Wave(){
 			
@@ -19,6 +24,7 @@ package as3.game.gameobject.hazards{
 			this.y = 610;
 			this.alpha = 0.7;
 			this.initWave();
+			this.initAudio();
 			
 		}
 		
@@ -31,6 +37,11 @@ package as3.game.gameobject.hazards{
 			goTween();
 			this.setDelay(4000);
 			
+		}
+		
+		private function initAudio():void{
+			Session.sound.soundChannel.sources.add("waveAudio", WAVE_AUDIO);
+			this.waveAudio = Session.sound.soundChannel.get("waveAudio", true, true);
 		}
 		
 		private function initHitBox():void{
@@ -70,6 +81,8 @@ package as3.game.gameobject.hazards{
 		}
 		
 		private function goTideWave():void{
+			this.waveAudio.play();
+			this.waveAudio.volume = 0.8;
 			this.transStartY = 560;
 			this.transEndY = 550;
 			Session.timer.create(4000, waveDrawback);

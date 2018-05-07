@@ -36,107 +36,107 @@ package scene
 			this.go_controls = new EvertronControls(0);
 		}
 		
-	override public function init():void{		
+		override public function init():void{		
 			this.initLayers();
 			this.initBackground();
 			this.initGameoverBtns();
 			this.initBottom();
 			this.initHighscoreDisplay();
 			this.initTitle();
-	}
-	
-	override public function update():void{
-		this.go_updatecontrols();
-	}
-	
-	private function go_updatecontrols():void{
-		if (Input.keyboard.justPressed(this.go_controls.PLAYER_BUTTON_1)){
-			btnPress();
 		}
 		
-		if (Input.keyboard.justPressed(this.go_controls.PLAYER_UP)){
-			menuMoveUp();
+		override public function update():void{
+			this.go_updatecontrols();
 		}
 		
-		if (Input.keyboard.justPressed(this.go_controls.PLAYER_DOWN)){
-			menuMoveDown();
+		private function go_updatecontrols():void{
+			if (Input.keyboard.justPressed(this.go_controls.PLAYER_BUTTON_1)){
+				btnPress();
+			}
+			
+			if (Input.keyboard.justPressed(this.go_controls.PLAYER_UP)){
+				menuMoveUp();
+			}
+			
+			if (Input.keyboard.justPressed(this.go_controls.PLAYER_DOWN)){
+				menuMoveDown();
+			}
+		}	
+		
+		private function initLayers():void {
+			this.go_menuLayer = this.layers.add("gameover");
 		}
-	}	
-	
-	private function initLayers():void {
-		this.go_menuLayer = this.layers.add("gameover");
-	}
-	
-	private function initBackground():void {
-		this.go_background = new Sprite();
 		
-		this.go_background.graphics.beginFill(0x121944);
-		this.go_background.graphics.drawRect(0, 0, 800, 600);
-		this.go_background.graphics.endFill();
+		private function initBackground():void {
+			this.go_background = new Sprite();
+			
+			this.go_background.graphics.beginFill(0x121944);
+			this.go_background.graphics.drawRect(0, 0, 800, 600);
+			this.go_background.graphics.endFill();
+			
+			this.go_menuLayer.addChild(this.go_background);
+		}	
 		
-		this.go_menuLayer.addChild(this.go_background);
-	}	
-	
-	private function initBottom():void {		
-		this.go_bottom = new gameoverBottom();
+		private function initBottom():void {		
+			this.go_bottom = new gameoverBottom();
+			
+			go_bottom.x = 0;
+			go_bottom.y = 382.45;
+			
+			this.go_menuLayer.addChild(this.go_bottom);
+		}
 		
-		go_bottom.x = 0;
-		go_bottom.y = 382.45;
 		
-		this.go_menuLayer.addChild(this.go_bottom);
-	}
-		
-	
-	private function initGameoverBtns():void {		
-		this.go_btns = new gameoverBtns();
-		
-		go_btns.x = 119.45;
-		go_btns.y = 189.3;
-		
-		this.go_btns.gotoAndStop("replay");
-		
-		this.go_menuLayer.addChild(this.go_btns);
-	}
-	
-	private function initTitle():void {		
-		this.go_title = new gameoverTitle();
-		
-		go_title.x = 48;
-		go_title.y = 47.55;
-		
-		this.go_menuLayer.addChild(this.go_title);
-	}
-	
-	private function initHighscoreDisplay():void {		
-		this.go_highscoreDisplay = new gameoverHighscoreDisplay();
-		
-		go_highscoreDisplay.x = 503.75;
-		go_highscoreDisplay.y = 35.7;
-		
-		this.go_menuLayer.addChild(this.go_highscoreDisplay);
-	}
-	
-	private function menuMoveUp():void {
-		if (go_btns.currentLabel == "menu") {
+		private function initGameoverBtns():void {		
+			this.go_btns = new gameoverBtns();
+			
+			go_btns.x = 119.45;
+			go_btns.y = 189.3;
+			
 			this.go_btns.gotoAndStop("replay");
-		}
-	}
-	
-	private function menuMoveDown():void {
-		if (go_btns.currentLabel == "replay") {
-			this.go_btns.gotoAndStop("menu");
-		}
-	}
-	
-	private function btnPress():void {
-		if (go_btns.currentLabel == "replay") {
-			Session.application.displayState = new Game(mode);
+			
+			this.go_menuLayer.addChild(this.go_btns);
 		}
 		
-		if (go_btns.currentLabel == "menu") {
-			Session.application.displayState = new Menu();
+		private function initTitle():void {		
+			this.go_title = new gameoverTitle();
+			
+			go_title.x = 48;
+			go_title.y = 47.55;
+			
+			this.go_menuLayer.addChild(this.go_title);
 		}
-	}
-	
+		
+		private function initHighscoreDisplay():void {		
+			this.go_highscoreDisplay = new gameoverHighscoreDisplay();
+			
+			go_highscoreDisplay.x = 503.75;
+			go_highscoreDisplay.y = 35.7;
+			
+			this.go_menuLayer.addChild(this.go_highscoreDisplay);
+		}
+		
+		private function menuMoveUp():void {
+			if (go_btns.currentLabel == "menu") {
+				this.go_btns.gotoAndStop("replay");
+			}
+		}
+		
+		private function menuMoveDown():void {
+			if (go_btns.currentLabel == "replay") {
+				this.go_btns.gotoAndStop("menu");
+			}
+		}
+		
+		private function btnPress():void {
+			if (go_btns.currentLabel == "replay") {
+				Session.application.displayState = new Game(mode);
+			}
+			
+			if (go_btns.currentLabel == "menu") {
+				Session.application.displayState = new Menu();
+			}
+		}
+		
 	}
 }

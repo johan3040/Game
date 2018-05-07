@@ -2,20 +2,22 @@ package as3.game.gameHandler
 {	
 	import flash.geom.Rectangle;
 	
-	import as3.game.gameobject.GameObject;
 	import as3.game.gameobject.platforms.LeftBase;
+	import as3.game.gameobject.platforms.MpPlatform;
 	import as3.game.gameobject.platforms.OriginalPlatform;
 	import as3.game.gameobject.platforms.Platform;
 	import as3.game.gameobject.platforms.RightBase;
+	import as3.game.gameobject.platforms.SpPlatform;
 	import as3.game.gameobject.platforms.WeakPlatform;
+	import as3.game.gameobject.player.Player;
 	
 	import scene.Game;
 	
 
 	public class PlatformHandler{
 		
-		public var platformVector:Vector.<GameObject>;
-		public var playerVector:Vector.<GameObject>;
+		public var platformVector:Vector.<Platform>;
+		public var playerVector:Vector.<Player>;
 		private var plat:OriginalPlatform;
 		private var weakPlat:WeakPlatform;
 		private var game:Game;
@@ -23,6 +25,7 @@ package as3.game.gameHandler
 		private var lb:LeftBase;
 		private var nrOfWeakPlatforms:int = 3;
 		private var nrOfOriginalPlatforms:int = 8;
+		private var nrOfMpPlatforms:int = 11;
 		private var tempPlatRect:Rectangle;
 		private var benefitPosition:Boolean = false;
 		
@@ -31,31 +34,53 @@ package as3.game.gameHandler
 												[370,60],[370,160],[370,260],[370,360],[370,460],[370,560],[370,660],
 												[490,60],[490,160],[490,260],[490,360],[490,460],[490,560],[490,660]];
 		
+		private var mpPlatformPositions:Array = [[130,260],[130,360],[130,660],
+												[250,60],[250,460],[250,660],
+												[370,60],[370,360],[370,660],
+												[490,60],[490,660]];
+		
 		public function PlatformHandler(game, players){
 			this.game = game;
 			this.playerVector = players;
-			this.platformVector = new Vector.<GameObject>;
-			this.initPlatforms();
-			this.initWeakplatforms();
+			this.platformVector = new Vector.<Platform>;
+			this.playerVector.length == 1 ? this.initSpPlatforms() : this.initMpPlatforms();
 			this.initIslands();
 		}
 		
-		private function initPlatforms():void{
+		private function initSpPlatforms():void{
+			this.createSpPlatforms();
+			this.createSpWeakplatforms();
+		}
+		
+		private function initMpPlatforms():void{
+			this.createMpPlatforms();
+		}
+		
+		private function createSpPlatforms():void{
 			for(var i: int = 0; i < this.nrOfOriginalPlatforms; i++){
-				this.plat = new OriginalPlatform(this.getPlatformPosition(), this.returnPlatformPosition);
-				this.game.gameLayer.addChild(this.plat);
-				this.platformVector.push(this.plat);
-				this.positionPlatform(this.plat);
+				this.plat = new SpPlatform(this.getPlatformPosition(), this.returnPlatformPosition);
+				this.addToLayerAndVector(this.plat);
 			}
 		}
 		
-		private function initWeakplatforms():void{
+		private function createSpWeakplatforms():void{
 			for(var i:int = 0; i < this.nrOfWeakPlatforms; i++){
 				this.weakPlat = new WeakPlatform(this.getPlatformPosition(), this.returnPlatformPosition);
-				this.game.gameLayer.addChild(this.weakPlat);
-				this.positionPlatform(this.weakPlat);
-				this.platformVector.push(this.weakPlat);
+				this.addToLayerAndVector(this.weakPlat);
 			}
+		}
+		
+		private function createMpPlatforms():void{
+			for(var i: int = 0; i < this.nrOfMpPlatforms; i++){
+				this.plat = new MpPlatform(this.getMpPlatformPosition(i));
+				this.addToLayerAndVector(this.plat);
+			}
+		}
+		
+		private function addToLayerAndVector(plat:Platform):void{
+			this.game.gameLayer.addChild(plat);
+			this.positionPlatform(plat);
+			this.platformVector.push(plat);
 		}
 		
 		private function positionPlatform(obj:Platform):void{
@@ -64,9 +89,11 @@ package as3.game.gameHandler
 		}
 		
 		private function getPlatformPosition():Array{
-			
 			return this.benefitPosition ? kindPosition() : meanPosition();
-			
+		}
+		
+		private function getMpPlatformPosition(index:int):Array{
+			return this.mpPlatformPositions[index];
 		}
 		
 		private function kindPosition():Array{
@@ -133,34 +160,34 @@ package as3.game.gameHandler
 			this.platformVector.push(this.rb);
 		}
 		
-		public function update(player):void{
-		
-			this.m_updatePlatformCollission(player);
-		
+		public function update(player:Player):void{
+			if(player.currentPlat == null) this.m_updatePlatformCollission(player);
 		}
 		
-		private function m_updatePlatformCollission(player):void{
+		private function m_updatePlatformCollission(player:Player):void{
 			
-			var a:Rectangle;
-			//for(var j:int = 0; j<this.playerVector.length; j++){
-				
+			var a:Rectangle;				
 				// If velocity is < 0, check against body hitbox (larger), else if going up in a jump(velocity > 0), check against foot hitbox
-				player.velocity < 0 ? a = player.hitBox.getRect(this.game.gameLayer) : a = player.bottomHitBox.getRect(this.game.gameLayer);
-				
-				for(var i:int = 0; i<this.platformVector.length; i++){
-					this.tempPlatRect = this.platformVector[i].hitBox.getRect(this.game.gameLayer);
-					if(a.intersects(this.tempPlatRect)){
-						this.platformCollission(this.platformVector[i], player);
-						break;
-					}//End if intersect
-				}//End platformloop
-			//}//End playerloop
+			player.velocity < 0 ? a = player.hitBox.getRect(this.game.gameLayer) : a = player.bottomHitBox.getRect(this.game.gameLayer);
+			
+			for(var i:int = 0; i<this.platformVector.length; i++){
+				this.tempPlatRect = this.platformVector[i].hitBox.getRect(this.game.gameLayer);
+				if(a.intersects(this.tempPlatRect)){
+					this.platformCollission(this.platformVector[i], player);
+					break;
+				}//End if intersect
+			}//End platformloop
 		}//End function
 		
 		
 		private function platformCollission(plat, player):void{
-			if(player.falling && plat.exists){
-				//
+			if(player.falling){
+				this.playerVector.length == 1 ? this.spPlatCollission(plat, player) : this.mpPlatCollission(plat,player);
+			}
+		}
+		
+		private function spPlatCollission(plat,player):void{
+			if(plat.exists){
 				if(plat is WeakPlatform){
 					player.setCurrentPlat(plat);
 					plat.removePlat();
@@ -169,6 +196,11 @@ package as3.game.gameHandler
 				}
 			}
 			
+		}
+		
+		private function mpPlatCollission(plat,player):void{
+			player.setCurrentPlat(plat);
+			if(plat is MpPlatform) plat.playerOnPlat(player);
 		}
 		
 		public function dispose():void{

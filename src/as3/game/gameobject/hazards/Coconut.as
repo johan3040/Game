@@ -1,14 +1,13 @@
 package as3.game.gameobject.hazards
 {
 	import as3.game.gameobject.GameObject;
+	import as3.game.gameobject.player.Player;
 	
 	import assets.gameObjects.FallingLeaf;
 	import assets.gameObjects.HazardCoconut;
 	
 	import se.lnu.stickossdk.media.SoundObject;
 	import se.lnu.stickossdk.system.Session;
-	import se.lnu.stickossdk.tween.easing.Sine;
-	import se.lnu.stickossdk.tween.easing.Strong;
 
 	public class Coconut extends Hazard{
 		
@@ -24,7 +23,7 @@ package as3.game.gameobject.hazards
 		private const COCO_AUDIO:Class;
 		private var cocoAudio:SoundObject;
 		
-		public function Coconut(target){
+		public function Coconut(target:Player){
 			super();
 			this.target = target;
 			//this.setPosition();

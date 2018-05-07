@@ -7,7 +7,7 @@ package as3.game.gameobject.platforms{
 		
 		private var platform:island2;
 		
-		public function RightBase(pos){
+		public function RightBase(pos:Array){
 			super(pos);
 			initRightBase();
 		}

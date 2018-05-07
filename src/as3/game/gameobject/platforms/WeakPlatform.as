@@ -17,7 +17,7 @@
 		private const BREAK_AUDIO:Class;
 		private var breakAudioSound:SoundObject;
 		
-		public function WeakPlatform(pos, callback) {
+		public function WeakPlatform(pos:Array, callback:Function) {
 			super(pos);
 			this.callback = callback;
 			this.pos = pos;

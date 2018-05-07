@@ -7,7 +7,7 @@ package as3.game.gameobject.platforms{
 		
 		private var platform:island1;
 		
-		public function LeftBase(pos){
+		public function LeftBase(pos:Array){
 			super(pos);
 			initLeftBase();
 		}

@@ -33,13 +33,6 @@ package as3.game.gameobject.powerups{
 			super.startTween();
 		}
 		
-		public function reposition():void{
-			this.x = -100;
-			this.y = -100;
-			var delay:int = Math.floor(Math.random()*7000) + 7000;
-			Session.timer.create(delay, super.setPosition);
-		}
-		
 		override public function dispose():void{
 			m_skin = null;
 			hitBox = null;

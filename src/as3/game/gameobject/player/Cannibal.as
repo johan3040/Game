@@ -1,14 +1,13 @@
 ﻿package  as3.game.gameobject.player{
 	
-	import flash.display.Sprite;
 	import assets.gameObjects.P2;
 	
 	
 	public class Cannibal extends Player{
 		
 		
-		public function Cannibal() {
-			super(1);
+		public function Cannibal(push:Function) {
+			super(1, push);
 			initExplorer();
 		}
 		
@@ -30,12 +29,12 @@
 		
 		private function setBodyBitbox():void{
 			//hitBox.graphics.beginFill(0x00FF00);
-			hitBox.graphics.drawRect(-5, 4, 12, 34);
+			hitBox.graphics.drawRect(-6, 0, 14, 33);
 			//hitBox.graphics.endFill();
+			//hitBox.alpha = 0.7;
 		}
 		
 		private function setFootHitbox():void{
-			bottomHitBox = new Sprite();
 			//bottomHitBox.graphics.beginFill(0xFF0000);
 			bottomHitBox.graphics.drawRect(-10, 30, 18, 12);
 			//bottomHitBox.graphics.endFill();

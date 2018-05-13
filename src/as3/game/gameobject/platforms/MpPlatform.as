@@ -7,6 +7,7 @@ package as3.game.gameobject.platforms{
 	import as3.game.gameobject.player.Player;
 	
 	import assets.gameObjects.FlagBlue;
+	import assets.gameObjects.FlagFirework;
 	import assets.gameObjects.FlagPole;
 	import assets.gameObjects.FlagRed;
 	import assets.gameObjects.FlagWhite;
@@ -19,6 +20,7 @@ package as3.game.gameobject.platforms{
 		private var flagBlue:FlagBlue;
 		private var flagWhite:FlagWhite;
 		private var flagRed:FlagRed;
+		private var firework:FlagFirework;
 		private var currentFlag:MovieClip;
 		private var flagVector:Vector.<MovieClip>;
 		private var visitors:Vector.<Player>;
@@ -33,7 +35,7 @@ package as3.game.gameobject.platforms{
 			this.visitors = 	new Vector.<Player>;
 			this.initFlagPole();
 			this.initFlags();
-			this.initStartFlag();
+			this.initFirework();
 		}
 		
 		private function initFlagPole():void{
@@ -53,14 +55,24 @@ package as3.game.gameobject.platforms{
 			this.positionFlags();
 		}
 		
+		private function initFirework():void{
+			this.firework = new FlagFirework();
+			this.firework.y = -100;
+			this.firework.x = 30;
+			addChild(this.firework);
+			this.firework.stop();
+			this.firework.visible = false;
+		}
+		
 		private function positionFlags():void{
 			
 			for(var i:int = 0; i<this.flagVector.length; i++){
-				this.flagVector[i].x = 30;
-				this.flagVector[i].y -= this.flagPole.height;
+				this.flagVector[i].x = 25;
+				this.flagVector[i].y = -68;
 				this.flagVector[i].visible = false;
 				addChild(this.flagVector[i]);
 			}
+			this.initStartFlag();
 		}
 		
 		private function initStartFlag():void{
@@ -89,16 +101,15 @@ package as3.game.gameobject.platforms{
 		}
 		
 		private function countDown():void{
-			if(this.go){
+			if(this.go && this.currentPlayer.frozen == false){
+				if(this.owner != this.currentPlayer && this.owner != null && this.percentOwned == 0){
+					this.owner.numFlags--;
+				}
 				if(this.percentOwned > 0){
 					this.percentOwned-=5;
 					this.moveFlagsDown();
 					startTimer(this.countDown);
 					return;
-				}
-				if(this.owner != this.currentPlayer && this.owner != null){
-					trace(this.currentPlayer + " stole a flag from " + this.owner);
-					this.owner.numFlags--;
 				}
 				this.owner = this.currentPlayer;
 				this.changeFlag();
@@ -107,27 +118,27 @@ package as3.game.gameobject.platforms{
 		}
 		
 		private function countUp():void{
-			if(this.go){
-				if(this.percentOwned < 100 && this.go){
+			if(this.go && this.currentPlayer.frozen == false){
+				if(this.percentOwned < 100){
 					this.percentOwned+=5;
 					this.moveFlagsUp();
 					startTimer(this.countUp);
 					return;
 				}
 				this.currentPlayer.numFlags++;
-				trace(this.currentPlayer + " got a flag and have " + this.currentPlayer.numFlags + " flags");
+				this.playFirework();
 			}
 		}
 		
 		private function moveFlagsDown():void{
 			for(var i:int = 0; i<this.flagVector.length; i++){
-				this.flagVector[i].y+=1.3;
+				this.flagVector[i].y+=2.2;
 			}
 		}
 		
 		private function moveFlagsUp():void{
 			for(var i:int = 0; i<this.flagVector.length; i++){
-				this.flagVector[i].y-=1.3;
+				this.flagVector[i].y-=2.2;
 			}
 		}
 		
@@ -143,7 +154,19 @@ package as3.game.gameobject.platforms{
 			}
 		}
 		
-		public function hey(player:Player):void{
+		private function playFirework():void{
+			this.firework.visible = true;
+			this.firework.play();
+		}
+		
+		override public function update():void{
+			if(this.firework.currentFrame == this.firework.totalFrames){
+				this.firework.gotoAndStop(1);
+				this.firework.visible = false;
+			}
+		}
+		
+		public function visitorLeft(player:Player):void{
 			this.visitors.splice(this.visitors.indexOf(player),1);
 			if(this.visitors.length == 1){
 				this.go = true;
@@ -151,6 +174,28 @@ package as3.game.gameobject.platforms{
 			}else{
 				this.go = false;
 			}
+		}
+		
+		public function resetFlag():void{
+			this.owner = null;
+			this.percentOwned = 100;
+			this.currentPlayer = null;
+			this.firework.gotoAndStop(1);
+			this.firework.visible = false;
+			this.positionFlags();
+		}
+		
+		override public function dispose():void{
+			this.flagPole = null;
+			this.flagBlue = null;
+			this.flagWhite = null;
+			this.flagRed = null;
+			this.firework = null;
+			this.currentFlag = null;
+			this.flagVector = null;
+			this.visitors = null;
+			this.owner = null;
+			this.currentPlayer = null;
 		}
 		
 	}

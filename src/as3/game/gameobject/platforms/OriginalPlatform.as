@@ -18,7 +18,7 @@
 			this.scaleX = 0.8;
 			this.scaleY = 0.8;
 			setHitbox();
-			obj_width = 65;
+			obj_width = 50;
 			obj_height = this.platform.height;
 			addChild(this.platform);
 			addChild(hitBox);

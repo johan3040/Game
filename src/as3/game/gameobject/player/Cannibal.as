@@ -8,16 +8,17 @@
 		
 		public function Cannibal(push:Function) {
 			super(1, push);
-			initExplorer();
+			this.initCannibal();
 		}
 		
-		private function initExplorer():void{
+		private function initCannibal():void{
 			
-			initSkin();
-			setBodyBitbox();
-			setFootHitbox();
-			setObjectDim();
-			addChildren();
+			this.initSkin();
+			this.setBodyBitbox();
+			this.setFootHitbox();
+			this.setObjectDim();
+			this.addChildren();
+			this.startPosition();
 			
 		}
 		
@@ -25,6 +26,11 @@
 			m_skin = new P2();
 			m_skin.x -= (m_skin.width/2);
 			m_skin.gotoAndStop(1);
+		}
+		
+		public function startPosition():void{
+			this.x = 600;
+			this.y = 560 - this.obj_height;
 		}
 		
 		private function setBodyBitbox():void{

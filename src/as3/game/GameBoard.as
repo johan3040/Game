@@ -1,20 +1,16 @@
 ﻿package  as3.game{
 	
-	import se.lnu.stickossdk.display.DisplayStateLayerSprite;
+	import assets.gameObjects.GradientBack;
 	
-	//import assets.gameObjects.BackgroundImageGFX;
-	import flash.display.Sprite;
+	import se.lnu.stickossdk.display.DisplayStateLayerSprite;
 	
 	public class GameBoard extends DisplayStateLayerSprite{
 
-		private var gb:Sprite;
+		private var gb:GradientBack;
 		
 		public function GameBoard() {
 			
-			this.gb = new Sprite();
-			this.gb.graphics.beginFill(0x7DC8DB);
-			this.gb.graphics.drawRect(0,0,800,600);
-			this.gb.graphics.endFill();
+			this.gb = new GradientBack();
 			addChild(this.gb);
 		}
 		

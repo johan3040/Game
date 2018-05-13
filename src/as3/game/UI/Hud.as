@@ -4,6 +4,9 @@ package as3.game.UI
 	import as3.game.UI.Sidebar;
 	import as3.game.gameobject.player.Player;
 	
+	import assets.gameObjects.ArenaSideLeft;
+	import assets.gameObjects.ArenaSideRight;
+	
 	import se.lnu.stickossdk.display.DisplayStateLayerSprite;
 	
 	public class Hud extends DisplayStateLayerSprite{
@@ -12,6 +15,9 @@ package as3.game.UI
 		
 		private var leftSidebar:Sidebar;
 		private var rightSidebar:Sidebar;
+		private var arenaBarRight:ArenaSideRight;
+		private var arenaBarLeft:ArenaSideLeft;
+		
 		private var m_hudTopBar:TopBar;
 		private var players:Vector.<Player>;
 		private var m_gameBonusPoints:GameBonusPoints;
@@ -21,7 +27,7 @@ package as3.game.UI
 		public function Hud(mode:int, players:Vector.<Player>){
 			super();
 			this.players = players
-			this.initSidebars();
+			
 			this.initTopBase();
 			mode == 1 ? this.initSpHud() : this.initMpHud();
 		}
@@ -47,16 +53,29 @@ package as3.game.UI
 		}
 		
 		private function initSpHud():void{
-			trace("sp");
+			this.initSidebars();
 			this.initGameBonusPoints();
 		}
 		
 		private function initMpHud():void{
-			trace("mp");
+			this.initMpLeafs();
+			this.initMpSidebars();
+		}
+		
+		private function initMpLeafs():void{
 			this.p1_leaf = new MultiplayerHud(this.players[0]);
 			this.p2_leaf = new MultiplayerHud(this.players[1]);
 			addChild(this.p1_leaf);
 			addChild(this.p2_leaf);
+		}
+		
+		private function initMpSidebars():void{
+			this.arenaBarLeft = new ArenaSideLeft();
+			
+			this.arenaBarRight = new ArenaSideRight();
+			this.arenaBarRight.x = 800;
+			addChild(this.arenaBarLeft);
+			addChild(this.arenaBarRight);
 		}
 		
 		private function initGameBonusPoints():void{
@@ -67,7 +86,15 @@ package as3.game.UI
 		}
 		
 		override public function dispose():void{
-			
+			this.arenaBarLeft = null;
+			this.arenaBarRight = null;
+			this.p1_leaf = null;
+			this.p2_leaf = null;
+			this.m_gameBonusPoints = null;
+			this.m_hudTopBar = null;
+			this.leftSidebar = null;
+			this.rightSidebar = null;
+			this.players = null;
 		}
 	}
 }

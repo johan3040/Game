@@ -17,6 +17,11 @@
 		private var delay:int = 1500;		
 		private var shootArrow:Boolean = false;
 		private var fromRight:int = 0;
+		private var speed:int;
+		
+		private const START_SPEED:int = 5;
+		private const MIDDLE_SPEED:int = 7;
+		private const TOP_SPEED:int = 10;
 		
 		[Embed(source = "../../../../../assets/audio/PlatBreakAU.mp3")] 
 		private const ARROW_AUDIO:Class;
@@ -26,22 +31,14 @@
 		public function Arrow(target:Player) {
 			super();
 			this.target = target;
-			
 			this.initArrow();
 			this.initHitBox();
 			this.initPosition();
 			this.initAudio();
+			this.setArrowSpeed();
 			addChild(this.warningCannibal);
 			addChild(this.arrow);
 			addChild(this.hitBox);
-		}
-		
-		private function initHitBox():void{
-		
-			//hitBox.graphics.beginFill(0x00FF00);
-			hitBox.graphics.drawRect(0,0,10,10);
-			//hitBox.graphics.endFill();
-		
 		}
 		
 		private function initArrow():void{
@@ -49,6 +46,14 @@
 			this.warningCannibal = new CannibalGFX();
 			this.arrow.scaleX = 0.5;
 			this.arrow.scaleY = 0.5;
+			
+		}
+		
+		private function initHitBox():void{
+			
+			//hitBox.graphics.beginFill(0x00FF00);
+			hitBox.graphics.drawRect(0,0,20,12);
+			//hitBox.graphics.endFill();
 			
 		}
 		
@@ -72,6 +77,15 @@
 			Session.sound.soundChannel.sources.add("platformBreak", ARROW_AUDIO);
 			this.arrowAudioSound = Session.sound.soundChannel.get("platformBreak", true, true);
 		
+		}
+		
+		private function setArrowSpeed():void{
+			
+			if(this.speed == this.MIDDLE_SPEED) this.speed = this.TOP_SPEED;
+			if(this.speed == this.START_SPEED) this.speed = this.MIDDLE_SPEED;
+			if(this.speed == 0) this.speed = this.START_SPEED;
+			
+			Session.timer.create(15000, this.setArrowSpeed, 2);
 		}
 		
 		override public function update():void{
@@ -118,7 +132,7 @@
 			
 		private function moveArrowLeft():void{
 			
-			this.x-=5;
+			this.x-= this.speed;
 			if(this.x  <= -40){
 				resetArrow();
 				}
@@ -126,7 +140,7 @@
 		
 		private function moveArrowRight():void{
 		
-			this.x+=5;
+			this.x += this.speed;
 			if(this.x >= 840){
 				resetArrow();
 			}

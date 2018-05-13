@@ -3,6 +3,7 @@ package as3.game.gameHandler
 	import flash.geom.Rectangle;
 	
 	import as3.game.gameobject.platforms.LeftBase;
+	import as3.game.gameobject.platforms.MpGround;
 	import as3.game.gameobject.platforms.MpPlatform;
 	import as3.game.gameobject.platforms.OriginalPlatform;
 	import as3.game.gameobject.platforms.Platform;
@@ -23,6 +24,7 @@ package as3.game.gameHandler
 		private var game:Game;
 		private var rb:RightBase;
 		private var lb:LeftBase;
+		private var ground:MpGround;
 		private var nrOfWeakPlatforms:int = 3;
 		private var nrOfOriginalPlatforms:int = 8;
 		private var nrOfMpPlatforms:int = 11;
@@ -39,33 +41,46 @@ package as3.game.gameHandler
 												[370,60],[370,360],[370,660],
 												[490,60],[490,660]];
 		
+		private var mpPlatformPositions2:Array = 	[[130,60],[130,360],[130,660],
+													[250,60],[250,460],[250,660],
+													[370,60],[370,260],[370,660],
+													[490,160],[490,560]];
+		
+		private var mpPlatformPositions3:Array = 	[[130,60],[130,260],[130,560],
+													[250,160],[250,460],[250,660],
+													[370,60],[370,160],[370,560],
+													[490,60],[490,560]];
+		
 		public function PlatformHandler(game, players){
 			this.game = game;
 			this.playerVector = players;
 			this.platformVector = new Vector.<Platform>;
 			this.playerVector.length == 1 ? this.initSpPlatforms() : this.initMpPlatforms();
-			this.initIslands();
+			
 		}
 		
 		private function initSpPlatforms():void{
 			this.createSpPlatforms();
 			this.createSpWeakplatforms();
+			this.initIslands();
 		}
 		
 		private function initMpPlatforms():void{
 			this.createMpPlatforms();
+			this.initGround();
+			//this.initIslands();
 		}
 		
 		private function createSpPlatforms():void{
 			for(var i: int = 0; i < this.nrOfOriginalPlatforms; i++){
-				this.plat = new SpPlatform(this.getPlatformPosition(), this.returnPlatformPosition);
+				this.plat = new SpPlatform(this.platformPosition, this.returnPlatformPosition);
 				this.addToLayerAndVector(this.plat);
 			}
 		}
 		
 		private function createSpWeakplatforms():void{
 			for(var i:int = 0; i < this.nrOfWeakPlatforms; i++){
-				this.weakPlat = new WeakPlatform(this.getPlatformPosition(), this.returnPlatformPosition);
+				this.weakPlat = new WeakPlatform(this.platformPosition, this.returnPlatformPosition);
 				this.addToLayerAndVector(this.weakPlat);
 			}
 		}
@@ -83,12 +98,22 @@ package as3.game.gameHandler
 			this.platformVector.push(plat);
 		}
 		
-		private function positionPlatform(obj:Platform):void{
-			obj.x = obj.getX();
-			obj.y = obj.getY();
+		private function initGround():void{
+			var pos:Array = [562, 0];
+			this.ground = new MpGround(pos);
+			this.game.gameLayer.addChild(this.ground);
+			this.ground.x = this.ground.xPos;
+			this.ground.y = this.ground.yPos;
+			this.platformVector.push(this.ground);
+			
 		}
 		
-		private function getPlatformPosition():Array{
+		private function positionPlatform(obj:Platform):void{
+			obj.x = obj.xPos;
+			obj.y = obj.yPos;
+		}
+		
+		private function get platformPosition():Array{
 			return this.benefitPosition ? kindPosition() : meanPosition();
 		}
 		
@@ -131,7 +156,7 @@ package as3.game.gameHandler
 		
 		private function returnPlatformPosition(plat:Platform):void{
 			this.platformPositions.push(plat.pos);
-			plat.setNewData(this.getPlatformPosition());
+			plat.setNewData(this.platformPosition);
 			this.positionPlatform(plat);
 		}
 		
@@ -145,8 +170,8 @@ package as3.game.gameHandler
 			var lbPos:Array = [550, 140];
 			this.lb = new LeftBase(lbPos);
 			this.game.gameLayer.addChild(this.lb);
-			this.lb.x = this.lb.getX();
-			this.lb.y = this.lb.getY();
+			this.lb.x = this.lb.xPos;
+			this.lb.y = this.lb.yPos;
 			this.platformVector.push(this.lb);
 		}
 		
@@ -155,8 +180,8 @@ package as3.game.gameHandler
 			var rbPos:Array = [550, 450];
 			this.rb = new RightBase(rbPos);
 			this.game.gameLayer.addChild(this.rb);
-			this.rb.x = this.rb.getX();
-			this.rb.y = this.rb.getY();
+			this.rb.x = this.rb.xPos;
+			this.rb.y = this.rb.yPos;
 			this.platformVector.push(this.rb);
 		}
 		
@@ -180,27 +205,55 @@ package as3.game.gameHandler
 		}//End function
 		
 		
-		private function platformCollission(plat, player):void{
+		private function platformCollission(plat:Platform, player:Player):void{
 			if(player.falling){
-				this.playerVector.length == 1 ? this.spPlatCollission(plat, player) : this.mpPlatCollission(plat,player);
+				if(this.playerVector.length == 1){
+					this.spPlatCollission(plat, player);
+				} else{
+					player.setCurrentPlat(plat);
+					if(plat is MpPlatform) this.mpPlatCollission(plat as MpPlatform,player);
+				}
 			}
 		}
 		
-		private function spPlatCollission(plat,player):void{
+		private function spPlatCollission(plat:Platform,player:Player):void{
 			if(plat.exists){
 				if(plat is WeakPlatform){
-					player.setCurrentPlat(plat);
-					plat.removePlat();
+					this.setWeakPlatform(plat as WeakPlatform, player)
 				}else{
 					player.setCurrentPlat(plat);
 				}
-			}
-			
+			}	
 		}
 		
-		private function mpPlatCollission(plat,player):void{
+		private function setWeakPlatform(plat:WeakPlatform, player:Player):void{
 			player.setCurrentPlat(plat);
-			if(plat is MpPlatform) plat.playerOnPlat(player);
+			plat.removePlat();
+		}
+		
+		private function mpPlatCollission(plat:MpPlatform,player:Player):void{
+			plat.playerOnPlat(player);
+		}
+		
+		public function repositionAndNeutralizeMpPlatforms(round:int):void{
+			var arr:Array;
+			round == 2 ? arr = this.mpPlatformPositions2 : arr = this.mpPlatformPositions3;
+			for(var i:int = 0; i < this.platformVector.length; i++){
+				if(this.platformVector[i] is MpPlatform){
+					var plat:MpPlatform = this.platformVector[i] as MpPlatform;
+					this.mpRepos(plat, arr[i]);
+					this.mpNeutralize(plat);
+				}
+			}
+		}
+		
+		private function mpRepos(plat:MpPlatform, pos:Array):void{
+			plat.setData(pos);
+			this.positionPlatform(plat);
+		}
+		
+		private function mpNeutralize(plat:MpPlatform):void{
+			plat.resetFlag();
 		}
 		
 		public function dispose():void{

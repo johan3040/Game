@@ -14,16 +14,16 @@
 			
 		}
 			
-		protected function setData(pos:Array):void{
+		public function setData(pos:Array):void{
 			this.xVal = pos[1];
 			this.yVal = pos[0];
 		}	
 		
-		public function getX():int{
+		public function get xPos():int{
 			return this.xVal;
 		}
 	
-		public function getY():int{
+		public function get yPos():int{
 			return this.yVal;
 		}
 		

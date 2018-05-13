@@ -6,16 +6,17 @@
 		
 		public function Explorer(push:Function) {
 			super(0, push);
-			initExplorer();
+			this.initExplorer();
 		}
 		
 		private function initExplorer():void{
 			
-			initSkin();
-			setBodyBitbox();
-			setFootHitbox();
-			setObjectDim();
-			addChildren();
+			this.initSkin();
+			this.setBodyBitbox();
+			this.setFootHitbox();
+			this.setObjectDim();
+			this.addChildren();
+			this.startPosition();
 			
 			}
 		
@@ -49,6 +50,11 @@
 			addChild(this.m_skin);
 			addChild(hitBox);
 			addChild(bottomHitBox);
+		}
+		
+		public function startPosition():void{
+			this.x = 160;
+			this.y = 560 - this.obj_height;
 		}
 		
 		override public function dispose():void{

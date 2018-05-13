@@ -50,11 +50,11 @@ package as3.game.gameobject.gems
 			}
 		}
 		
-		public function getX():int{
+		public function get xVal():int{
 			return this.xCoor;
 		}
 		
-		public function getY():int{
+		public function get yVal():int{
 			return this.yCoor;
 		}
 		

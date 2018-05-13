@@ -3,11 +3,16 @@ package scene
 	import flash.display.Sprite;
 	
 	import as3.game.gameobject.player.Explorer;
+	import as3.game.gameobject.player.Player;
 	
 	import assets.gameObjects.gameoverBottom;
+	import assets.gameObjects.gameoverBottomP1;
+	import assets.gameObjects.gameoverBottomP2;
 	import assets.gameObjects.gameoverBtns;
 	import assets.gameObjects.gameoverHighscoreDisplay;
 	import assets.gameObjects.gameoverTitle;
+	import assets.gameObjects.gameoverTitleP1;
+	import assets.gameObjects.gameoverTitleP2;
 	
 	import se.lnu.stickossdk.display.DisplayState;
 	import se.lnu.stickossdk.display.DisplayStateLayer;
@@ -20,17 +25,29 @@ package scene
 		private var go_menuLayer:DisplayStateLayer;
 		private var go_background:Sprite;
 		private var go_controls:EvertronControls;
-		
 		private var go_btns:gameoverBtns;
 		
+		//---------------------------------------
+		// Titles
+		//---------------------------------------
 		private var go_title:gameoverTitle;
-		private var go_highscoreDisplay:gameoverHighscoreDisplay;
+		private var go_mpTitleP1:gameoverTitleP1;
+		private var go_mpTitleP2:gameoverTitleP2;
+		
+		//---------------------------------------
+		// Bottom GFX
+		//---------------------------------------
 		private var go_bottom:gameoverBottom;
-		private var player:Explorer;
-		private var mode:int; // 0 = singelplayer 1 = multiplayer
+		private var go_mpP1:gameoverBottomP1;
+		private var go_mpP2:gameoverBottomP2;
+		
+		private var go_highscoreDisplay:gameoverHighscoreDisplay;
+		private var player:Player;
+		private var mode:int; // 1 = singelplayer 2 = multiplayer
 		
 		public function GameOver(player, mode){
 			super();
+			trace(mode);
 			this.player = player;
 			this.mode = mode;
 			this.go_controls = new EvertronControls(0);
@@ -40,9 +57,7 @@ package scene
 			this.initLayers();
 			this.initBackground();
 			this.initGameoverBtns();
-			this.initBottom();
-			this.initHighscoreDisplay();
-			this.initTitle();
+			this.mode == 1 ? this.go_Sp() : this.go_Mp();
 		}
 		
 		override public function update():void{
@@ -77,7 +92,49 @@ package scene
 			this.go_menuLayer.addChild(this.go_background);
 		}	
 		
-		private function initBottom():void {		
+		private function go_Sp():void{
+			trace("sp");
+			//Kod för Gameover single player
+			this.initHighscoreDisplay();
+			this.initBottom();
+			this.initTitle();
+		}
+		
+		private function go_Mp():void{
+			//Kod för Gameover multi player
+			if(this.player is Explorer){
+				this.initMpBottomP1();
+				this.initP1WinnerText();
+			}else{
+				this.initMpBottomP2();
+				this.initP2WinnerText();
+			}
+		}
+		
+		private function initMpBottomP1():void{
+			// Skapa & visa grafik när P1 är vinnare
+			
+			//this.go_mpP1 = ;
+			
+		}
+		
+		private function initMpBottomP2():void{
+			// Skapa & visa grafik när P2 är vinnare
+			
+			//this.go_mpP2 = ;
+			
+		}
+		
+		private function initP1WinnerText():void{
+			//this.go_mpTitleP1 = ;
+		}
+		
+		private function initP2WinnerText():void{
+			//this.go_mpTitleP2 = ;
+		}
+		
+		private function initBottom():void {	
+			trace("123");
 			this.go_bottom = new gameoverBottom();
 			
 			go_bottom.x = 0;
@@ -98,6 +155,7 @@ package scene
 			this.go_menuLayer.addChild(this.go_btns);
 		}
 		
+		// För SP
 		private function initTitle():void {		
 			this.go_title = new gameoverTitle();
 			
@@ -107,6 +165,7 @@ package scene
 			this.go_menuLayer.addChild(this.go_title);
 		}
 		
+		// För SP
 		private function initHighscoreDisplay():void {		
 			this.go_highscoreDisplay = new gameoverHighscoreDisplay();
 			

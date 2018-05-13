@@ -197,5 +197,9 @@ package scene
 			}
 		}
 		
+		override public function dispose():void{
+			//Alla instansierade objekt skall nullas: ex - this.go_highscroreDisplay = null;
+		}
+		
 	}
 }

@@ -19,7 +19,7 @@ package as3.game.gameobject.hazards
 		private var drop:Boolean;
 		private var warningLeaf:FallingLeaf;
 		
-		[Embed(source = "../../../../../assets/audio/CoconutDropAU.mp3")]
+		[Embed(source = "../../../../../assets/audio/CoconutFallAU.mp3")]
 		private const COCO_AUDIO:Class;
 		private var cocoAudio:SoundObject;
 		
@@ -70,6 +70,7 @@ package as3.game.gameobject.hazards
 		private function setMeta():void{			
 			this.startSpeed = 1;
 			this.drop = true;
+			this.cocoAudio.play();
 		}
 		
 		private function initAudio():void{

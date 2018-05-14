@@ -45,6 +45,11 @@ package scene
 		private var player:Player;
 		private var mode:int; // 1 = singelplayer 2 = multiplayer
 		
+		private const TABLE:int = 1;
+		private const RANGE:int = 10;
+		private var score:int = 0;
+		private var submitted:Boolean = false;
+		
 		public function GameOver(player, mode){
 			super();
 			trace(mode);
@@ -56,12 +61,11 @@ package scene
 		override public function init():void{		
 			this.initLayers();
 			this.initBackground();
-			this.initGameoverBtns();
 			this.mode == 1 ? this.go_Sp() : this.go_Mp();
 		}
 		
 		override public function update():void{
-			this.go_updatecontrols();
+			if (submitted) this.go_updatecontrols();
 		}
 		
 		private function go_updatecontrols():void{
@@ -94,14 +98,33 @@ package scene
 		
 		private function go_Sp():void{
 			trace("sp");
+			this.score = this.player.bonusPoints;
 			//Kod för Gameover single player
-			this.initHighscoreDisplay();
+			
+			checkHighscore();
+		}
+		
+		private function checkHighscore():void
+		{
+			Session.highscore.smartSend(this.TABLE, this.score, this.RANGE, onSubmitComplete);
+			
+		}
+		
+		private function onSubmitComplete(e:*):void {
+			trace(e);
+			
 			this.initBottom();
+			this.initHighscoreDisplay();
 			this.initTitle();
+			this.initGameoverBtns();
+			
+			this.submitted = true;
 		}
 		
 		private function go_Mp():void{
 			//Kod för Gameover multi player
+			this.initGameoverBtns();
+			
 			if(this.player is Explorer){
 				this.initMpBottomP1();
 				this.initP1WinnerText();
@@ -114,23 +137,43 @@ package scene
 		private function initMpBottomP1():void{
 			// Skapa & visa grafik när P1 är vinnare
 			
-			//this.go_mpP1 = ;
+			this.go_mpP1 = new gameoverBottomP1();
+			
+			go_mpP1.x = 0;
+			go_mpP1.y = 382.45;
+			
+			this.go_menuLayer.addChild(this.go_mpP1);
 			
 		}
 		
 		private function initMpBottomP2():void{
 			// Skapa & visa grafik när P2 är vinnare
 			
-			//this.go_mpP2 = ;
+			this.go_mpP2 = new gameoverBottomP2();
+			
+			go_mpP2.x = 0;
+			go_mpP2.y = 382.45;
+			
+			this.go_menuLayer.addChild(this.go_mpP2);
 			
 		}
 		
 		private function initP1WinnerText():void{
-			//this.go_mpTitleP1 = ;
+			this.go_mpTitleP1 = new gameoverTitleP1();
+			
+			go_mpTitleP1.x = 48;
+			go_mpTitleP1.y = 36.55;
+			
+			this.go_menuLayer.addChild(this.go_mpTitleP1);
 		}
 		
 		private function initP2WinnerText():void{
-			//this.go_mpTitleP2 = ;
+			this.go_mpTitleP2 = new gameoverTitleP2();
+			
+			go_mpTitleP2.x = 48;
+			go_mpTitleP2.y = 36.55;
+			
+			this.go_menuLayer.addChild(this.go_mpTitleP2);
 		}
 		
 		private function initBottom():void {	

@@ -92,7 +92,7 @@ package scene
 			this.m_btns = new menuBtns();
 			
 			m_btns.x = 269.35;
-			m_btns.y = 190.9;
+			m_btns.y = 240.9;
 			
 			this.m_btns.gotoAndStop("single");
 			
@@ -124,7 +124,7 @@ package scene
 			m_logo.scaleX = 2.25;
 			m_logo.scaleY = 2.25;
 			m_logo.x = 295;
-			m_logo.y = 13.4;
+			m_logo.y = 33.4;
 			
 			this.m_menuLayer.addChild(this.m_logo);
 		}
@@ -146,8 +146,6 @@ package scene
 			
 			if (m_btns.currentLabel == "single") {
 				this.m_btns.gotoAndStop("multi");
-				
-				multiGraphics();
 			}
 		}
 		
@@ -159,18 +157,10 @@ package scene
 			if (m_btns.currentLabel == "multi") {
 				Session.application.displayState = new Game(2);
 			}
-		}
-		
-		private function singleGraphics():void {
 			
-		}
-		
-		private function multiGraphics():void {
-			
-		}
-		
-		private function highscoreGraphics():void {
-			
+			if (m_btns.currentLabel == "highscore") {
+				Session.application.displayState = new Highscore;
+			}
 		}
 		
 	}

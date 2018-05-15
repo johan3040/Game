@@ -111,8 +111,7 @@ package scene
 			
 		}
 		
-		private function onSubmitComplete(e:*):void {
-			trace(e);
+		private function onSubmitComplete(data:XML):void {
 			
 			this.initBottom();
 			this.initHighscoreDisplay();

@@ -4,8 +4,8 @@
 	
 	public class Explorer extends Player{
 		
-		public function Explorer(push:Function) {
-			super(0, push);
+		public function Explorer(ctrl:int,push:Function) {
+			super(ctrl, push);
 			this.initExplorer();
 		}
 		

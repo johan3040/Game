@@ -2,12 +2,10 @@
 	
 	import assets.gameObjects.P2;
 	
-	
 	public class Cannibal extends Player{
 		
-		
-		public function Cannibal(push:Function) {
-			super(1, push);
+		public function Cannibal(ctrl:int,push:Function) {
+			super(ctrl, push);
 			this.initCannibal();
 		}
 		
@@ -28,14 +26,9 @@
 			m_skin.gotoAndStop(1);
 		}
 		
-		public function startPosition():void{
-			this.x = 600;
-			this.y = 560 - this.obj_height;
-		}
-		
 		private function setBodyBitbox():void{
 			//hitBox.graphics.beginFill(0x00FF00);
-			hitBox.graphics.drawRect(-6, 0, 14, 33);
+			hitBox.graphics.drawRect(-7, 4, 14, 33);
 			//hitBox.graphics.endFill();
 			//hitBox.alpha = 0.7;
 		}
@@ -56,6 +49,11 @@
 			addChild(this.m_skin);
 			addChild(hitBox);
 			addChild(bottomHitBox);
+		}
+		
+		public function startPosition():void{
+			this.x = 600;
+			this.y = 560 - this.obj_height;
 		}
 		
 		override public function dispose():void{

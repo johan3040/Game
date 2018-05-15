@@ -98,7 +98,6 @@ package scene
 		}	
 		
 		private function go_Sp():void{
-			trace("sp");
 			this.score = this.player.bonusPoints;
 			//Kod för Gameover single player
 			

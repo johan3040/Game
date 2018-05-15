@@ -2,6 +2,7 @@ package scene
 {
 	import flash.display.Sprite;
 	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	import assets.gameObjects.HighscoreBook;
 	import assets.gameObjects.creditsBtns;
@@ -11,7 +12,6 @@ package scene
 	import se.lnu.stickossdk.input.EvertronControls;
 	import se.lnu.stickossdk.input.Input;
 	import se.lnu.stickossdk.system.Session;
-	import flash.text.TextFormat;
 	
 	public class Credits extends DisplayState{
 		

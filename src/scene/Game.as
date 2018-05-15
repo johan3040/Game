@@ -71,7 +71,7 @@ package scene
 		//------------------------------------------
 		// Audio
 		//------------------------------------------
-		[Embed(source = "../../assets/audio/gameOverAU.mp3")] 	// <-- this data..
+		[Embed(source = "../../assets/audio/PDeathAU.mp3")] 	// <-- this data..
 		private const GAME_OVER_AUDIO:Class;					// ..gets saved in this const
 		private var gameOverAudio:SoundObject;
 		
@@ -79,13 +79,23 @@ package scene
 		private const POWER_UP_AUDIO:Class;						// ..gets saved in this const
 		private var powerUpAudio:SoundObject;
 		
+		[Embed(source = "../../assets/audio/PointAU.mp3")] 	// <-- this data..
+		private const POINT_AUDIO:Class;						// ..gets saved in this const
+		private var pointAudio:SoundObject;
+		
 		[Embed(source = "../../assets/audio/gameMusicAU.mp3")] 	// <-- this data..
 		private const GAME_MAIN_AUDIO:Class;					// ..gets saved in this const
 		private var mainAudio:SoundObject;
+		
+		[Embed(source = "../../assets/audio/winner.mp3")] 	// <-- this data..
+		private const WINNER_AUDIO:Class;					// ..gets saved in this const
+		private var winnerAudio:SoundObject;
 		//
 		private var platformhandler:PlatformHandler;
 		private var hazardhandler:HazardHandler;
 		
+		private var showRound:Boolean = false;
+		private var updateMP:Boolean = false;
 		
 		//
 		// Constructor method
@@ -114,9 +124,13 @@ package scene
 			this.powerUpAudio = Session.sound.soundChannel.get("powerUp", true, true);
 			Session.sound.soundChannel.sources.add("main", GAME_MAIN_AUDIO);
 			this.mainAudio = Session.sound.soundChannel.get("main", true, true);
+			Session.sound.soundChannel.sources.add("point", POINT_AUDIO);
+			this.pointAudio = Session.sound.soundChannel.get("point", true, true);
+			Session.sound.soundChannel.sources.add("winner", WINNER_AUDIO);
+			this.winnerAudio = Session.sound.soundChannel.get("winner", true, true);
 			
-			//this.mainAudio.play(999); //Loopar musiken 999 gånger
-			this.mainAudio.volume = 1;
+			this.mainAudio.play(999); //Loopar musiken 999 gånger
+			this.mainAudio.volume = 0.6;
 			
 		}
 		
@@ -150,16 +164,18 @@ package scene
 			this.initHud();
 			this.initMpUI();
 			this.initRoundGFX();
+			this.updateMP = true;
 		}
 		
 		private function initPlayer():void{
-			this.player1 = new Explorer(this.playerPush);
+			this.player1 = new Explorer(0, this.playerPush);
 			this.m_playerLayer.addChild(this.player1);
 			this.playerVector.push(this.player1);
 		}
 		
 		private function initPlayer2():void{
-			this.player2 = new Cannibal(this.playerPush);
+			this.player2 = new Cannibal(1, this.playerPush);
+			this.player2.x = 400;
 			this.m_playerLayer.addChild(this.player2);
 			this.playerVector.push(this.player2);
 		}
@@ -262,9 +278,10 @@ package scene
 					m_updateCollission(this.playerVector[i]);
 					this.platformhandler.update(this.playerVector[i]);
 					if(this.playerVector[i].y >= 600) this.prepareGameOver(this.playerVector[i]);
-					if(this.mode == 2) this.updatePoints(this.playerVector[i]);
+					if(this.mode == 2 && this.updateMP) this.updatePoints(this.playerVector[i]);
 				}
 			}
+			if(this.showRound) this.checkRoundGFX();
 		}
 		
 		private function m_updateCollission(player:Player):void{
@@ -294,13 +311,14 @@ package scene
 		}//End function
 		
 		private function hazardCollission(player:Player, hazard:Hazard):void{
-			//this.gameOverAudio.play();
 			if(player.immortal != true && hazard.lethal == true){
 				this.prepareGameOver(player);
 			}
 		}
 		
 		private function gemCollission(player:Player, gem:Gem):void{
+			this.mainAudio.fade(0.3, 200, this.resetVolume);
+			this.pointAudio.play();
 			player.setBonusPoints(gem.value);
 			this.m_gameBonusPoints.setVisibleBonusPoints(gem.value);
 			gem.prepareReposition(this.positionGems);		
@@ -309,22 +327,27 @@ package scene
 		private function powerCollission(player:Player, pw:PowerUp):void{
 			this.mainAudio.fade(0.3, 700, this.resetVolume);
 			this.powerUpAudio.play();
-			pw.reposition();
-			this.mode == 1 ? player.setPowerUp(pw) : this.attack(pw, player);
+			this.mode == 1 ? this.setPowerUp(pw, player) : this.attack(pw as IceBlock, player);
 		}
 		
-		private function attack(pw:PowerUp, player:Player):void{
+		private function setPowerUp(pw:PowerUp, player:Player):void{
+			player.setPowerUp(pw);
+			pw.reposition();
+		}
+		
+		private function attack(pw:IceBlock, player:Player):void{
 			var receiver:Player;
+			pw.resetPosition();
 			this.playerVector.indexOf(player) == 0 ? receiver = this.playerVector[1] : receiver = this.playerVector[0];
 			receiver.setFrozen();
 		}
 		
 		private function resetVolume():void{
-			this.mainAudio.fade(1, 700);
+			this.mainAudio.fade(0.6, 700);
 		}
 		
-		private function playerPush(player:Player):void{
-			if(this.mode == 1) return;
+		private function playerPush(player:Player):int{
+			if(this.mode == 1) return 1;
 			var opponent:Player;
 			player is Explorer ? opponent = this.player2 : opponent = this.player1;
 			if(	player.x > opponent.x - 25 &&
@@ -333,19 +356,32 @@ package scene
 				player.y < opponent.y + 25){
 				opponent.gotPushed(player.faceRight);
 			}
+			return 2;
 		}
 		
 		private function updatePoints(player:Player):void{
-			if(player.numFlags == 1){
+			if(player.numFlags == 6){
+				this.updateMP = false;
 				player.roundsWon++;
+				this.roundWinner(player);
 				this.mp_rounds++;
 				if(this.player1.roundsWon == 2 || this.player2.roundsWon == 2){
 					this.prepareGameOver(this.getMpWinner());
 					return;
 				}
-				this.showMpRound();
-				this.newMpRound();
 			}
+		}
+		
+		private function roundWinner(player:Player):void{
+			var delay:int = 2000;
+			
+			Session.effects.add(new Flicker(player, delay, 36,true));
+			Session.timer.create(delay, this.initNewMpRound,0,true);
+		}
+		
+		private function initNewMpRound():void{
+			this.showMpRound();
+			this.newMpRound();
 		}
 		
 		private function showMpRound():void{			
@@ -353,7 +389,17 @@ package scene
 			this.mp_roundsGFX[this.mp_rounds].x = 180;
 			this.mp_roundsGFX[this.mp_rounds].y = 200;
 			this.mp_roundsGFX[this.mp_rounds].gotoAndPlay(1);
+			this.showRound = true;
 			this.roundCountDown();
+		}
+		
+		private function checkRoundGFX():void{
+			if(this.mp_roundsGFX[this.mp_rounds].currentFrame == 120){
+				this.gameLayer.removeChild(this.mp_roundsGFX[this.mp_rounds]);
+				this.showRound = false;
+				this.setAutoUpdate();
+				this.updateMP = true;
+			}
 		}
 		
 		private function newMpRound():void{			
@@ -389,21 +435,24 @@ package scene
 			this.player1.autoUpdate = false;
 			this.player2.autoUpdate = false;
 			this.pu_iceblock.autoUpdate = false;
-			Session.timer.create(2000, this.setAutoUpdate);
+			if(this.player1.m_skin.currentFrameLabel != "idle") this.player1.m_skin.gotoAndStop("idle");
+			if(this.player2.m_skin.currentFrameLabel != "idle") this.player2.m_skin.gotoAndStop("idle");
+			//Session.timer.create(2000, this.setAutoUpdate);
 		}
 		
 		private function setAutoUpdate():void{
 			this.player1.autoUpdate = true;
 			this.player2.autoUpdate = true;
 			this.pu_iceblock.autoUpdate = true;
-			this.gameLayer.removeChild(this.mp_roundsGFX[this.mp_rounds]);
 		}
 		
 		private function prepareGameOver(player:Player):void{
+			this.mainAudio.stop();
+			this.mode == 1 ? this.gameOverAudio.play() : this.winnerAudio.play();
 			player.alive = false;
 			Session.timer.dispose();
 			Session.tweener.dispose();
-			var go_delay:int = 1000;
+			var go_delay:int = 2000;
 			Session.effects.add(new Flicker(player, go_delay, 30, true));
 			Session.timer.create(go_delay, gameOver, 0);
 		}

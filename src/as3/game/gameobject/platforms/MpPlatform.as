@@ -68,7 +68,7 @@ package as3.game.gameobject.platforms{
 			
 			for(var i:int = 0; i<this.flagVector.length; i++){
 				this.flagVector[i].x = 25;
-				this.flagVector[i].y = -68;
+				this.flagVector[i].y = -50;
 				this.flagVector[i].visible = false;
 				addChild(this.flagVector[i]);
 			}
@@ -99,19 +99,20 @@ package as3.game.gameobject.platforms{
 		private function startTimer(f:Function):void{
 			Session.timer.create(40, f);
 		}
-		
+		private var givenPoint:Boolean = false;
 		private function countDown():void{
 			if(this.go && this.currentPlayer.frozen == false){
-				if(this.owner != this.currentPlayer && this.owner != null && this.percentOwned == 0){
+				if(this.owner != this.currentPlayer && this.owner != null && this.percentOwned == 0 && this.givenPoint==true){
 					this.owner.numFlags--;
 				}
 				if(this.percentOwned > 0){
 					this.percentOwned-=5;
 					this.moveFlagsDown();
-					startTimer(this.countDown);
+					this.startTimer(this.countDown);
 					return;
 				}
 				this.owner = this.currentPlayer;
+				this.givenPoint = false;
 				this.changeFlag();
 				startTimer(this.countUp);
 			}
@@ -122,23 +123,24 @@ package as3.game.gameobject.platforms{
 				if(this.percentOwned < 100){
 					this.percentOwned+=5;
 					this.moveFlagsUp();
-					startTimer(this.countUp);
+					this.startTimer(this.countUp);
 					return;
 				}
 				this.currentPlayer.numFlags++;
+				this.givenPoint = true;
 				this.playFirework();
 			}
 		}
 		
 		private function moveFlagsDown():void{
 			for(var i:int = 0; i<this.flagVector.length; i++){
-				this.flagVector[i].y+=2.2;
+				this.flagVector[i].y+=1.6;
 			}
 		}
 		
 		private function moveFlagsUp():void{
 			for(var i:int = 0; i<this.flagVector.length; i++){
-				this.flagVector[i].y-=2.2;
+				this.flagVector[i].y-=1.6;
 			}
 		}
 		
@@ -150,7 +152,19 @@ package as3.game.gameobject.platforms{
 		private function setCorrectVisibleFlag(flag:MovieClip):void{
 			for(var i:int = 0; i<this.flagVector.length; i++){
 				if(this.flagVector[i] != flag) this.flagVector[i].visible = false;
-				else this.flagVector[i].visible = true;
+				else {
+					this.flagVector[i].visible = true;
+				}
+			}
+		}
+		
+		public function visitorLeft(player:Player):void{	
+			this.visitors.splice(this.visitors.indexOf(player),1);
+			if(this.visitors.length == 1){
+				trace(player);
+				this.checkVisitors(this.visitors[0]);
+			}else{
+				this.go = false;
 			}
 		}
 		
@@ -163,16 +177,6 @@ package as3.game.gameobject.platforms{
 			if(this.firework.currentFrame == this.firework.totalFrames){
 				this.firework.gotoAndStop(1);
 				this.firework.visible = false;
-			}
-		}
-		
-		public function visitorLeft(player:Player):void{
-			this.visitors.splice(this.visitors.indexOf(player),1);
-			if(this.visitors.length == 1){
-				this.go = true;
-				this.checkVisitors(this.visitors[0]);
-			}else{
-				this.go = false;
 			}
 		}
 		

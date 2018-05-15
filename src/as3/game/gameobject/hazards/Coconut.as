@@ -23,15 +23,18 @@ package as3.game.gameobject.hazards
 		private const COCO_AUDIO:Class;
 		private var cocoAudio:SoundObject;
 		
+		[Embed(source = "../../../../../assets/audio/CoconutLeavesAU.mp3")]
+		private const COCO_LEAFS:Class;
+		private var cocoLeafssAudio:SoundObject;
+		
 		public function Coconut(target:Player){
 			super();
 			this.target = target;
 			//this.setPosition();
 			this.initCoconut();
 			this.initHitBox();
-			this.initWarning();
 			this.initAudio();
-			
+			this.initWarning();
 			this.goWarning();
 			//this.setMeta();
 		}
@@ -42,14 +45,11 @@ package as3.game.gameobject.hazards
 			this.coconut.scaleX = 0.8;
 			this.coconut.scaleY = 0.8;
 			addChild(this.coconut);
-			//this.setPosition();			
-			//this.cocoAudioSound.play();
+			//this.setPosition();
 		}
 		
 		private function initHitBox():void{
-			//hitBox.graphics.beginFill(0x00FF00);
 			hitBox.graphics.drawRect(0,0,28,25);
-			//hitBox.graphics.endFill();
 			addChild(hitBox);
 		}
 		
@@ -67,17 +67,18 @@ package as3.game.gameobject.hazards
 		
 		}
 		
-		private function setMeta():void{			
+		/*private function setMeta():void{			
 			this.startSpeed = 1;
 			this.drop = true;
-			this.cocoAudio.play();
-		}
+		}*/
 		
 		private function initAudio():void{
 		
 			Session.sound.soundChannel.sources.add("coconutFalling", COCO_AUDIO);
 			this.cocoAudio = Session.sound.soundChannel.get("coconutFalling", true, true);
-		
+			
+			Session.sound.soundChannel.sources.add("leafSound", COCO_LEAFS);
+			this.cocoLeafssAudio = Session.sound.soundChannel.get("leafSound", true, true);		
 		}
 		
 		override public function update():void{
@@ -90,8 +91,8 @@ package as3.game.gameobject.hazards
 			this.lethal = false;
 			this.warningLeaf.visible = true;
 			this.coconut.visible = false;
-			this.warningLeaf.play();
-			
+			this.warningLeaf.gotoAndPlay(1);
+			this.cocoLeafssAudio.play();
 		}
 		
 		private function prepareFallingCoco():void{
@@ -101,6 +102,7 @@ package as3.game.gameobject.hazards
 			this.coconut.visible = true;
 			this.startSpeed = 1;
 			this.drop = true;
+			//this.cocoAudio.play();
 		}
 		
 		private function moveCoconut():void{
@@ -108,7 +110,7 @@ package as3.game.gameobject.hazards
 			this.startSpeed += this.dragForce;
 			if(this.y > 600){
 				this.drop = false;
-				Session.timer.create(1000,goWarning,0);
+				Session.timer.create(3000,goWarning,0);
 			}
 		}
 		

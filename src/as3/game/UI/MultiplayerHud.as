@@ -17,6 +17,13 @@ package as3.game.UI{
 		private var m_textFormat:TextFormat;
 		private var owner:Player;
 		
+		[Embed(source="../../../../assets/font/PaintyPaint.TTF",
+					fontName = "FontyFont",
+					mimeType = "application/x-font",
+					advancedAntiAliasing="true",
+					embedAsCFF="false")]
+		private var myEmbeddedFont:Class;
+		
 		public function MultiplayerHud(player:Player){
 			super();
 			this.owner = player;
@@ -29,13 +36,11 @@ package as3.game.UI{
 			this.leaf.scaleY = 0.5;
 			
 			this.m_text = new TextField();
-			this.m_textFormat = new TextFormat();
-			this.m_textFormat.font = "Helvetica";
-			this.m_textFormat.size = "22";
+			this.m_textFormat = new TextFormat("FontyFont", 22, 0xFFFFFF);
 			this.m_text.width = 100;
 			this.m_text.height = 30;
+			this.m_text.embedFonts = true;
 			this.m_text.defaultTextFormat = this.m_textFormat;
-			this.m_text.text = this.owner.numFlags.toString();
 			this.m_text.x = 30;
 			
 			this.owner is Explorer ? this.x = 60 : this.x = 650;

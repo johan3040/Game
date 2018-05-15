@@ -21,6 +21,13 @@ package as3.game.UI{
 		private var inComingPoints:int;
 		private var m_leaf:hudLeafMiddle;
 		
+		[Embed(source="../../../../assets/font/PaintyPaint.TTF",
+					fontName = "FontyFont",
+					mimeType = "application/x-font",
+					advancedAntiAliasing="true",
+					embedAsCFF="false")]
+		private var myEmbeddedFont:Class;
+		
 		public function GameBonusPoints(player:Player){
 			super();
 			this.player = player;
@@ -30,16 +37,17 @@ package as3.game.UI{
 		override public function init():void{
 			
 			this.m_leaf = new hudLeafMiddle();
-			this.m_leaf.scaleX = 0.5;
-			this.m_leaf.scaleY = 0.5;
+			this.m_leaf.scaleX = 0.7;
+			this.m_leaf.scaleY = 0.7;
 			this.m_leaf.x = -10;
 			
 			this.m_bonusText = new TextField();
-			this.m_textFormat = new TextFormat();
-			this.m_textFormat.font = "Helvetica";
-			this.m_textFormat.size = "22";
+			this.m_textFormat = new TextFormat("FontyFont", 22, 0xFFFFFF);
 			this.m_bonusText.width = 100;
 			this.m_bonusText.height = 30;
+			this.m_bonusText.x = 20;
+			this.m_bonusText.y = 5;
+			this.m_bonusText.embedFonts = true;
 			this.m_bonusText.defaultTextFormat = this.m_textFormat;
 			this.m_bonusText.text = m_visibleBonusPoints.toString();
 			this.x = 350;

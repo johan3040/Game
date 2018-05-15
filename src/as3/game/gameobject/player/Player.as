@@ -45,7 +45,7 @@
 		public var alive:Boolean = true;
 		public var bottomHitBox:Sprite = new Sprite();
 		public var bonusPoints:int = 0;
-		public var immortal:Boolean = true; //--------------------------------------
+		public var immortal:Boolean = false;
 		
 		//For MP
 		public var numFlags:int = 0;
@@ -139,8 +139,12 @@
 		
 		private function m_push():void{
 			
-			this.pushCallback(this);
-			if(this.m_skin.currentFrameLabel != "push") this.m_skin.gotoAndStop("push");
+			if(this.pushCallback(this) == 1){
+				return;
+			}else{
+				//if(this.m_skin.currentFrameLabel != "push") this.m_skin.gotoAndStop("push");
+			}
+			
 			
 		}
 		
@@ -177,7 +181,7 @@
 			}
 			
 		}
-		//---------------------------------arguments
+		
 		private function steppedOfMpPlat(plat:MpPlatform):void{
 			plat.visitorLeft(this);
 		}

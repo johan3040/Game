@@ -66,6 +66,7 @@ package scene
 		
 		override public function update():void{
 			if (submitted) this.go_updatecontrols();
+			if (this.mode != 1) this.go_updatecontrols();
 		}
 		
 		private function go_updatecontrols():void{
@@ -122,7 +123,7 @@ package scene
 		}
 		
 		private function go_Mp():void{
-			//Kod för Gameover multi player
+			//Kod för Gameover multi player			
 			this.initGameoverBtns();
 			
 			if(this.player is Explorer){

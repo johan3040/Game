@@ -2,6 +2,9 @@ package scene
 {
 	import flash.display.Sprite;
 	import flash.text.TextField;
+	import flash.text.TextFormat;
+	
+	import as3.game.GetHighscore;
 	
 	import assets.gameObjects.HighscoreBook;
 	import assets.gameObjects.highscoreBtns;
@@ -11,7 +14,6 @@ package scene
 	import se.lnu.stickossdk.input.EvertronControls;
 	import se.lnu.stickossdk.input.Input;
 	import se.lnu.stickossdk.system.Session;
-	import flash.text.TextFormat;
 	
 	public class Highscore extends DisplayState{
 		
@@ -24,6 +26,14 @@ package scene
 		private var hi_highscoreTitle:TextField;
 		
 		private var hi_highscoreTitleFormat:TextFormat = new TextFormat;
+		private var hi_highscoreListFormat:TextFormat;
+		
+		private var hi_highscoreNumbers:TextField;
+		private var hi_highscoreNames:TextField;
+		private var hi_highscoreScores:TextField;
+		
+		private var hi_HighscoreData:GetHighscore;
+		private var hi_highscoreNumbersFormat:TextFormat;
 		
 		public function Highscore(){
 			super();
@@ -37,6 +47,63 @@ package scene
 			
 			this.initHighscoreBtns();
 			this.initTitle();
+			
+			this.initHighscore();
+		}
+		
+		private function initHighscore():void
+		{			
+			this.hi_HighscoreData = new GetHighscore(this.recieveHighscoreInfo);
+			
+			//hi_HighscoreData.GetHighscoreData();
+			
+		}
+		
+		private function recieveHighscoreInfo():void {
+			placeHighscoreElements();
+		}
+		
+		private function placeHighscoreElements():void
+		{
+			
+			this.hi_highscoreNumbers = new TextField;
+			hi_highscoreNumbers.text += hi_HighscoreData.highscorePositions;
+			
+			this.hi_highscoreNames = new TextField;
+			hi_highscoreNames.text += hi_HighscoreData.highscoreNames;
+			
+			this.hi_highscoreScores = new TextField;
+			hi_highscoreScores.text += hi_HighscoreData.highscoreScores;
+			
+			hi_highscoreNumbers.x = 410;
+			hi_highscoreNumbers.y = 80;
+			hi_highscoreNumbers.height = 420;
+			hi_highscoreNumbers.width = 44;
+			
+			hi_highscoreNames.x = 460;
+			hi_highscoreNames.y = 80;
+			hi_highscoreNames.height = 420;
+			hi_highscoreNames.width = 180;
+			
+			hi_highscoreScores.x = 640;
+			hi_highscoreScores.y = 80;
+			hi_highscoreScores.height = 420;
+			hi_highscoreScores.width = 100;
+			
+			this.hi_highscoreNumbersFormat = new TextFormat("Segoe Script", 20, 0x990000);
+			hi_highscoreNumbersFormat.align = "right";
+			hi_highscoreNumbersFormat.leading = 8;
+			hi_highscoreNumbers.setTextFormat(hi_highscoreNumbersFormat);
+			
+			this.hi_highscoreListFormat = new TextFormat("Segoe Script", 20, 0x990000);
+			hi_highscoreListFormat.align = "left";
+			hi_highscoreListFormat.leading = 8;
+			hi_highscoreNames.setTextFormat(hi_highscoreListFormat);
+			hi_highscoreScores.setTextFormat(hi_highscoreListFormat);
+			
+			this.hi_menuLayer.addChild(this.hi_highscoreNumbers);
+			this.hi_menuLayer.addChild(this.hi_highscoreNames);
+			this.hi_menuLayer.addChild(this.hi_highscoreScores);
 		}
 		
 		override public function update():void{

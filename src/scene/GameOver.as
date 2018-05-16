@@ -1,7 +1,10 @@
 package scene
 {
 	import flash.display.Sprite;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
+	import as3.game.GetHighscore;
 	import as3.game.gameobject.player.Explorer;
 	import as3.game.gameobject.player.Player;
 	
@@ -49,6 +52,20 @@ package scene
 		private const RANGE:int = 10;
 		private var score:int = 0;
 		private var submitted:Boolean = false;
+		
+		private var go_HighscoreData:GetHighscore;
+		private var go_highscoreNumbers:TextField;
+		private var go_highscoreNames:TextField;
+		private var go_highscoreScores:TextField;
+		private var go_highscoreListFormat:TextFormat;
+		private var go_highscoreNumbersFormat:TextFormat;
+		
+		[Embed(source="../../assets/font/PaintyPaint.TTF",
+					fontName = "FontyFont",
+					mimeType = "application/x-font",
+					advancedAntiAliasing="true",
+					embedAsCFF="false")]
+		private var myEmbeddedFont:Class;
 		
 		public function GameOver(player, mode){
 			super();
@@ -118,7 +135,67 @@ package scene
 			this.initGameoverBtns();
 			
 			this.submitted = true;
+			
+			initHighscore();
 		}
+		
+		private function initHighscore():void
+		{			
+			this.go_HighscoreData = new GetHighscore(this.recieveHighScore);
+			
+			//go_HighscoreData.GetHighscoreData();
+		}
+		
+		private function recieveHighScore():void{
+			placeHighscoreElements();
+		}
+		
+		private function placeHighscoreElements():void
+		{
+			
+			this.go_highscoreNumbers = new TextField;
+			go_highscoreNumbers.text = go_HighscoreData.highscorePositions;
+			
+			this.go_highscoreNames = new TextField;
+			go_highscoreNames.text = go_HighscoreData.highscoreNames;
+			
+			this.go_highscoreScores = new TextField;
+			go_highscoreScores.text = go_HighscoreData.highscoreScores;
+			
+			go_highscoreNumbers.x = 498;
+			go_highscoreNumbers.y = 129;
+			go_highscoreNumbers.height = 420;
+			go_highscoreNumbers.width = 44;
+			
+			go_highscoreNames.x = 548;
+			go_highscoreNames.y = 129;
+			go_highscoreNames.height = 420;
+			go_highscoreNames.width = 140;
+			
+			go_highscoreScores.x = 685;
+			go_highscoreScores.y = 129;
+			go_highscoreScores.height = 420;
+			go_highscoreScores.width = 85;
+			
+			this.go_highscoreNumbersFormat = new TextFormat("FontyFont", 24, 0xFFFFFF);
+			go_highscoreNumbersFormat.align = "right";
+			go_highscoreNumbersFormat.leading = 10.5;
+			go_highscoreNumbers.setTextFormat(go_highscoreNumbersFormat);
+			this.go_highscoreNumbers.embedFonts = true;
+			
+			this.go_highscoreListFormat = new TextFormat("FontyFont", 24, 0xFFFFFF);
+			go_highscoreListFormat.align = "left";
+			go_highscoreListFormat.leading = 10.5;
+			go_highscoreNames.setTextFormat(go_highscoreListFormat);
+			go_highscoreScores.setTextFormat(go_highscoreListFormat);
+			this.go_highscoreNames.embedFonts = true;
+			this.go_highscoreScores.embedFonts = true;
+			
+			this.go_menuLayer.addChild(this.go_highscoreNumbers);
+			this.go_menuLayer.addChild(this.go_highscoreNames);
+			this.go_menuLayer.addChild(this.go_highscoreScores);
+		}
+		
 		
 		private function go_Mp():void{
 			//Kod för Gameover multi player			

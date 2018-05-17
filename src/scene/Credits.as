@@ -122,7 +122,7 @@ package scene
 			this.cr_creditsTitle = new TextField;
 			
 			cr_creditsTitleFormat.font = "Segoe Script";
-			cr_creditsTitleFormat.color = 0x990000;
+			cr_creditsTitleFormat.color = 0x000066;
 			cr_creditsTitleFormat.size = 50;
 			
 			cr_creditsTitle.text = "Credits";
@@ -147,13 +147,13 @@ package scene
 			cr_mainCreditsDesignerTitle.text = "Samantha Persson";
 			cr_mainCreditsDesigner.text = "Design, Music & Sound";
 			
-			this.cr_mainCreditsTitleFormat = new TextFormat("Segoe Script", 25, 0x990000);
+			this.cr_mainCreditsTitleFormat = new TextFormat("Segoe Script", 25, 0x000066);
 			cr_mainCreditsTitleFormat.align = "center";
 			cr_mainCreditsTitleFormat.leading = 0;
 			cr_mainCreditsDeveloperTitle.setTextFormat(cr_mainCreditsTitleFormat);
 			cr_mainCreditsDesignerTitle.setTextFormat(cr_mainCreditsTitleFormat);
 			
-			this.cr_mainCreditsFormat = new TextFormat("Segoe Script", 18, 0x990000);
+			this.cr_mainCreditsFormat = new TextFormat("Segoe Script", 18, 0x000066);
 			cr_mainCreditsFormat.align = "center";
 			cr_mainCreditsFormat.leading = 0;
 			cr_mainCreditsDeveloper.setTextFormat(cr_mainCreditsFormat);
@@ -188,12 +188,12 @@ package scene
 			cr_fontCreditsTitle.text = "Font";	
 			cr_fontCredits.text = "Painty Paint - Vin Rowe(dafont)";
 	
-			this.cr_fontCreditsTitleFormat = new TextFormat("Segoe Script", 19, 0x990000);
+			this.cr_fontCreditsTitleFormat = new TextFormat("Segoe Script", 19, 0x000066);
 			cr_fontCreditsTitleFormat.align = "center";
 			cr_fontCreditsTitleFormat.leading = 0;
 			cr_fontCreditsTitle.setTextFormat(cr_fontCreditsTitleFormat);
 			
-			this.cr_fontCreditsFormat = new TextFormat("Segoe Script", 12, 0x990000);
+			this.cr_fontCreditsFormat = new TextFormat("Segoe Script", 12, 0x000066);
 			cr_fontCreditsFormat.align = "center";
 			cr_fontCreditsFormat.leading = 0;
 			cr_fontCredits.setTextFormat(cr_fontCreditsFormat);
@@ -217,12 +217,12 @@ package scene
 			cr_soundCreditsTitle.text = "Sound";	
 			cr_soundCredits.text = "Arrows Fly By - DigPro120 (freesound)\nWave3 - Kayyy (freesound)\nCrate Break 1 - kevinkace(freesound)\nShaker Riff - cloudyeyetavern(freesound)";
 			
-			this.cr_soundCreditsTitleFormat = new TextFormat("Segoe Script", 19, 0x990000);
+			this.cr_soundCreditsTitleFormat = new TextFormat("Segoe Script", 19, 0x000066);
 			cr_soundCreditsTitleFormat.align = "center";
 			cr_soundCreditsTitleFormat.leading = 0;
 			cr_soundCreditsTitle.setTextFormat(cr_soundCreditsTitleFormat);
 			
-			this.cr_soundCreditsFormat = new TextFormat("Segoe Script", 12, 0x990000);
+			this.cr_soundCreditsFormat = new TextFormat("Segoe Script", 12, 0x000066);
 			cr_soundCreditsFormat.align = "center";
 			cr_soundCreditsFormat.leading = 4;
 			cr_soundCredits.setTextFormat(cr_soundCreditsFormat);

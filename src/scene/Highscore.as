@@ -90,12 +90,12 @@ package scene
 			hi_highscoreScores.height = 420;
 			hi_highscoreScores.width = 100;
 			
-			this.hi_highscoreNumbersFormat = new TextFormat("Segoe Script", 20, 0x990000);
+			this.hi_highscoreNumbersFormat = new TextFormat("Segoe Script", 20, 0x000066);
 			hi_highscoreNumbersFormat.align = "right";
 			hi_highscoreNumbersFormat.leading = 8;
 			hi_highscoreNumbers.setTextFormat(hi_highscoreNumbersFormat);
 			
-			this.hi_highscoreListFormat = new TextFormat("Segoe Script", 20, 0x990000);
+			this.hi_highscoreListFormat = new TextFormat("Segoe Script", 20, 0x000066);
 			hi_highscoreListFormat.align = "left";
 			hi_highscoreListFormat.leading = 8;
 			hi_highscoreNames.setTextFormat(hi_highscoreListFormat);
@@ -168,7 +168,7 @@ package scene
 			this.hi_highscoreTitle = new TextField;
 			
 			hi_highscoreTitleFormat.font = "Segoe Script";
-			hi_highscoreTitleFormat.color = 0x990000;
+			hi_highscoreTitleFormat.color = 0x000066;
 			hi_highscoreTitleFormat.size = 50;
 			
 			hi_highscoreTitle.text = "Highscore";

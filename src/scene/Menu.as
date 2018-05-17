@@ -151,11 +151,11 @@ package scene
 		
 		private function btnPress():void {
 			if (m_btns.currentLabel == "single") {
-				Session.application.displayState = new Game(1);
+				Session.application.displayState = new Game(1)
 			}
 			
 			if (m_btns.currentLabel == "multi") {
-				Session.application.displayState = new Game(2);
+				Session.application.displayState = new TutorialMP;
 			}
 			
 			if (m_btns.currentLabel == "highscore") {

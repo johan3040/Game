@@ -4,7 +4,7 @@
 	
 	public class OriginalPlatform extends Platform{
 		
-		protected var platform:OrgPlatGFX;
+		public var platform:OrgPlatGFX;
 		
 		public function OriginalPlatform(pos:Array) {
 			super(pos);

@@ -74,7 +74,6 @@ package scene
 		
 		public function GameOver(player, mode){
 			super();
-			trace(mode);
 			this.player = player;
 			this.mode = mode;
 			this.go_controls = new EvertronControls(0);
@@ -322,7 +321,8 @@ package scene
 		
 		private function btnPress():void {
 			if (go_btns.currentLabel == "replay") {
-				Session.application.displayState = new Game(mode);
+				if(mode == 1) Session.application.displayState = new SingleplayerGame(mode);
+				if(mode == 2) Session.application.displayState = new MultiplayerGame(mode);
 			}
 			
 			if (go_btns.currentLabel == "menu") {

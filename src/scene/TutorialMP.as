@@ -69,7 +69,7 @@ package scene
 		}
 		
 		private function btnPress():void {
-			Session.application.displayState = new Game(2);
+			Session.application.displayState = new MultiplayerGame(2);
 		}
 		
 	}

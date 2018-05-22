@@ -23,7 +23,6 @@ package as3.game.gameobject.platforms{
 	public class MpPlatform extends OriginalPlatform{
 		
 		public var lockedPlat:OrgPlatLock;
-		public var visitors:Vector.<Player>;
 		
 		private var flagPole:FlagPole;
 		private var flagBlue:FlagBlue;
@@ -32,31 +31,23 @@ package as3.game.gameobject.platforms{
 		private var firework:FlagFirework;
 		private var currentFlag:MovieClip;
 		private var flagVector:Vector.<MovieClip>;
+		public var visitors:Vector.<Player>;
 		private var owner:Player;
 		private var currentPlayer:Player;
 		private var percentOwned:Number = 100;
+		private var go:Boolean;
 		private var givenPoint:Boolean = false;
+		
 		private var lockdown:Boolean = false;
 		private var lockdownTimer:Timer;
-		private var lockdownTimerActive:Boolean = false;
 		private var lockdownShake:Effect;
+		
 		private var flagTimer:Timer;
 		
 		[Embed(source = "../../../../../assets/audio/LockdownAUmp3.mp3")] 	// <-- this data..
 		private const LOCKDOWN_AUDIO:Class;					// ..gets saved in this const
 		protected var lockdownAudio:SoundObject;
 		
-		[Embed(source = "../../../../../assets/audio/PointAU.mp3")] 	// <-- this data..
-		private const POINT_AUDIO:Class;					// ..gets saved in this const
-		protected var pointAudio:SoundObject;
-		
-		/**
-		 * 
-		 * Class contructor
-		 * 
-		 * @param Array (coordinates of position)
-		 * 
-		 */
 		public function MpPlatform(pos:Array){
 			super(pos);
 			this.flagVector = 	new Vector.<MovieClip>;
@@ -68,11 +59,6 @@ package as3.game.gameobject.platforms{
 			this.initLockedPlat();
 		}
 		
-		/**
-		 * 
-		 * Initializes flag pole graphics
-		 * 
-		 */
 		private function initFlagPole():void{
 			this.flagPole = new FlagPole();
 			this.flagPole.x = this.obj_width/2;
@@ -80,11 +66,6 @@ package as3.game.gameobject.platforms{
 			addChild(this.flagPole);
 		}
 		
-		/**
-		 * 
-		 * Adds all 3 flags to Vector
-		 * 
-		 */
 		private function initFlags():void{
 			this.flagBlue = new FlagBlue();
 			this.flagRed = new FlagRed();
@@ -95,13 +76,6 @@ package as3.game.gameobject.platforms{
 			this.positionFlags();
 		}
 		
-		/**
-		 * 
-		 * Adds firework animation
-		 * 
-		 * Sets visibility to false
-		 * 
-		 */
 		private function initFirework():void{
 			this.firework = new FlagFirework();
 			this.firework.y = -100;
@@ -111,35 +85,17 @@ package as3.game.gameobject.platforms{
 			this.firework.visible = false;
 		}
 		
-		/**
-		 * 
-		 * Initializes class's audio
-		 * 
-		 */
 		private function initAudio():void{
 			Session.sound.soundChannel.sources.add("lockdown", LOCKDOWN_AUDIO);
 			this.lockdownAudio = Session.sound.soundChannel.get("lockdown", true, true);
-			Session.sound.soundChannel.sources.add("point", POINT_AUDIO);
-			this.pointAudio = Session.sound.soundChannel.get("point", true, false);
 		}
 		
-		
-		/**
-		 * 
-		 * Adds platform graphics
-		 * 
-		 */
 		private function initLockedPlat():void{
 			this.lockedPlat = new OrgPlatLock();
 			this.lockedPlat.visible = false;
 			addChild(this.lockedPlat);
 		}
 		
-		/**
-		 * 
-		 * Sets startposition for flags
-		 * 
-		 */
 		private function positionFlags():void{
 			
 			for(var i:int = 0; i<this.flagVector.length; i++){
@@ -151,111 +107,52 @@ package as3.game.gameobject.platforms{
 			this.initStartFlag();
 		}
 		
-		/**
-		 * 
-		 * Starting flag of every game (flagWhite) is set to visible
-		 * 
-		 */
 		private function initStartFlag():void{
 			this.currentFlag = this.flagWhite;
 			this.currentFlag.visible = true;
 		}
 		
-		/**
-		 * 
-		 * Callback when a player collides with platform
-		 * 
-		 * @param Player
-		 * 
-		 */
 		public function playerOnPlat(player:Player):void{
 			var i:int = this.visitors.indexOf(player);
 			if(i == -1){
 				this.visitors.push(player);
+				this.checkVisitors(player);
 			}
+			
 		}
 		
-		/**
-		 * 
-		 * Game update loop
-		 * 
-		 */
-		override public function update():void{
-			this.checkFirework();
-			this.checkPlayers();
-		}
-		
-		/**
-		 * 
-		 * Sets visibility to false when firework animation is complete
-		 * 
-		 */
-		private function checkFirework():void{
-			if(this.firework.currentFrame == this.firework.totalFrames){
-				this.firework.gotoAndStop(1);
-				this.firework.visible = false;
-			}
-		}
-		
-		/**
-		 * 
-		 * Calls methods depending on how many players is on the platform
-		 * 
-		 */
-		private function checkPlayers():void{
+		private function checkVisitors(player:Player):void{
+			
 			if(this.visitors.length == 1 && this.lockdown == false){
-				this.takePlatformAction();
-			}else if(this.visitors.length == 2){
-				this.checkMultipleVisitors();
-			}
-		}
-		
-		/**
-		 * 
-		 * Method when platform only has one current player
-		 * 
-		 */
-		private function takePlatformAction():void{
-			this.currentPlayer = this.visitors[0];
-			if(this.owner != this.currentPlayer){
-				if(this.lockdownTimer != null) this.stopTimer();
-				this.countDown();
-			}
-			if(this.owner == this.currentPlayer && this.percentOwned < 100){
-				this.countUp();
-			}
-			if(this.owner == this.currentPlayer && this.lockdownTimer != null && this.percentOwned == 100){
-				if(this.lockdownTimer.active == false){
-					this.startLockdownTimer();
+				this.go = true;
+				this.currentPlayer = player;
+				this.checkLockdownTimer();
+				if(this.owner != this.currentPlayer){
+					//this.flagTimer = this.startTimer(this.countDown);
+					this.countDown();
 				}
+				if(this.owner == this.currentPlayer && this.percentOwned < 100){
+					//this.flagTimer = this.startTimer(this.countUp);
+					this.countUp();
+				}
+			}else{
+				this.go = false;
+				if(this.lockdownTimer != null) this.lockdownTimer.stop();
+				if(this.flagTimer != null) this.flagTimer.stop();
 			}
+			
 		}
 		
-		/**
-		 * 
-		 * Method when two players are on plat
-		 * 
-		 */
-		private function checkMultipleVisitors():void{
-			if(	this.lockdownTimer != null 		&& 
-				this.lockdown == false 			&&
-				(this.visitors[0] != this.owner 	|| 
-				this.visitors[1] != this.owner)){
-				
-					if(this.lockdownTimer) this.stopTimer();
-			}
+		private function startTimer(f:Function):Timer{
+			return Session.timer.create(32,f,0,true);			
 		}
 		
-		/**
-		 * 
-		 * Counts 
-		 * 
-		 */
 		private function countDown():void{
-			if(this.currentPlayer.frozen == false){
-				this.percentOwned-=2.5;
+			if(this.go && this.currentPlayer.frozen == false){
+				this.percentOwned-=5;
 				if(this.percentOwned <= 0) return this.flagReachedBottom();
 				this.moveFlags();
+				this.flagTimer = this.startTimer(this.countDown);
 			}
 		}
 		
@@ -276,21 +173,20 @@ package as3.game.gameobject.platforms{
 		}
 		
 		private function countUp():void{
-			if(this.currentPlayer.frozen == false){
-				this.percentOwned+=2.5;
+			if(this.go && this.currentPlayer.frozen == false){
+				this.percentOwned+=5;
 				if(this.percentOwned >= 100) return this.givePoint();
 				this.moveFlags();
+				this.flagTimer = this.startTimer(this.countUp);
 			}
 		}
 		
 		private function givePoint():void{
-			this.pointAudio.play();
-			this.lockdownTimerActive = true;
 			this.percentOwned = 100;
 			if(this.givenPoint == false) this.currentPlayer.numFlags++;
 			this.givenPoint = true;
 			this.playFirework();
-			this.startLockdownTimer();
+			this.startLockdownCounter();
 		}
 		
 		//------------------------------------
@@ -302,18 +198,24 @@ package as3.game.gameobject.platforms{
 			this.lockedPlat.visible = true;
 			this.lockdownAudio.play(0);
 			this.lockdownEffect();
+			
 		}
 		
-		private function startLockdownTimer():void{
-			this.lockdownTimer = Session.timer.create(6000,this.lockItDown,0,true);
+		private function checkLockdownTimer():void{
+			if(this.lockdownTimer && this.currentPlayer != this.owner){
+				this.stopTimer();
+			}else if(this.lockdownTimer && this.currentPlayer == this.owner){
+				this.lockdownTimer.start();
+			}
+		}
+		
+		private function startLockdownCounter():void{
+			this.lockdownTimer = Session.timer.add(new Timer(6000, this.lockItDown, 0),true);
+			//this.lockdownTimer.start();
 		}
 		
 		private function stopTimer():void{
-			
-			if(this.lockdownTimerActive == true){
-				this.lockdownTimer.stop();
-				this.lockdownTimerActive = false;
-			}
+			this.lockdownTimer.removeCurrentTimer();
 		}
 		
 		private function lockdownEffect():void{
@@ -348,12 +250,34 @@ package as3.game.gameobject.platforms{
 		
 		public function visitorLeft(player:Player):void{	
 			var i:int = this.visitors.indexOf(player);
-			if(i != -1)	this.visitors.splice(i,1);
+			
+			if(i != -1){
+				
+				this.visitors.splice(i,1);
+			
+				if(this.visitors.length == 1){
+					this.checkVisitors(this.visitors[0]);
+				}else{
+					this.go = false;
+				}
+			}
 		}
 		
 		private function playFirework():void{
 			this.firework.visible = true;
 			this.firework.play();
+		}
+		
+		override public function update():void{
+			this.checkFirework();
+			
+		}
+		
+		private function checkFirework():void{
+			if(this.firework.currentFrame == this.firework.totalFrames){
+				this.firework.gotoAndStop(1);
+				this.firework.visible = false;
+			}
 		}
 		
 		public function resetFlag():void{

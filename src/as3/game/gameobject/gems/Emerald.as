@@ -7,7 +7,7 @@ package as3.game.gameobject.gems{
 		
 		public function Emerald(player){
 			super(player);
-			value = 500;
+			value = 50;
 		}
 		
 		override public function init():void{

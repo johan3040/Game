@@ -3,6 +3,7 @@ package as3.game
 	
 	import se.lnu.stickossdk.display.DisplayState;
 	import se.lnu.stickossdk.system.Session;
+	import se.lnu.stickossdk.util.URLUtils;
 
 	public class GetHighscore extends DisplayState
 	{
@@ -42,7 +43,7 @@ package as3.game
 			}
 			
 			for (var e:int = 0; e < data.items.item.length(); e++) {
-				hl_names[e] = data.items.item[e].name;
+				hl_names[e] = URLUtils.decode(data.items.item[e].name);
 			}
 			
 			for (var o:int = 0; o < data.items.item.length(); o++) {

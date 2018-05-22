@@ -1,26 +1,28 @@
 package as3.game.gameobject.powerups{
 	
-	import assets.gameObjects.PowerupIce;
+	import assets.gameObjects.PowerupSnail;
 	
 	import se.lnu.stickossdk.system.Session;
 	
-	public class IceBlock extends PowerUp{
+	public class Snail extends PowerUp{
 		
-		public function IceBlock(){
+		public function Snail(){
 			super();
+			
 		}
 		
 		override public function init():void{
 			this.initSkin();
 			this.initHitbox();
+			this.x = 300;
+			this.y = -100;
 			this.scaleX = 0.8;
 			this.scaleY = 0.8;
-			this.m_skin.rotation = 10;
-			Session.timer.create(6000, this.initDrop);
+			Session.timer.create(9000, this.initDrop);
 		}
 		
 		private function initSkin():void{
-			m_skin = new PowerupIce();
+			m_skin = new PowerupSnail();
 			addChild(m_skin);
 		}
 		

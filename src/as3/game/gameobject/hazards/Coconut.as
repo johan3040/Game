@@ -67,11 +67,6 @@ package as3.game.gameobject.hazards
 		
 		}
 		
-		/*private function setMeta():void{			
-			this.startSpeed = 1;
-			this.drop = true;
-		}*/
-		
 		private function initAudio():void{
 		
 			Session.sound.soundChannel.sources.add("coconutFalling", COCO_AUDIO);

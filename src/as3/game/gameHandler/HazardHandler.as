@@ -3,6 +3,7 @@ package as3.game.gameHandler
 	
 	import as3.game.gameobject.hazards.Arrow;
 	import as3.game.gameobject.hazards.Coconut;
+	import as3.game.gameobject.hazards.Hazard;
 	import as3.game.gameobject.hazards.Wave;
 	import as3.game.gameobject.player.Player;
 	
@@ -16,11 +17,12 @@ package as3.game.gameHandler
 		private var ocean:Wave;
 		private var arr:Arrow;
 		private var coco:Coconut;
-		private var gameOver:Boolean = false;
+		private var hazards:Vector.<Hazard>;
 		
 		public function HazardHandler(game:Game){
 			super();
 			this.game = game;
+			this.hazards = new Vector.<Hazard>();
 			this.init();
 		}
 		
@@ -28,11 +30,11 @@ package as3.game.gameHandler
 		
 			// Inithazards
 			this.initWave();
-			this.initCoconut();
-			Session.timer.create(10000, this.initCoconut);
-			this.initArrow();
-			Session.timer.create(5000, this.initArrow);
-			Session.timer.create(10000, this.initArrow);
+			Session.timer.create(3000, this.initCoconut);
+			Session.timer.create(15000, this.initCoconut);
+			Session.timer.create(6000, this.initArrow);
+			Session.timer.create(15000, this.initArrow);
+			Session.timer.create(20000, this.initArrow);
 			
 		}
 		
@@ -43,14 +45,15 @@ package as3.game.gameHandler
 			this.game.gameLayer.addChild(this.ocean);
 			this.game.hazardVector.push(this.ocean);
 			this.game.collidableObjects.push(this.ocean);
+			this.hazards.push(this.ocean);
 		}
 		
 		private function initArrow():void{
-			this.arr = new Arrow(getPlayerAsTarget());
+			this.arr = new Arrow(this.getPlayerAsTarget());
 			this.game.gameLayer.addChild(this.arr);
 			this.game.hazardVector.push(this.arr);
 			this.game.collidableObjects.push(this.arr);
-			
+			this.hazards.push(this.arr);
 		}
 		
 		private function initCoconut():void{
@@ -58,15 +61,18 @@ package as3.game.gameHandler
 			this.game.gameLayer.addChild(this.coco);
 			this.game.hazardVector.push(this.coco);
 			this.game.collidableObjects.push(this.coco);
+			this.hazards.push(this.coco);
 		}
 		
 		private function getPlayerAsTarget():Player{
-			return this.game.playerVector.length == 1 ? this.game.playerVector[0] : this.game.playerVector[Math.round(Math.random())];
+			return this.game.playerVector[0];
 			
 		}
 		
 		public function setGameState():void{
-			this.gameOver = true;
+			/*for (var i:int = 0; i<this.hazards.length; i++){
+				this.hazards[i].setGameOver();
+			}*/
 		}
 		
 		public function dispose():void{

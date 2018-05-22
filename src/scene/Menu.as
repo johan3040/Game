@@ -2,10 +2,10 @@ package scene
 {
 	import flash.display.Sprite;
 	
-	import assets.gameObjects.menuPalm;
-	import assets.gameObjects.menuBtns;
-	import assets.gameObjects.Logo;
 	import assets.gameObjects.GradientBack;
+	import assets.gameObjects.Logo;
+	import assets.gameObjects.menuBtns;
+	import assets.gameObjects.menuPalm;
 	
 	import se.lnu.stickossdk.display.DisplayState;
 	import se.lnu.stickossdk.display.DisplayStateLayer;
@@ -151,7 +151,7 @@ package scene
 		
 		private function btnPress():void {
 			if (m_btns.currentLabel == "single") {
-				Session.application.displayState = new Game(1)
+				Session.application.displayState = new SingleplayerGame(1)
 			}
 			
 			if (m_btns.currentLabel == "multi") {

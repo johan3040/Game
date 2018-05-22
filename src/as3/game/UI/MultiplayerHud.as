@@ -9,6 +9,8 @@ package as3.game.UI{
 	import assets.gameObjects.hudLeafMiddle;
 	
 	import se.lnu.stickossdk.display.DisplayStateLayerSprite;
+	import se.lnu.stickossdk.system.Session;
+	import se.lnu.stickossdk.tween.easing.Back;
 	
 	public class MultiplayerHud extends DisplayStateLayerSprite{
 		
@@ -51,7 +53,29 @@ package as3.game.UI{
 		}
 		
 		override public function update():void{
-			if(this.m_text.text != this.owner.numFlags.toString()) this.m_text.text = this.owner.numFlags.toString();
+			if(this.m_text.text != this.owner.numFlags.toString()){
+				this.m_text.text = this.owner.numFlags.toString();
+				this.scaleUp();
+			}
+		}
+		
+		private function scaleUp():void{
+			Session.tweener.add(this.m_text,{
+				transition: Back.easeOut,
+				scaleX: 2,
+				scaleY: 2,
+				duration: 500,
+				onComplete: this.scaleDown
+			});
+		}
+		
+		private function scaleDown():void{
+			Session.tweener.add(this.m_text,{
+				transition: Back.easeOut,
+				scaleX: 1,
+				scaleY: 1,
+				duration: 500
+			});
 		}
 		
 		override public function dispose():void{

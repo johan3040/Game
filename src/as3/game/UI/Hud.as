@@ -23,17 +23,23 @@ package as3.game.UI
 		private var m_gameBonusPoints:GameBonusPoints;
 		private var p1_leaf:MultiplayerHud;
 		private var p2_leaf:MultiplayerHud;
+		private var sb:MpScoreboard;
 		
-		public function Hud(mode:int, players:Vector.<Player>){
+		public function Hud(players:Vector.<Player>){
 			super();
 			this.players = players
-			
-			this.initTopBase();
-			mode == 1 ? this.initSpHud() : this.initMpHud();
+			this.players.length == 1 ? this.initSpHud() : this.initMpHud();
 		}
 		
-		override public function init():void{
-			
+		private function initTopBase():void{
+			this.m_hudTopBar = new TopBar();
+			addChild(this.m_hudTopBar);
+		}
+		
+		private function initSpHud():void{
+			this.initTopBase();
+			this.initSidebars();
+			this.initGameBonusPoints();
 		}
 		
 		private function initSidebars():void{
@@ -45,21 +51,17 @@ package as3.game.UI
 			addChild(this.rightSidebar);		
 		}
 		
-		private function initTopBase():void{
+		private function initGameBonusPoints():void{
 			
-			this.m_hudTopBar = new TopBar();
-			addChild(this.m_hudTopBar);
+			this.m_gameBonusPoints = new GameBonusPoints(this.players[0]);
+			addChild(this.m_gameBonusPoints);
 			
-		}
-		
-		private function initSpHud():void{
-			this.initSidebars();
-			this.initGameBonusPoints();
 		}
 		
 		private function initMpHud():void{
 			this.initMpLeafs();
 			this.initMpSidebars();
+			this.initScoreboard();
 		}
 		
 		private function initMpLeafs():void{
@@ -71,18 +73,19 @@ package as3.game.UI
 		
 		private function initMpSidebars():void{
 			this.arenaBarLeft = new ArenaSideLeft();
-			
 			this.arenaBarRight = new ArenaSideRight();
 			this.arenaBarRight.x = 800;
 			addChild(this.arenaBarLeft);
 			addChild(this.arenaBarRight);
 		}
 		
-		private function initGameBonusPoints():void{
-			
-			this.m_gameBonusPoints = new GameBonusPoints(this.players[0]);
-			addChild(this.m_gameBonusPoints);
-			
+		private function initScoreboard():void{
+			this.sb = new MpScoreboard(this.players);
+			addChild(this.sb);
+		}
+		
+		override public function update():void{
+			this.sb.update();
 		}
 		
 		override public function dispose():void{

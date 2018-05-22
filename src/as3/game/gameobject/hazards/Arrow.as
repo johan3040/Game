@@ -50,11 +50,7 @@
 		}
 		
 		private function initHitBox():void{
-			
-			//hitBox.graphics.beginFill(0x00FF00);
 			hitBox.graphics.drawRect(0,0,20,12);
-			//hitBox.graphics.endFill();
-			
 		}
 		
 		private function initPosition():void{
@@ -89,7 +85,6 @@
 		}
 		
 		override public function update():void{
-			
 			if(this.shootArrow == true && this.fromRight == 0)this.moveArrowLeft();
 			if(this.shootArrow == true && this.fromRight == 1)this.moveArrowRight();
 			

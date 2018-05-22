@@ -1,5 +1,5 @@
-package as3.game.gameobject.powerups
-{
+package as3.game.gameobject.powerups{
+	
 	import assets.gameObjects.PowerupJump;
 	
 	import se.lnu.stickossdk.system.Session;

@@ -232,6 +232,7 @@ package as3.game.gameHandler
 		}
 		
 		private function mpPlatCollission(plat:MpPlatform,player:Player):void{
+			player.setCurrentPlat(plat);
 			plat.playerOnPlat(player);
 		}
 		
@@ -241,19 +242,23 @@ package as3.game.gameHandler
 			for(var i:int = 0; i < this.platformVector.length; i++){
 				if(this.platformVector[i] is MpPlatform){
 					var plat:MpPlatform = this.platformVector[i] as MpPlatform;
+					this.setVisiblePlatform(plat);
 					this.mpRepos(plat, arr[i]);
-					this.mpNeutralize(plat);
+					plat.resetFlag();
 				}
+			}
+		}
+		
+		private function setVisiblePlatform(plat:MpPlatform):void{
+			if(plat.platform.visible == false){
+				plat.platform.visible = true;
+				plat.lockedPlat.visible = false;
 			}
 		}
 		
 		private function mpRepos(plat:MpPlatform, pos:Array):void{
 			plat.setData(pos);
 			this.positionPlatform(plat);
-		}
-		
-		private function mpNeutralize(plat:MpPlatform):void{
-			plat.resetFlag();
 		}
 		
 		public function dispose():void{

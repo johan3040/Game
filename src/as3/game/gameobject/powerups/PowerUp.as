@@ -12,6 +12,11 @@ package as3.game.gameobject.powerups
 		protected var m_skin:MovieClip;
 		protected var drop:Boolean = false;
 		
+		/**
+		 * 
+		 * Class's contructor method
+		 * 
+		 */
 		public function PowerUp(){
 			super();
 			this.y = 0;
@@ -24,20 +29,37 @@ package as3.game.gameobject.powerups
 			addChild(hitBox);
 		}
 		
+		/**
+		 * 
+		 * Update-loop
+		 * 
+		 */
 		override public function update():void{
 			if(this.drop) this.dropPackage();
 		}
 		
+		/**
+		 * 
+		 * Adds exactly 1 to objects Y-value
+		 * 
+		 * If objects y-value is >= 600 it is off-screen. Call for reposition method
+		 * 
+		 */
 		private function dropPackage():void{
 			this.y++;
 			if(this.y >=600){
 				this.drop = false;
 				this.y = -100;
-				var delay:int = Math.floor(Math.random()*7000) + 7000;
+				var delay:int = Math.floor(Math.random()*13000) + 9000;
 				Session.timer.create(delay, this.setPosition);
 			}
 		}
 		
+		/**
+		 * 
+		 * First tween for 'swinging' effect on object
+		 * 
+		 */
 		protected function startTween():void{
 			Session.tweener.add(this.m_skin, {
 				rotation: -10,
@@ -47,7 +69,12 @@ package as3.game.gameobject.powerups
 			});
 		}
 		
-		protected function endTween():void{
+		/**
+		 * 
+		 * Second tween for 'swining' effect on object
+		 * 
+		 */
+		private function endTween():void{
 			Session.tweener.add(this.m_skin, {
 				rotation: 10,
 				duration: 1000,
@@ -56,10 +83,16 @@ package as3.game.gameobject.powerups
 			});
 		}
 		
+		/**
+		 * 
+		 * Sets objects position off-screen until setPosition is called
+		 * 
+		 */
 		public function reposition():void{
 			this.x = -100;
 			this.y = -100;
-			var delay:int = Math.floor(Math.random()*7000) + 7000;
+			this.drop = false;
+			var delay:int = Math.floor(Math.random()*13000) + 9000;
 			Session.timer.create(delay, this.setPosition);
 		}
 		

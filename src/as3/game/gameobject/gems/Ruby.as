@@ -10,7 +10,7 @@ package as3.game.gameobject.gems
 		
 		public function Ruby(player){
 			super(player);
-			value = 250;
+			value = 25;
 		}
 		
 		override public function init():void{

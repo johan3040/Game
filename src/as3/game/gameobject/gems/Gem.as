@@ -44,7 +44,7 @@ package as3.game.gameobject.gems
 		
 		private function setY():void{
 			if(this.player.y > 300){
-				this.yCoor = Math.floor(Math.random()*200) + 60;
+				this.yCoor = Math.floor(Math.random()*200) + 100;
 			}else{
 				this.yCoor = Math.floor(Math.random()*200) + 200;
 			}

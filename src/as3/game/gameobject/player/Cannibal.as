@@ -54,6 +54,7 @@
 		public function startPosition():void{
 			this.x = 600;
 			this.y = 560 - this.obj_height;
+			if(this.scaleX != 1) this.scaleX = 1;
 		}
 		
 		override public function dispose():void{

@@ -8,6 +8,7 @@ package as3.game.gameobject.powerups{
 		
 		public function Immortality(){
 			super();
+			this.duration = 4000;
 		}
 		
 		override public function init():void{

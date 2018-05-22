@@ -248,7 +248,7 @@ package as3.game.gameobject.platforms{
 		
 		/**
 		 * 
-		 * Counts 
+		 * Counts owned percentage down
 		 * 
 		 */
 		private function countDown():void{

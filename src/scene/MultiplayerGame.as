@@ -298,8 +298,8 @@ package scene{
 			this.soundHandler.powerUpCollission();
 			pw.reposition();
 			var receiver:Player = this.playerVector.indexOf(player) == 0 ? receiver = this.playerVector[1] : receiver = this.playerVector[0];
-			if(pw is IceBlock) receiver.setFrozen();				
-			if(pw is Snail) receiver.setSpeed();
+			if(pw is IceBlock) receiver.setFrozen(pw as IceBlock);				
+			if(pw is Snail) receiver.setSpeed(pw as Snail);
 		}
 		
 		/**

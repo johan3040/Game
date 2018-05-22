@@ -40,9 +40,6 @@ package scene
 		public var hazardVector:Vector.<GameObject>;
 		public var collidableObjects:Vector.<GameObject>;
 		
-		
-		
-		
 		/**
 		 * 
 		 * Constructor method for Game
@@ -53,7 +50,6 @@ package scene
 		public function Game(mode:int){
 			super();
 			this.mode = mode;
-			//this.gameObjectVec = new Vector.<GameObject>;
 			this.playerVector = new Vector.<Player>;
 			this.hazardVector = new Vector.<GameObject>;
 			this.collidableObjects = new Vector.<GameObject>;

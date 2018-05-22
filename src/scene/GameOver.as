@@ -21,6 +21,7 @@ package scene
 	import se.lnu.stickossdk.display.DisplayStateLayer;
 	import se.lnu.stickossdk.input.EvertronControls;
 	import se.lnu.stickossdk.input.Input;
+	import se.lnu.stickossdk.media.SoundObject;
 	import se.lnu.stickossdk.system.Session;
 	
 	public class GameOver extends DisplayState{
@@ -67,6 +68,10 @@ package scene
 					embedAsCFF="false")]
 		private var myEmbeddedFont:Class;
 		
+		[Embed(source = "../../assets/audio/gameoverMusicAU.mp3")] 	// <-- this data..
+		private const GO_MAIN_AUDIO:Class;					// ..gets saved in this const
+		private var goAudio:SoundObject;
+		
 		public function GameOver(player, mode){
 			super();
 			trace(mode);
@@ -78,6 +83,7 @@ package scene
 		override public function init():void{		
 			this.initLayers();
 			this.initBackground();
+			this.initMusic();
 			this.mode == 1 ? this.go_Sp() : this.go_Mp();
 		}
 		
@@ -113,6 +119,14 @@ package scene
 			
 			this.go_menuLayer.addChild(this.go_background);
 		}	
+		
+		private function initMusic():void {
+			Session.sound.soundChannel.sources.add("GO_MAIN", GO_MAIN_AUDIO);
+			this.goAudio = Session.sound.soundChannel.get("GO_MAIN", true, true);
+			
+			this.goAudio.play(9999); //Loopar musiken 9999 gånger
+			this.goAudio.volume = 0.6;
+		}
 		
 		private function go_Sp():void{
 			this.score = this.player.bonusPoints;

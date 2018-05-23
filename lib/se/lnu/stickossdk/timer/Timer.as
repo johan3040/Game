@@ -131,6 +131,10 @@ package se.lnu.stickossdk.timer
 		// Public methods
 		//-------------------------------------------------------
 		
+		public function elapsed():Number {
+			return this._activeTimeElapsed;
+		}
+		
 		/**
 		 *	Startar timern, om den inte redan är igång.
 		 * 

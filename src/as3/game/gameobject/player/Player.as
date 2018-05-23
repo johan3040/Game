@@ -17,6 +17,7 @@
 	
 	import assets.gameObjects.IceBlockGFX;
 	
+	import se.lnu.stickossdk.display.DisplayStateLayer;
 	import se.lnu.stickossdk.fx.Flicker;
 	import se.lnu.stickossdk.input.EvertronControls;
 	import se.lnu.stickossdk.input.Input;
@@ -85,6 +86,7 @@
 		private const FRICTION:Number = 0.6;
 		private const DEFAULT_PUSH_POWER:int = 10;
 		
+		public var meterLayer:DisplayStateLayer;
 		/**
 		 * 
 		 * 
@@ -94,9 +96,10 @@
 		 * @param function
 		 * 
 		 */
-		public function Player(ctrl:int, pushCallback:Function) {
+		public function Player(ctrl:int, pushCallback:Function, meterLayer:DisplayStateLayer) {
 			this.ctrl = ctrl;
 			if(pushCallback != null)this.pushCallback = pushCallback;
+			this.meterLayer = meterLayer;
 			this.powerupMeters = new Vector.<PowerupMeter>;
 			this.velocity = 0;
 			this.gravity = this.DEFAULT_GRAVITY;
@@ -166,6 +169,7 @@
 			
 		private function m_goRight():void{
 			this.scaleX = 1;
+			//this.scalePowerupMeters();
 			if(this.x <= 760) {
 				this.x += this.speed;
 				this.faceRight = true;
@@ -178,6 +182,7 @@
 		
 		private function m_goLeft():void{
 			this.scaleX = -1;
+			//this.scalePowerupMeters();
 			if(this.x>=40){ 
 				this.x -= this.speed;
 				this.faceRight = false;
@@ -198,6 +203,15 @@
 			}
 		}
 		
+		private function scalePowerupMeters():void{
+			if(this.powerupMeters.length > 0){
+				for(var i:int = 0; i<this.powerupMeters.length; i++){
+					this.powerupMeters[i].scaleX = 1;
+				}
+			}
+			
+		}
+		
 		/**
 		 * 
 		 * Method for setting 'push'-animation
@@ -215,7 +229,7 @@
 			}			
 		}
 		
-		private function gotoIdle():void{
+		public function gotoIdle():void{
 			if(this.m_skin.currentFrameLabel != "idle" && this.wings == false) this.m_skin.gotoAndStop("idle");
 		}
 
@@ -262,16 +276,26 @@
 		
 		private function updatePowerupMeters():void{
 			for(var i:int = 0; i < this.powerupMeters.length; i++){
-				this.powerupMeters[i].update();
+				this.powerupMeters[i].updateMeters(i);
 			}
 		}
 		
 		public function removePowerupMeter(timer:PowerupMeter):void{
 			var i:int = this.powerupMeters.indexOf(timer);
 			if(i != -1){
-				removeChild(this.powerupMeters[i]);
+				this.meterLayer.removeChild(this.powerupMeters[i]);
 				this.powerupMeters.splice(i,1);
-				if(this.powerupMeters.length == 1) this.powerupMeters[0].setY();
+			}
+		}
+		
+		/**
+		 * 
+		 * Callback from class 'MultiplayerGame' to clear and remove active powerups
+		 * 
+		 */
+		public function clearActivePowerups():void{
+			for(var i:int = 0; i<this.powerupMeters.length; i++){
+				this.removePowerupMeter(this.powerupMeters[i]);
 			}
 		}
 		
@@ -356,7 +380,7 @@
 		
 		private function setPowerMeter(pw:PowerUp):void{
 			var p:PowerupMeter = new PowerupMeter(pw, this.removePowerupMeter, this);
-			addChild(p);
+			this.meterLayer.addChild(p);
 			this.powerupMeters.push(p);
 		}
 		

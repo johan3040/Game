@@ -2,10 +2,12 @@
 	
 	import assets.gameObjects.P1;
 	
+	import se.lnu.stickossdk.display.DisplayStateLayer;
+	
 	public class Explorer extends Player{
 		
-		public function Explorer(ctrl:int,push:Function) {
-			super(ctrl, push);
+		public function Explorer(ctrl:int,push:Function, meterLayer:DisplayStateLayer) {
+			super(ctrl, push, meterLayer);
 			this.initExplorer();
 		}
 		
@@ -27,11 +29,15 @@
 		}
 		
 		private function setBodyBitbox():void{
+			//hitBox.graphics.beginFill(0x0000FF);
 			hitBox.graphics.drawRect(-7, 4, 14, 33);
+			//hitBox.graphics.endFill();
 		}
 		
 		private function setFootHitbox():void{
+			//bottomHitBox.graphics.beginFill(0xFF0000);
 			bottomHitBox.graphics.drawRect(-10, 30, 18, 12);
+			//bottomHitBox.graphics.endFill();
 		}
 		
 		private function setObjectDim():void{

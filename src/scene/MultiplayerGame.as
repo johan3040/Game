@@ -71,7 +71,7 @@ package scene{
 		 * 
 		 */
 		private function initPlayer():void{
-			this.player1 = new Explorer(0, this.playerPush);
+			this.player1 = new Explorer(0, this.playerPush, this.m_powerupMeterLayer);
 			this.m_playerLayer.addChild(this.player1);
 			this.playerVector.push(this.player1);
 		}
@@ -83,7 +83,7 @@ package scene{
 		 * 
 		 */
 		private function initPlayer2():void{
-			this.player2 = new Cannibal(1, this.playerPush);
+			this.player2 = new Cannibal(1, this.playerPush, this.m_powerupMeterLayer);
 			this.m_playerLayer.addChild(this.player2);
 			this.playerVector.push(this.player2);
 		}
@@ -223,14 +223,15 @@ package scene{
 		
 		/**
 		 * 
-		 * Checks if player 1 or player2 has active powerups in beginning of round
+		 * Checks if players has active powerups in beginning of round
 		 * 
 		 */
 		private function checkIfActivePowerups():void{
-			if(this.player1.frozen) this.player1.resetFrozen();
-			if(this.player1.slowedDown) this.player1.resetSpeed();
-			if(this.player2.frozen) this.player2.resetFrozen();
-			if(this.player2.slowedDown) this.player2.resetSpeed();
+			for(var i:int = 0; i < this.playerVector.length; i++){
+				if(this.playerVector[i].slowedDown || this.playerVector[i].frozen) this.playerVector[i].clearActivePowerups();
+				if(this.playerVector[i].frozen) this.playerVector[i].resetFrozen();
+				if(this.playerVector[i].slowedDown) this.playerVector[i].resetSpeed();
+			}
 		}
 		
 		/**

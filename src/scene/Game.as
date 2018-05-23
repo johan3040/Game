@@ -26,6 +26,7 @@ package scene
 		
 		protected var m_gameHudLayer:DisplayStateLayer;
 		protected var m_playerLayer:DisplayStateLayer;
+		protected var m_powerupMeterLayer:DisplayStateLayer;
 		protected var m_hud:Hud;
 		protected var player1:Player;
 		protected var player2:Player;
@@ -71,6 +72,7 @@ package scene
 			this.gameLayer = this.layers.add("game");
 			this.m_gameHudLayer = this.layers.add("HUD");
 			this.m_playerLayer = this.layers.add("playerLayer");
+			this.m_powerupMeterLayer = this.layers.add("powerupMeter");
 		}
 		
 		/**
@@ -91,6 +93,7 @@ package scene
 		 */
 		protected function prepareGameOver(player:Player):void{
 			var go_delay:int = 2000;
+			player.gotoIdle();
 			this.mode == 1 ? this.gameOverSp(player, go_delay) : this.gameOverMp();
 			Session.timer.dispose();
 			Session.timer.create(go_delay, gameOver, 0);

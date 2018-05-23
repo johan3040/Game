@@ -56,7 +56,7 @@ package as3.game.gameHandler{
 		}
 		
 		public function playMainAudio():void{
-			//this.mainAudio.play(999);
+			this.mainAudio.play(999);
 		}
 		
 		public function lowerVolume():void{

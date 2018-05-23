@@ -58,7 +58,7 @@ package as3.game.UI
 		
 		private function initMpHud():void{
 			this.initMpLeafs();
-			this.initMpSidebars();
+			//this.initMpSidebars();
 			this.initScoreboard();
 		}
 		

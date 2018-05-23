@@ -2,10 +2,12 @@
 	
 	import assets.gameObjects.P2;
 	
+	import se.lnu.stickossdk.display.DisplayStateLayer;
+	
 	public class Cannibal extends Player{
 		
-		public function Cannibal(ctrl:int,push:Function) {
-			super(ctrl, push);
+		public function Cannibal(ctrl:int, push:Function, meterLayer:DisplayStateLayer){
+			super(ctrl, push, meterLayer);
 			this.initCannibal();
 		}
 		

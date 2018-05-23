@@ -23,7 +23,6 @@ package as3.game.UI{
 			this.callback = callback;
 			this.owner = player;
 			this.timer = Session.timer.create(pw.duration, this.removeGraphics, 0, true);
-			this.x = -15;
 			this.owner.powerupMeters.length < 1 ? this.y = -10 : this.y = -18;
 			this.initMeter();
 		}
@@ -37,16 +36,14 @@ package as3.game.UI{
 			addChild(this.meter);
 		}
 		
-		override public function update():void{
-			var x:Number = 1 - (this.timer._activeTimeElapsed / this.duration);
+		public function updateMeters(i:int):void{
+			i == 0 ? this.y = this.owner.y-12 : this.y = this.owner.y-18;
+			this.x = this.owner.x - this.owner.width/2;
+			var x:Number = 1 - (this.timer.elapsed() / this.duration);
 			var y:Number = x*30;
 			this.meter.graphics.beginFill(0xFFa500);
 			this.meter.graphics.drawRect(0, 0, y, 4);
 			this.meter.graphics.endFill();
-		}
-		
-		public function setY():void{
-			this.y = -10;
 		}
 		
 		private function removeGraphics():void{

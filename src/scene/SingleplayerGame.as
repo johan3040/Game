@@ -61,7 +61,7 @@ package scene{
 		 * 
 		 */
 		private function initPlayer():void{
-			this.player1 = new Explorer(0, this.playerPush);
+			this.player1 = new Explorer(0, this.playerPush, this.m_powerupMeterLayer);
 			this.m_playerLayer.addChild(this.player1);
 			this.playerVector.push(this.player1);
 		}

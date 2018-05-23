@@ -27,16 +27,11 @@
 		}
 		
 		private function setBodyBitbox():void{
-			//hitBox.graphics.beginFill(0x00FF00);
 			hitBox.graphics.drawRect(-7, 4, 14, 33);
-			//hitBox.graphics.endFill();
-			//hitBox.alpha = 0.7;
 		}
 		
 		private function setFootHitbox():void{
-			//bottomHitBox.graphics.beginFill(0xFF0000);
 			bottomHitBox.graphics.drawRect(-10, 30, 18, 12);
-			//bottomHitBox.graphics.endFill();
 		}
 		
 		private function setObjectDim():void{
@@ -45,8 +40,6 @@
 		}
 		
 		private function addChildren():void{
-			//this.scaleX = 0.8;
-			//this.scaleY = 0.8;
 			addChild(this.m_skin);
 			addChild(hitBox);
 			addChild(bottomHitBox);

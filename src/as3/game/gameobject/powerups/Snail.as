@@ -8,7 +8,7 @@ package as3.game.gameobject.powerups{
 		
 		public function Snail(){
 			super();
-			
+			this.duration = 2500;
 		}
 		
 		override public function init():void{
@@ -18,7 +18,7 @@ package as3.game.gameobject.powerups{
 			this.y = -100;
 			this.scaleX = 0.8;
 			this.scaleY = 0.8;
-			Session.timer.create(9000, this.initDrop);
+			Session.timer.create(17000, this.initDrop);
 		}
 		
 		private function initSkin():void{

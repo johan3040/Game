@@ -3,16 +3,19 @@
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	
+	import as3.game.UI.PowerupMeter;
 	import as3.game.gameobject.GameObject;
 	import as3.game.gameobject.platforms.LeftBase;
 	import as3.game.gameobject.platforms.MpPlatform;
 	import as3.game.gameobject.platforms.Platform;
 	import as3.game.gameobject.platforms.RightBase;
+	import as3.game.gameobject.powerups.IceBlock;
 	import as3.game.gameobject.powerups.Immortality;
 	import as3.game.gameobject.powerups.PowerUp;
+	import as3.game.gameobject.powerups.Snail;
 	import as3.game.gameobject.powerups.Superjump;
 	
-	import assets.gameObjects.IceBlock;
+	import assets.gameObjects.IceBlockGFX;
 	
 	import se.lnu.stickossdk.fx.Flicker;
 	import se.lnu.stickossdk.input.EvertronControls;
@@ -36,6 +39,7 @@
 		private var gravity:Number;
 		private var currentY:int; // För att jämföra currentplat.y - om den ändras i Y-led
 		private var wings:Boolean = false;
+		
 		
 		/**
 		 * 
@@ -63,6 +67,7 @@
 		public var bottomHitBox:Sprite = new Sprite();
 		public var bonusPoints:int = 0;
 		public var immortal:Boolean = false;
+		public var powerupMeters:Vector.<PowerupMeter>;
 		
 		/**
 		 * 
@@ -76,7 +81,7 @@
 		private var pushCallback:Function;
 		public var frozen:Boolean = false;
 		public var slowedDown:Boolean = false;
-		private var frozenGFX:IceBlock;
+		private var frozenGFX:IceBlockGFX;
 		private const FRICTION:Number = 0.6;
 		private const DEFAULT_PUSH_POWER:int = 10;
 		
@@ -92,6 +97,7 @@
 		public function Player(ctrl:int, pushCallback:Function) {
 			this.ctrl = ctrl;
 			if(pushCallback != null)this.pushCallback = pushCallback;
+			this.powerupMeters = new Vector.<PowerupMeter>;
 			this.velocity = 0;
 			this.gravity = this.DEFAULT_GRAVITY;
 			this.current_velocity = this.DEFAULT_VELOCITY;
@@ -113,7 +119,7 @@
 		 * 
 		 */
 		private function initIceBlock():void{
-			this.frozenGFX = new IceBlock();
+			this.frozenGFX = new IceBlockGFX();
 			this.frozenGFX.scaleY = 1.2;
 			this.frozenGFX.x -= this.frozenGFX.width/2;
 			this.frozenGFX.y -= 8;
@@ -134,6 +140,7 @@
 				this.updateControllers();
 				if(this.currentPlat) this.checkCurrentPlat();
 			}
+			if(this.powerupMeters.length > 0) this.updatePowerupMeters();
 		}
 		
 		/**
@@ -170,7 +177,6 @@
 		}
 		
 		private function m_goLeft():void{
-			
 			this.scaleX = -1;
 			if(this.x>=40){ 
 				this.x -= this.speed;
@@ -254,6 +260,21 @@
 			
 		}
 		
+		private function updatePowerupMeters():void{
+			for(var i:int = 0; i < this.powerupMeters.length; i++){
+				this.powerupMeters[i].update();
+			}
+		}
+		
+		public function removePowerupMeter(timer:PowerupMeter):void{
+			var i:int = this.powerupMeters.indexOf(timer);
+			if(i != -1){
+				removeChild(this.powerupMeters[i]);
+				this.powerupMeters.splice(i,1);
+				if(this.powerupMeters.length == 1) this.powerupMeters[0].setY();
+			}
+		}
+		
 		/**
 		 * 
 		 * Calls class MpPlatform's method if player leaves platform
@@ -292,8 +313,9 @@
 		 * @param PowerUp
 		 */
 		public function setPowerUp(pw:PowerUp):void{
-			if(pw is Superjump) this.setVelocity();
-			if(pw is Immortality) this.setImmortality();
+			this.setPowerMeter(pw as PowerUp);
+			if(pw is Superjump) this.setVelocity(pw as Superjump);
+			if(pw is Immortality) this.setImmortality(pw as Immortality);
 		}
 		
 		/**
@@ -301,20 +323,19 @@
 		 * Sets player's velocity and game worlds gravity
 		 * 
 		 */
-		private function setVelocity():void{
-			
-			if(this.current_velocity != this.PWR_VELOCITY){
-				this.current_velocity = this.PWR_VELOCITY;
-				this.gravity = this.PWR_GRAVITY;
-				this.m_skin.gotoAndStop("wings");
-				this.wings = true;
-				Session.timer.create(4000, this.setVelocity);
-			}else{
-				this.current_velocity = this.DEFAULT_VELOCITY;
-				this.gravity = this.DEFAULT_GRAVITY;
-				this.wings = false;
-				this.m_skin.gotoAndStop("idle");
-			}
+		private function setVelocity(pw:Superjump):void{
+			this.current_velocity = this.PWR_VELOCITY;
+			this.gravity = this.PWR_GRAVITY;
+			this.m_skin.gotoAndStop("wings");
+			this.wings = true;
+			Session.timer.create(pw.duration, this.resetVelocity);
+		}
+		
+		private function resetVelocity():void{
+			this.current_velocity = this.DEFAULT_VELOCITY;
+			this.gravity = this.DEFAULT_GRAVITY;
+			this.wings = false;
+			this.m_skin.gotoAndStop("idle");
 		}
 		
 		/**
@@ -322,16 +343,21 @@
 		 * Sets player's immortality property
 		 * 
 		 */
-		private function setImmortality():void{
+		private function setImmortality(pw:Immortality):void{
 		
-			if(this.immortal){
-				this.immortal = false;
-			}else{
-				this.immortal = true;
-				Session.effects.add(new Flicker(this.m_skin, 4000, 30, true));
-				Session.timer.create(4000, this.setImmortality);
-			}
+			this.immortal = true;
+			Session.effects.add(new Flicker(this.m_skin, pw.duration, 30, true));
+			Session.timer.create(pw.duration, this.resetImmortality);
+		}
 		
+		private function resetImmortality():void{
+			this.immortal = false;
+		}
+		
+		private function setPowerMeter(pw:PowerUp):void{
+			var p:PowerupMeter = new PowerupMeter(pw, this.removePowerupMeter, this);
+			addChild(p);
+			this.powerupMeters.push(p);
 		}
 		
 		/**
@@ -371,16 +397,16 @@
 		 * If player is frozen he cannot move
 		 * 
 		 */
-		public function setFrozen():void{
-			
-			if(this.frozen){
-				this.frozen = false;
-				this.frozenGFX.visible = false;
-			}else{
-				this.frozen = true;
-				this.frozenGFX.visible = true;
-				Session.timer.create(5000, this.setFrozen);
-			}
+		public function setFrozen(pw:IceBlock):void{
+			this.setPowerMeter(pw as PowerUp);
+			this.frozen = true;
+			this.frozenGFX.visible = true;
+			Session.timer.create(pw.duration, this.resetFrozenState);
+		}
+		
+		public function resetFrozenState():void{
+			this.frozen = false;
+			this.frozenGFX.visible = false;
 		}
 		
 		/**
@@ -392,24 +418,25 @@
 		 */
 		public function resetFrozen():void{
 			Session.timer.dispose();
-			this.setFrozen();
+			this.resetFrozenState();
 		}
 		
 		/**
 		 * 
 		 * Used for multiplayer mode to set new speed to player
 		 * 
+		 * @param Snail
 		 */
-		public function setSpeed():void{
-			
-			if(this.slowedDown){
-				this.slowedDown = false;
-				this.speed = this.DEFAULT_SPEED;
-			}else{
-				this.slowedDown = true;
-				this.speed = this.SLOW_SPEED;
-				Session.timer.create(5000, this.setSpeed);
-			}
+		public function setSpeed(pw:Snail):void{
+			this.setPowerMeter(pw as PowerUp);
+			this.slowedDown = true;
+			this.speed = this.SLOW_SPEED;
+			Session.timer.create(pw.duration, this.resetToNormalSpeed);
+		}
+		
+		private function resetToNormalSpeed():void{
+			this.slowedDown = false;
+			this.speed = this.DEFAULT_SPEED;
 		}
 		
 		/**
@@ -421,7 +448,7 @@
 		 */
 		public function resetSpeed():void{
 			Session.timer.dispose();
-			this.setSpeed();
+			this.resetToNormalSpeed();
 		}
 		//--------------------------------
 		// End MP mehtods

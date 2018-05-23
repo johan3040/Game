@@ -45,11 +45,7 @@ package as3.game.gameobject.hazards{
 		}
 		
 		private function initHitBox():void{
-		
-			//hitBox.graphics.beginFill(0xFF0000);
 			hitBox.graphics.drawRect(0, -15, 800, 100);
-			//hitBox.graphics.endFill();
-			
 		}
 		
 		private function setDelay(delay:int):void{

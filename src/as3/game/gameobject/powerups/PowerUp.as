@@ -11,6 +11,7 @@ package as3.game.gameobject.powerups
 		
 		protected var m_skin:MovieClip;
 		protected var drop:Boolean = false;
+		public var duration:Number;
 		
 		/**
 		 * 

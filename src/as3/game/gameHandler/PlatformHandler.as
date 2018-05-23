@@ -36,22 +36,22 @@ package as3.game.gameHandler
 												[370,60],[370,160],[370,260],[370,360],[370,460],[370,560],[370,660],
 												[490,60],[490,160],[490,260],[490,360],[490,460],[490,560],[490,660]];
 		
-		private var mpPlatformPositions:Array = [[130,260],[130,360],[130,660],
-												[250,60],[250,460],[250,660],
-												[370,60],[370,360],[370,660],
-												[490,60],[490,660]];
+		private var mpPlatformPositions:Array = 	[[130,60],[130,660],
+													[250,60],[250,260],[250,460],[250,660],
+													[370,360],
+													[490,260],[490,160], [490,560],[490,460]];
 		
-		private var mpPlatformPositions2:Array = 	[[130,60],[130,360],[130,660],
-													[250,60],[250,460],[250,660],
-													[370,60],[370,260],[370,660],
-													[490,160],[490,560]];
+		private var mpPlatformPositions2:Array = 	[[130,160],[130,360],[130,560],
+													[250,60],[250,260],[250,460],[250,660],
+													[370,360],
+													[490,260],[490,360],[490,460]];
 		
-		private var mpPlatformPositions3:Array = 	[[130,60],[130,260],[130,560],
-													[250,160],[250,460],[250,660],
-													[370,60],[370,160],[370,560],
-													[490,60],[490,560]];
+		private var mpPlatformPositions3:Array = 	[[130,60],[130,260],[130,460],[130,560],
+													[250,460],
+													[370,60],[370,360],[370,660],[370,260],
+													[490,260],[490,460]];
 		
-		public function PlatformHandler(game, players){
+		public function PlatformHandler(game:Game, players:Vector.<Player>){
 			this.game = game;
 			this.playerVector = players;
 			this.platformVector = new Vector.<Platform>;
@@ -68,7 +68,6 @@ package as3.game.gameHandler
 		private function initMpPlatforms():void{
 			this.createMpPlatforms();
 			this.initGround();
-			//this.initIslands();
 		}
 		
 		private function createSpPlatforms():void{
@@ -238,7 +237,7 @@ package as3.game.gameHandler
 		
 		public function repositionAndNeutralizeMpPlatforms(round:int):void{
 			var arr:Array;
-			round == 2 ? arr = this.mpPlatformPositions2 : arr = this.mpPlatformPositions3;
+			round == 1 ? arr = this.mpPlatformPositions2 : arr = this.mpPlatformPositions3;
 			for(var i:int = 0; i < this.platformVector.length; i++){
 				if(this.platformVector[i] is MpPlatform){
 					var plat:MpPlatform = this.platformVector[i] as MpPlatform;

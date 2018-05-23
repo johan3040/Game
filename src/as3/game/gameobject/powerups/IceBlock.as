@@ -8,6 +8,7 @@ package as3.game.gameobject.powerups{
 		
 		public function IceBlock(){
 			super();
+			this.duration = 3000;
 		}
 		
 		override public function init():void{
@@ -16,7 +17,7 @@ package as3.game.gameobject.powerups{
 			this.scaleX = 0.8;
 			this.scaleY = 0.8;
 			this.m_skin.rotation = 10;
-			Session.timer.create(6000, this.initDrop);
+			Session.timer.create(10000, this.initDrop);
 		}
 		
 		private function initSkin():void{

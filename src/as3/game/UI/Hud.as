@@ -11,8 +11,6 @@ package as3.game.UI
 	
 	public class Hud extends DisplayStateLayerSprite{
 		
-		//protected var m_textFormat:TextFormat = new TextFormat();
-		
 		private var leftSidebar:Sidebar;
 		private var rightSidebar:Sidebar;
 		private var arenaBarRight:ArenaSideRight;
@@ -48,7 +46,7 @@ package as3.game.UI
 			this.rightSidebar.scaleX = -1;
 			this.rightSidebar.x = 800;
 			addChild(this.leftSidebar);
-			addChild(this.rightSidebar);		
+			addChild(this.rightSidebar);
 		}
 		
 		private function initGameBonusPoints():void{
@@ -85,10 +83,11 @@ package as3.game.UI
 		}
 		
 		override public function update():void{
-			this.sb.update();
+			if(this.sb!= null) this.sb.update();
 		}
 		
 		override public function dispose():void{
+			if(this.sb != null) this.sb.dispose();
 			this.arenaBarLeft = null;
 			this.arenaBarRight = null;
 			this.p1_leaf = null;

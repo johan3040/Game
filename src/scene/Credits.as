@@ -215,7 +215,7 @@ package scene
 			this.cr_soundCredits = new TextField;
 			
 			cr_soundCreditsTitle.text = "Sound";	
-			cr_soundCredits.text = "Arrows Fly By - DigPro120 (freesound)\nWave3 - Kayyy (freesound)\nCrate Break 1 - kevinkace(freesound)\nShaker Riff - cloudyeyetavern(freesound)";
+			cr_soundCredits.text = "Wave3 - Kayyy (freesound)\nCrate Break 1 - kevinkace(freesound)\nShaker Riff - cloudyeyetavern(freesound)";
 			
 			this.cr_soundCreditsTitleFormat = new TextFormat("Segoe Script", 19, 0x000066);
 			cr_soundCreditsTitleFormat.align = "center";

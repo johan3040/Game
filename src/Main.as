@@ -2,7 +2,7 @@ package
 {
 	
 	import se.lnu.stickossdk.system.Engine;
-	import scene.Menu;
+	import scene.Intro;
 	
 	[SWF(width="800", height="600", frameRate="60", backgroundColor="#000000")]
 	
@@ -15,7 +15,7 @@ package
 		this.initId = 42;
 		this.initBackgroundColor = 0x000000;
 		this.initDebugger = true;
-		this.initDisplayState = Menu;
+		this.initDisplayState = Intro;
 	}
 	}
 }

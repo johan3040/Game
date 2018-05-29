@@ -11,6 +11,7 @@ package scene
 	import se.lnu.stickossdk.display.DisplayStateLayer;
 	import se.lnu.stickossdk.input.EvertronControls;
 	import se.lnu.stickossdk.input.Input;
+	import se.lnu.stickossdk.media.SoundObject;
 	import se.lnu.stickossdk.system.Session;
 	
 	public class Menu extends DisplayState{
@@ -25,6 +26,10 @@ package scene
 		
 		private var m_palmLeft:menuPalm;
 		private var m_palmRight:menuPalm;
+		
+		[Embed(source = "../../assets/audio/menuMusicAU.mp3")] 	// <-- this data..
+		private const M_MAIN_AUDIO:Class;					// ..gets saved in this const
+		private var mAudio:SoundObject;
 		
 		public function Menu(){
 			super();
@@ -41,6 +46,8 @@ package scene
 			this.initPalmRight();
 			
 			this.initLogo();
+			
+			this.initMenuMusic();
 		}
 		
 		override public function update():void{
@@ -129,6 +136,14 @@ package scene
 			this.m_menuLayer.addChild(this.m_logo);
 		}
 		
+		private function initMenuMusic():void {
+			Session.sound.soundChannel.sources.add("M_MAIN", M_MAIN_AUDIO);
+			this.mAudio = Session.sound.soundChannel.get("M_MAIN", true, true);
+			
+			this.mAudio.play(9999); //Loopar musiken 9999 gånger
+			this.mAudio.volume = 0.6;
+		}
+		
 		private function menuMoveUp():void {
 			if (m_btns.currentLabel == "multi") {
 				this.m_btns.gotoAndStop("single");
@@ -151,7 +166,7 @@ package scene
 		
 		private function btnPress():void {
 			if (m_btns.currentLabel == "single") {
-				Session.application.displayState = new SingleplayerGame(1)
+				Session.application.displayState = new TutorialSP;
 			}
 			
 			if (m_btns.currentLabel == "multi") {

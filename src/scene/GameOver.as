@@ -60,6 +60,8 @@ package scene
 		private var go_highscoreScores:TextField;
 		private var go_highscoreListFormat:TextFormat;
 		private var go_highscoreNumbersFormat:TextFormat;
+		private var go_highscoreTitle:TextField;
+		private var go_highscoreTitleFormat:TextFormat;
 		
 		[Embed(source="../../assets/font/PaintyPaint.TTF",
 					fontName = "FontyFont",
@@ -117,27 +119,24 @@ package scene
 			this.go_background.graphics.endFill();
 			
 			this.go_menuLayer.addChild(this.go_background);
-		}	
+		}
 		
 		private function initMusic():void {
 			Session.sound.soundChannel.sources.add("GO_MAIN", GO_MAIN_AUDIO);
 			this.goAudio = Session.sound.soundChannel.get("GO_MAIN", true, true);
 			
 			this.goAudio.play(9999); //Loopar musiken 9999 gånger
-			this.goAudio.volume = 0.6;
+			this.goAudio.volume = 1;
 		}
 		
 		private function go_Sp():void{
 			this.score = this.player.bonusPoints;
 			//Kod för Gameover single player
-			
 			checkHighscore();
 		}
 		
-		private function checkHighscore():void
-		{
+		private function checkHighscore():void{
 			Session.highscore.smartSend(this.TABLE, this.score, this.RANGE, onSubmitComplete);
-			
 		}
 		
 		private function onSubmitComplete(data:XML):void {
@@ -149,30 +148,30 @@ package scene
 			
 			this.submitted = true;
 			
-			initHighscore();
+			this.initHighscore();
+			this.initHighscoreTitle();
 		}
 		
-		private function initHighscore():void
-		{			
+		private function initHighscore():void{			
 			this.go_HighscoreData = new GetHighscore(this.recieveHighScore);
-			
-			//go_HighscoreData.GetHighscoreData();
 		}
 		
 		private function recieveHighScore():void{
-			placeHighscoreElements();
+			this.placeHighscoreElements();
 		}
 		
-		private function placeHighscoreElements():void
-		{
+		private function placeHighscoreElements():void{
 			
-			this.go_highscoreNumbers = new TextField;
+			//Om spelare väljer att starta nytt spel innan highscore-data har hämtats lämnas metoden utan att spelet kraschar
+			if(go_HighscoreData == null) return;
+			
+			this.go_highscoreNumbers = new TextField();
 			go_highscoreNumbers.text = go_HighscoreData.highscorePositions;
 			
-			this.go_highscoreNames = new TextField;
+			this.go_highscoreNames = new TextField();
 			go_highscoreNames.text = go_HighscoreData.highscoreNames;
 			
-			this.go_highscoreScores = new TextField;
+			this.go_highscoreScores = new TextField();
 			go_highscoreScores.text = go_HighscoreData.highscoreScores;
 			
 			go_highscoreNumbers.x = 498;
@@ -209,6 +208,21 @@ package scene
 			this.go_menuLayer.addChild(this.go_highscoreScores);
 		}
 		
+		
+		private function initHighscoreTitle():void{
+			this.go_highscoreTitle = new TextField();
+			this.go_highscoreTitleFormat = new TextFormat("FontyFont", 38, 0xFFFFFF);
+			this.go_highscoreTitle.text = "Highscore";
+			this.go_highscoreTitle.setTextFormat(this.go_highscoreTitleFormat);
+			this.go_highscoreTitle.embedFonts = true;
+			this.go_highscoreTitle.defaultTextFormat = this.go_highscoreTitleFormat;
+			
+			this.go_highscoreTitle.x = 575;
+			this.go_highscoreTitle.y = 58;
+			this.go_highscoreTitle.width = 220;
+			this.go_highscoreTitle.rotation = -5;
+			this.go_menuLayer.addChild(this.go_highscoreTitle);
+		}
 		
 		private function go_Mp():void{
 			//Kod för Gameover multi player			
@@ -266,7 +280,6 @@ package scene
 		}
 		
 		private function initBottom():void {	
-			trace("123");
 			this.go_bottom = new gameoverBottom();
 			
 			go_bottom.x = 0;
@@ -331,7 +344,25 @@ package scene
 		}
 		
 		override public function dispose():void{
-			//Alla instansierade objekt skall nullas: ex - this.go_highscroreDisplay = null;
+			this.go_HighscoreData = null;
+			this.go_highscoreNumbers = null;
+			this.go_highscoreNames = null;
+			this.go_highscoreScores = null;
+			this.go_highscoreListFormat = null;
+			this.go_highscoreNumbersFormat = null;
+			this.go_highscoreDisplay = null;
+			this.player = null;
+			this.go_bottom = null;
+			this.go_mpP1 = null;
+			this.go_mpP2 = null;
+			this.go_title = null;
+			this.go_mpTitleP1 = null;
+			this.go_mpTitleP2 = null;
+			this.go_background = null;
+			this.go_controls = null;
+			this.go_btns = null;
+			this.go_highscoreTitle = null;
+			this.go_highscoreTitleFormat = null;
 		}
 		
 	}

@@ -1,12 +1,16 @@
 package as3.game.UI{
 	
+	import flash.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	
+	import mx.core.mx_internal;
+	
 	import as3.game.gameobject.player.Player;
 	
 	import assets.gameObjects.scoreboard;
+	import assets.gameObjects.scoreboardChain;
 	
 	import se.lnu.stickossdk.display.DisplayStateLayerSprite;
 	import se.lnu.stickossdk.system.Session;
@@ -15,6 +19,9 @@ package as3.game.UI{
 	public class MpScoreboard extends DisplayStateLayerSprite{
 		
 		private var sb:scoreboard;
+		private var leftChain:scoreboardChain;
+		private var rightChain:scoreboardChain;
+		private var boardContainer:Sprite;
 		private var m_textLeft:TextField;
 		private var m_textRight:TextField;
 		private var m_middleText:TextField;
@@ -31,10 +38,14 @@ package as3.game.UI{
 		public function MpScoreboard(players:Vector.<Player>){
 			super();
 			this.players = players;
+			this.boardContainer = new Sprite();
 			this.init();
 			this.initTextLeft();
 			this.initTextRight();
 			this.initTextMiddle();
+			this.initLeftChain();
+			this.initRightChain();
+			addChild(this.boardContainer);
 			this.effect();
 		}
 		
@@ -46,8 +57,8 @@ package as3.game.UI{
 			this.sb.x -= this.sb.width/2;
 			this.x = 320 + this.sb.width/2;
 			this.y = 20;
-			this.m_textFormat = new TextFormat("FontyFont", 22, 0xFFFFFF);
-			addChild(this.sb);
+			this.m_textFormat = new TextFormat("FontyFont", 30, 0xFFFFFF);
+			this.boardContainer.addChild(this.sb);
 		}
 		
 		private function initTextLeft():void{
@@ -62,7 +73,7 @@ package as3.game.UI{
 			this.m_textLeft.autoSize = TextFieldAutoSize.CENTER;
 			this.m_textLeft.defaultTextFormat = this.m_textFormat;
 			this.m_textLeft.setTextFormat(this.m_textFormat);
-			addChild(this.m_textLeft);
+			this.boardContainer.addChild(this.m_textLeft);
 		}
 		
 		private function initTextRight():void{
@@ -75,7 +86,7 @@ package as3.game.UI{
 			this.m_textRight.autoSize = TextFieldAutoSize.CENTER;
 			this.m_textRight.defaultTextFormat = this.m_textFormat;
 			this.m_textRight.setTextFormat(this.m_textFormat);
-			addChild(this.m_textRight);
+			this.boardContainer.addChild(this.m_textRight);
 		}
 		
 		private function initTextMiddle():void{
@@ -88,7 +99,21 @@ package as3.game.UI{
 			this.m_middleText.autoSize = TextFieldAutoSize.CENTER;
 			this.m_middleText.defaultTextFormat = this.m_textFormat;
 			this.m_middleText.setTextFormat(this.m_textFormat);
-			addChild(this.m_middleText);
+			this.boardContainer.addChild(this.m_middleText);
+		}
+		
+		private function initLeftChain():void{
+			this.leftChain = new scoreboardChain();
+			this.leftChain.x = -45;
+			this.leftChain.y = -30;
+			addChild(this.leftChain);
+		}
+		
+		private function initRightChain():void{
+			this.rightChain = new scoreboardChain();
+			this.rightChain.x = 45;
+			this.rightChain.y = -30;
+			addChild(this.rightChain);
 		}
 		
 		override public function update():void{
@@ -97,7 +122,7 @@ package as3.game.UI{
 		}
 		
 		private function effect():void{
-			Session.tweener.add(this,{
+			Session.tweener.add(this.boardContainer,{
 				transition: Quad.easeInOut,
 				rotationX: Math.floor(Math.random() * (35 - 25 + 1) + 25),
 				rotationY: Math.floor(Math.random() * (7 - 3 + 1) + 3),
@@ -107,7 +132,7 @@ package as3.game.UI{
 		}
 		
 		private function secondEffect():void{
-			Session.tweener.add(this,{
+			Session.tweener.add(this.boardContainer,{
 				transition: Quad.easeInOut,
 				rotationX: this.getNegativeX(),
 				rotationY: -2,

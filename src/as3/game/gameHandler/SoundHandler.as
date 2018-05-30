@@ -60,11 +60,11 @@ package as3.game.gameHandler{
 		}
 		
 		public function lowerVolume():void{
-			this.mainAudio.fade(0.3, 200, this.resetVolume);
+			this.mainAudio.fade(0.4, 200, this.resetVolume);
 		}
 		
 		private function resetVolume():void{
-			this.mainAudio.fade(0.6, 700);
+			this.mainAudio.fade(1, 700);
 		}
 		
 		public function gameOverSp():void{

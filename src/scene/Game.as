@@ -133,9 +133,11 @@ package scene
 		protected function gameOver():void{
 			var p:Player;
 			Session.tweener.dispose();
-			this.mode == 1 ? p = this.player1 : p = this.getMpWinner();
-			Session.application.displayState = new GameOver(p, mode);
-			
+			if(this.mode == 1){
+				Session.application.displayState = new PointsCounter(this.player1); 
+			}else{
+				Session.application.displayState = new GameOver(this.getMpWinner(), mode);
+			}
 		}
 		
 		

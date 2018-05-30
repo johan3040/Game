@@ -259,6 +259,11 @@ package as3.game.gameobject.platforms{
 			}
 		}
 		
+		/**
+		 * 
+		 * Method activates when this.percentOwned == 0
+		 * 
+		 */
 		private function flagReachedBottom():void{
 			this.percentOwned = 0;
 			if(this.owner != this.currentPlayer && 
@@ -275,6 +280,11 @@ package as3.game.gameobject.platforms{
 			this.countUp();
 		}
 		
+		/**
+		 * 
+		 * Counts owned percentage up
+		 * 
+		 */
 		private function countUp():void{
 			if(this.currentPlayer.frozen == false){
 				this.percentOwned+=2.5;
@@ -283,6 +293,11 @@ package as3.game.gameobject.platforms{
 			}
 		}
 		
+		/**
+		 * 
+		 * Method for when flag is rised to the top for a new player
+		 * 
+		 */
 		private function givePoint():void{
 			this.pointAudio.play();
 			this.lockdownTimerActive = true;
@@ -293,15 +308,21 @@ package as3.game.gameobject.platforms{
 			this.startLockdownTimer();
 		}
 		
-		//------------------------------------
-		// Lockdown methods
-		//------------------------------------
+		/**
+		 * 
+		 * Locks platform
+		 * 
+		 */
 		private function lockItDown():void{
-			this.lockdown = true;
-			this.platform.visible = false;
-			this.lockedPlat.visible = true;
-			this.lockdownAudio.play(0);
-			this.lockdownEffect();
+			if(this.percentOwned == 100){
+				this.lockdown = true;
+				this.platform.visible = false;
+				this.lockedPlat.visible = true;
+				this.lockdownAudio.play(0);
+				this.lockdownEffect();	
+			}else{
+				this.lockdownTimer.stop();
+			}
 		}
 		
 		private function startLockdownTimer():void{
@@ -322,10 +343,12 @@ package as3.game.gameobject.platforms{
 			this.lockdownShake = Session.effects.add(new Shake(this.lockedPlat, 600, effect, endPos));
 		}
 		
-		//------------------------------------
-		// End lockdown methods
-		//------------------------------------
 		
+		/**
+		 * 
+		 * Moves all three flags regardless which one is visible
+		 * 
+		 */		
 		private function moveFlags():void{
 			for(var i:int = 0; i<this.flagVector.length; i++){
 				this.flagVector[i].y = -60 +(50-(this.percentOwned*0.5));
@@ -337,6 +360,13 @@ package as3.game.gameobject.platforms{
 			if(this.currentPlayer is Cannibal) this.setCorrectVisibleFlag(this.flagRed);
 		}
 		
+		/**
+		 * 
+		 * Sets all flags to visible = false, then sets @param flag to visible
+		 * 
+		 * @param MovieClip
+		 * 
+		 */
 		private function setCorrectVisibleFlag(flag:MovieClip):void{
 			for(var i:int = 0; i<this.flagVector.length; i++){
 				if(this.flagVector[i] != flag) this.flagVector[i].visible = false;
@@ -346,6 +376,13 @@ package as3.game.gameobject.platforms{
 			}
 		}
 		
+		/**
+		 * 
+		 * Method is triggered when player leaves the platform
+		 * 
+		 * @param Player
+		 * 
+		 */
 		public function visitorLeft(player:Player):void{	
 			var i:int = this.visitors.indexOf(player);
 			if(i != -1)	this.visitors.splice(i,1);
@@ -356,6 +393,11 @@ package as3.game.gameobject.platforms{
 			this.firework.play();
 		}
 		
+		/**
+		 * 
+		 * Resets the values of the platform
+		 * 
+		 */
 		public function resetFlag():void{
 			this.owner = null;
 			this.currentPlayer = null;
@@ -371,6 +413,11 @@ package as3.game.gameobject.platforms{
 			this.positionFlags();
 		}
 		
+		/**
+		 * 
+		 * Removes the visitors in visitors vector
+		 * 
+		 */
 		private function resetVisitors():void{
 			for(var i:int = 0; i<this.visitors.length; i++){
 				this.visitors.splice(i, 1);

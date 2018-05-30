@@ -32,10 +32,6 @@ package scene
 			this.hi_updatecontrols();
 		}
 		
-		override public function dispose():void{
-			
-		}
-		
 		private function hi_updatecontrols():void{
 			if (Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_1) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_2) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_3) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_4) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_5) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_6) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_7) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_8)){
 				btnPress();
@@ -48,7 +44,7 @@ package scene
 		
 		private function initMpBook():void
 		{
-			this.tmp_book = new TutorialMpBook;
+			this.tmp_book = new TutorialMpBook();
 			
 			tmp_book.scaleX = 1.05;
 			tmp_book.scaleY = 1.05;
@@ -70,6 +66,12 @@ package scene
 		
 		private function btnPress():void {
 			Session.application.displayState = new MultiplayerGame(2);
+		}
+		
+		override public function dispose():void{
+			this.tmp_book = null;
+			this.tmp_background = null;
+			this.hi_controls = null;
 		}
 		
 	}

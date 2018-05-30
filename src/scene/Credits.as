@@ -64,10 +64,6 @@ package scene
 			this.cr_updatecontrols();
 		}
 		
-		override public function dispose():void{
-			
-		}
-		
 		private function cr_updatecontrols():void{
 			if (Input.keyboard.justPressed(this.cr_controls.PLAYER_BUTTON_1)){
 				btnPress();
@@ -259,6 +255,34 @@ package scene
 			if (cr_btns.currentLabel == "highscore") {
 				Session.application.displayState = new Highscore;
 			}
+		}
+		
+		
+		override public function dispose():void{
+			
+			this.cr_background = null;
+			this.cr_book = null;
+			this.cr_btns = null;
+			this.cr_controls = null;
+			this.cr_creditsTitle = null;
+			this.cr_creditsTitleFormat = null;
+			this.cr_fontCredits = null;
+			this.cr_fontCreditsFormat = null;
+			this.cr_fontCreditsTitle = null;
+			this.cr_fontCreditsTitleFormat = null;
+			this.cr_mainCreditsDesigner = null;
+			this.cr_mainCreditsDesignerTitle = null;
+			this.cr_mainCreditsDeveloper = null;
+			this.cr_mainCreditsDeveloperTitle = null;
+			this.cr_mainCreditsFormat = null;
+			this.cr_mainCreditsText = null;
+			this.cr_mainCreditsTitle = null;
+			this.cr_mainCreditsTitleFormat = null;
+			this.cr_soundCredits = null;
+			this.cr_soundCreditsFormat = null;
+			this.cr_soundCreditsTitle = null;
+			this.cr_soundCreditsTitleFormat = null;
+			
 		}
 		
 	}

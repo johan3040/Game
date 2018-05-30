@@ -75,5 +75,16 @@ package as3.game
 			
 			this.callback();
 		}
+		
+		override public function dispose():void{
+			this.hl_names = null;
+			this.hl_scores = null;
+			this.hl_position = null;
+			this.highscoreScores = null;
+			this.highscoreNames = null;
+			this.highscorePositions = null;
+			this.HighscoreData = null;
+			this.callback = null;
+		}
 	}
 }

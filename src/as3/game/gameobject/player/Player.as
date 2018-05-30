@@ -47,10 +47,10 @@
 		 * Private constants for player's speed, gravity and velocity
 		 * 
 		 */
-		private const DEFAULT_VELOCITY:Number = 10;
-		private const PWR_VELOCITY:Number = 14; // För power-ups
-		private const DEFAULT_GRAVITY:Number = 0.8;
-		private const PWR_GRAVITY:Number = 0.6;
+		private const DEFAULT_VELOCITY:Number = 9;
+		private const PWR_VELOCITY:Number = 13; // För power-ups
+		private const DEFAULT_GRAVITY:Number = 0.6;
+		private const PWR_GRAVITY:Number = 0.3;
 		private const DEFAULT_SPEED:int = 5;
 		private const SLOW_SPEED:int = 2;
 		
@@ -82,7 +82,6 @@
 		private var pushCallback:Function;
 		public var frozen:Boolean = false;
 		public var slowedDown:Boolean = false;
-		private var frozenGFX:IceBlockGFX;
 		private const FRICTION:Number = 0.6;
 		private const DEFAULT_PUSH_POWER:int = 10;
 		
@@ -113,21 +112,6 @@
 		 */
 		override public function init():void{
 			this.m_controls = new EvertronControls(this.ctrl);
-			this.initIceBlock();
-		}
-		
-		/**
-		 * 
-		 * Initializes graphics of IceBlock - only used in multi player mode
-		 * 
-		 */
-		private function initIceBlock():void{
-			this.frozenGFX = new IceBlockGFX();
-			this.frozenGFX.scaleY = 1.2;
-			this.frozenGFX.x -= this.frozenGFX.width/2;
-			this.frozenGFX.y -= 8;
-			addChild(this.frozenGFX);
-			this.frozenGFX.visible = false;
 		}
 		
 		/**
@@ -424,13 +408,13 @@
 		public function setFrozen(pw:IceBlock):void{
 			this.setPowerMeter(pw as PowerUp);
 			this.frozen = true;
-			this.frozenGFX.visible = true;
+			if(this.m_skin.currentFrameLabel != "freeze") this.m_skin.gotoAndStop("freeze");
 			Session.timer.create(pw.duration, this.resetFrozenState);
 		}
 		
 		public function resetFrozenState():void{
 			this.frozen = false;
-			this.frozenGFX.visible = false;
+			this.gotoIdle();
 		}
 		
 		/**
@@ -483,6 +467,7 @@
 			this.m_controls = null;
 			this.currentPlat = null;
 			this.bottomHitBox = null;
+			this.powerupMeters = null;
 		
 		}
 

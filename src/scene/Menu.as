@@ -28,8 +28,8 @@ package scene
 		private var m_palmRight:menuPalm;
 		
 		[Embed(source = "../../assets/audio/menuMusicAU.mp3")] 	// <-- this data..
-		private const M_MAIN_AUDIO:Class;					// ..gets saved in this const
-		private var mAudio:SoundObject;
+		private const MENU_AUDIO:Class;						// ..gets saved in this const
+		private var menuAudio:SoundObject;
 		
 		public function Menu(){
 			super();
@@ -41,21 +41,14 @@ package scene
 			this.initBackground();
 			this.initWater();
 			this.initMenuBtns();
-			
 			this.initPalmLeft();
 			this.initPalmRight();
-			
 			this.initLogo();
-			
-			this.initMenuMusic();
+			this.initAudio();
 		}
 		
 		override public function update():void{
 			this.m_updatecontrols();
-		}
-		
-		override public function dispose():void{
-			
 		}
 		
 		private function m_updatecontrols():void{
@@ -136,12 +129,10 @@ package scene
 			this.m_menuLayer.addChild(this.m_logo);
 		}
 		
-		private function initMenuMusic():void {
-			Session.sound.soundChannel.sources.add("M_MAIN", M_MAIN_AUDIO);
-			this.mAudio = Session.sound.soundChannel.get("M_MAIN", true, true);
-			
-			this.mAudio.play(9999); //Loopar musiken 9999 gånger
-			this.mAudio.volume = 0.6;
+		private function initAudio():void{
+			Session.sound.soundChannel.sources.add("menuMusic", MENU_AUDIO);
+			this.menuAudio = Session.sound.soundChannel.get("menuMusic", true, true);
+			this.menuAudio.play(9999);
 		}
 		
 		private function menuMoveUp():void {
@@ -176,6 +167,17 @@ package scene
 			if (m_btns.currentLabel == "highscore") {
 				Session.application.displayState = new Highscore;
 			}
+		}
+		
+		override public function dispose():void{
+			this.m_water = null;
+			this.m_controls = null;
+			this.m_btns = null;
+			this.m_logo = null;
+			this.m_background = null;
+			this.m_palmLeft = null;
+			this.m_palmRight = null;
+			this.menuAudio = null;
 		}
 		
 	}

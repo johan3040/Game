@@ -31,26 +31,36 @@ package as3.game.gameHandler
 		private var tempPlatRect:Rectangle;
 		private var benefitPosition:Boolean = false;
 		
+		// All avaliable positions - used for singleplayer
 		private var platformPositions:Array = 	[[130,60],[130,160],[130,260],[130,360],[130,460],[130,560],[130,660],
 												[250,60],[250,160],[250,260],[250,360],[250,460],[250,560],[250,660],
 												[370,60],[370,160],[370,260],[370,360],[370,460],[370,560],[370,660],
 												[490,60],[490,160],[490,260],[490,360],[490,460],[490,560],[490,660]];
 		
+		//Positions for multiplayer round 1
 		private var mpPlatformPositions:Array = 	[[130,60],[130,660],
 													[250,60],[250,260],[250,460],[250,660],
 													[370,360],
 													[490,260],[490,160], [490,560],[490,460]];
-		
+		//Positions for multiplayer round 2
 		private var mpPlatformPositions2:Array = 	[[130,160],[130,360],[130,560],
 													[250,60],[250,260],[250,460],[250,660],
 													[370,360],
 													[490,260],[490,360],[490,460]];
-		
+		//Positions for multiplayer round 3
 		private var mpPlatformPositions3:Array = 	[[130,60],[130,260],[130,460],[130,560],
 													[250,460],
 													[370,60],[370,360],[370,660],[370,260],
 													[490,260],[490,460]];
 		
+		/**
+		 * 
+		 * Class contructor
+		 * 
+		 * @param Game
+		 * @param Vector.<Player>
+		 * 
+		 */
 		public function PlatformHandler(game:Game, players:Vector.<Player>){
 			this.game = game;
 			this.playerVector = players;
@@ -59,12 +69,22 @@ package as3.game.gameHandler
 			
 		}
 		
+		/**
+		 * 
+		 * initializes singleplayer platforms
+		 * 
+		 */
 		private function initSpPlatforms():void{
 			this.createSpPlatforms();
 			this.createSpWeakplatforms();
 			this.initIslands();
 		}
 		
+		/**
+		 * 
+		 * Initializes mulitplayer platforms
+		 * 
+		 */
 		private function initMpPlatforms():void{
 			this.createMpPlatforms();
 			this.initGround();
@@ -91,12 +111,24 @@ package as3.game.gameHandler
 			}
 		}
 		
+		/**
+		 * 
+		 * Adds platform to vector and adds platform to gameLayer
+		 * 
+		 * @param Platform
+		 * 
+		 */
 		private function addToLayerAndVector(plat:Platform):void{
 			this.game.gameLayer.addChild(plat);
 			this.positionPlatform(plat);
 			this.platformVector.push(plat);
 		}
 		
+		/**
+		 * 
+		 * Adds ground for multiplayer mode
+		 * 
+		 */
 		private function initGround():void{
 			var pos:Array = [562, 0];
 			this.ground = new MpGround(pos);
@@ -104,22 +136,51 @@ package as3.game.gameHandler
 			this.ground.x = this.ground.xPos;
 			this.ground.y = this.ground.yPos;
 			this.platformVector.push(this.ground);
-			
 		}
 		
+		/**
+		 * 
+		 * Gets position for platform
+		 * 
+		 * @param Platform
+		 * 
+		 */
 		private function positionPlatform(obj:Platform):void{
 			obj.x = obj.xPos;
 			obj.y = obj.yPos;
 		}
 		
+		/**
+		 * 
+		 * Gets position for platform
+		 * 
+		 */
 		private function get platformPosition():Array{
 			return this.benefitPosition ? kindPosition() : meanPosition();
 		}
 		
+		
+		/**
+		 * 
+		 * Returns array of coordinates from multiplayer platformpositions
+		 * 
+		 * @param int
+		 * @return Array
+		 * 
+		 */
 		private function getMpPlatformPosition(index:int):Array{
 			return this.mpPlatformPositions[index];
 		}
 		
+		/**
+		 * 
+		 * Returns array of coordinates close to the players position
+		 * 
+		 * If no position is found, return array from meanPositions method
+		 * 
+		 * @return Array
+		 * 
+		 */
 		private function kindPosition():Array{
 			this.benefitPosition = false;
 			var pos:Array;
@@ -133,9 +194,19 @@ package as3.game.gameHandler
 					break;
 				}
 			}
+			
+			//If no position is found, 'meanPosition' is called, which guarantees a new position
 			return pos == null ? meanPosition() : pos;
 		}
 		
+		
+		/**
+		 * 
+		 * Returns array of coordinates away from the players current position
+		 * 
+		 * @return Array
+		 * 
+		 */
 		private function meanPosition():Array{
 			this.benefitPosition = true;
 			var pos:Array;
@@ -153,6 +224,13 @@ package as3.game.gameHandler
 			return pos;
 		}
 		
+		/**
+		 * 
+		 * When platform is repositioned it returns the coordinates to the main array 'platformPositions'
+		 * 
+		 * @param Platform
+		 * 
+		 */
 		private function returnPlatformPosition(plat:Platform):void{
 			this.platformPositions.push(plat.pos);
 			plat.setNewData(this.platformPosition);
@@ -184,10 +262,25 @@ package as3.game.gameHandler
 			this.platformVector.push(this.rb);
 		}
 		
+		/**
+		 * 
+		 * Class's update method
+		 * 
+		 * @param Player
+		 * 
+		 */
 		public function update(player:Player):void{
 			if(player.currentPlat == null) this.m_updatePlatformCollission(player);
 		}
 		
+		
+		/**
+		 * 
+		 * Checks if player intersects with any of the platforms
+		 * 
+		 * @param Player
+		 * 
+		 */
 		private function m_updatePlatformCollission(player:Player):void{
 			
 			var a:Rectangle;				
@@ -203,7 +296,14 @@ package as3.game.gameHandler
 			}//End platformloop
 		}//End function
 		
-		
+		/**
+		 * 
+		 * Method for when player intersects with a specific platform
+		 * 
+		 * @param Platform
+		 * @param Player
+		 * 
+		 */
 		private function platformCollission(plat:Platform, player:Player):void{
 			if(player.falling){
 				if(this.playerVector.length == 1){
@@ -215,6 +315,14 @@ package as3.game.gameHandler
 			}
 		}
 		
+		/**
+		 * 
+		 * Method for when player intersects with a platform in singleplayer mode
+		 * 
+		 * @param Platform
+		 * @param Player
+		 * 
+		 */
 		private function spPlatCollission(plat:Platform,player:Player):void{
 			if(plat.exists){
 				if(plat is WeakPlatform){
@@ -225,16 +333,40 @@ package as3.game.gameHandler
 			}	
 		}
 		
+		/**
+		 * 
+		 * Method for platformcollission with platform of type 'weak'
+		 * 
+		 * @param Platform
+		 * @param Player
+		 * 
+		 */
 		private function setWeakPlatform(plat:WeakPlatform, player:Player):void{
 			player.setCurrentPlat(plat);
 			plat.removePlat();
 		}
 		
+		/**
+		 * 
+		 * Method for platformcollission in multiplayer mode
+		 * 
+		 * @param MpPlatform
+		 * @param Player
+		 * 
+		 */
 		private function mpPlatCollission(plat:MpPlatform,player:Player):void{
 			player.setCurrentPlat(plat);
 			plat.playerOnPlat(player);
 		}
 		
+		
+		/**
+		 * 
+		 * Method for reposition and neutralize a multiplayer platform
+		 * 
+		 * @param int
+		 * 
+		 */
 		public function repositionAndNeutralizeMpPlatforms(round:int):void{
 			var arr:Array;
 			round == 1 ? arr = this.mpPlatformPositions2 : arr = this.mpPlatformPositions3;
@@ -248,6 +380,13 @@ package as3.game.gameHandler
 			}
 		}
 		
+		/**
+		 * 
+		 * If multiplayer platfrom is locked - reset and show original platform
+		 * 
+		 * @param MpPlatform
+		 * 
+		 */
 		private function setVisiblePlatform(plat:MpPlatform):void{
 			if(plat.platform.visible == false){
 				plat.platform.visible = true;
@@ -255,6 +394,14 @@ package as3.game.gameHandler
 			}
 		}
 		
+		/**
+		 * 
+		 * Reposition multiplayer platforms
+		 * 
+		 * @param MpPlatform
+		 * @param Array
+		 * 
+		 */
 		private function mpRepos(plat:MpPlatform, pos:Array):void{
 			plat.setData(pos);
 			this.positionPlatform(plat);

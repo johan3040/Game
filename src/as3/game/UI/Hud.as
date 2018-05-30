@@ -57,16 +57,8 @@ package as3.game.UI
 		}
 		
 		private function initMpHud():void{
-			this.initMpLeafs();
-			//this.initMpSidebars();
+			this.initMpSidebars();
 			this.initScoreboard();
-		}
-		
-		private function initMpLeafs():void{
-			this.p1_leaf = new MultiplayerHud(this.players[0]);
-			this.p2_leaf = new MultiplayerHud(this.players[1]);
-			addChild(this.p1_leaf);
-			addChild(this.p2_leaf);
 		}
 		
 		private function initMpSidebars():void{

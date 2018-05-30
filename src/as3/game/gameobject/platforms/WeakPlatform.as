@@ -40,9 +40,7 @@
 			}
 		
 		private function setHitbox():void{
-			//hitBox.graphics.beginFill(0x00FF00);
 			hitBox.graphics.drawRect(0, 1, 70, 6);
-			//hitBox.graphics.endFill();
 		}
 		
 		private function initAudio():void{
@@ -54,7 +52,6 @@
 			
 		public function removePlat():void{
 			this.breakAudioSound.play();
-			//removeCallback(this);
 			this.exists = false;
 			this.platform.gotoAndPlay(2);
 			}
@@ -63,7 +60,7 @@
 		
 			if(this.platform.currentFrame == this.platform.totalFrames){
 				this.platform.visible = false;
-				reSpawn();
+				this.reSpawn();
 			} 
 		}
 		

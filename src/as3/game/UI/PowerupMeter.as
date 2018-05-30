@@ -51,7 +51,9 @@ package as3.game.UI{
 		}
 		
 		override public function dispose():void{
-			
+			this.meter = null;
+			this.timer = null;
+			this.owner = null;
 		}
 	}
 }

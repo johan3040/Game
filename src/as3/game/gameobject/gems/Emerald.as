@@ -35,6 +35,7 @@ package as3.game.gameobject.gems{
 		
 		override public function dispose():void{
 			this.m_skin = null;
+			hitBox = null;
 		}
 		
 	}

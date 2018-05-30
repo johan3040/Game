@@ -13,6 +13,7 @@ package as3.game.gameobject.platforms{
 			this.setLifespan();
 		}
 		
+		
 		private function setLifespan():void{
 			this.delay = Math.floor(Math.random() * (10000 - 4000) + 4000);
 			Session.timer.create((this.delay - 2000), warning);

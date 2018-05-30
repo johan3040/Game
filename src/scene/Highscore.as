@@ -25,7 +25,7 @@ package scene
 		private var hi_book:HighscoreBook;
 		private var hi_highscoreTitle:TextField;
 		
-		private var hi_highscoreTitleFormat:TextFormat = new TextFormat;
+		private var hi_highscoreTitleFormat:TextFormat = new TextFormat();
 		private var hi_highscoreListFormat:TextFormat;
 		
 		private var hi_highscoreNumbers:TextField;
@@ -51,12 +51,8 @@ package scene
 			this.initHighscore();
 		}
 		
-		private function initHighscore():void
-		{			
+		private function initHighscore():void{			
 			this.hi_HighscoreData = new GetHighscore(this.recieveHighscoreInfo);
-			
-			//hi_HighscoreData.GetHighscoreData();
-			
 		}
 		
 		private function recieveHighscoreInfo():void {
@@ -66,13 +62,16 @@ package scene
 		private function placeHighscoreElements():void
 		{
 			
-			this.hi_highscoreNumbers = new TextField;
+			//Om spelare väljer att byta state innan highscore-data har hämtats lämnas metoden utan att spelet kraschar
+			if(hi_HighscoreData == null) return;
+			
+			this.hi_highscoreNumbers = new TextField();
 			hi_highscoreNumbers.text += hi_HighscoreData.highscorePositions;
 			
-			this.hi_highscoreNames = new TextField;
+			this.hi_highscoreNames = new TextField();
 			hi_highscoreNames.text += hi_HighscoreData.highscoreNames;
 			
-			this.hi_highscoreScores = new TextField;
+			this.hi_highscoreScores = new TextField();
 			hi_highscoreScores.text += hi_HighscoreData.highscoreScores;
 			
 			hi_highscoreNumbers.x = 410;
@@ -108,10 +107,6 @@ package scene
 		
 		override public function update():void{
 			this.hi_updatecontrols();
-		}
-		
-		override public function dispose():void{
-			
 		}
 		
 		private function hi_updatecontrols():void{
@@ -202,6 +197,24 @@ package scene
 			if (hi_btns.currentLabel == "credits") {
 				Session.application.displayState = new Credits;
 			}
+		}
+		
+		override public function dispose():void{
+			
+			this.hi_btns = null;
+			this.hi_background = null;
+			this.hi_book = null;
+			this.hi_highscoreTitle = null;
+			
+			this.hi_highscoreTitleFormat = null;
+			this.hi_highscoreListFormat = null;
+			
+			this.hi_highscoreNumbers = null;
+			this.hi_highscoreNames = null;
+			this.hi_highscoreScores = null;
+			
+			this.hi_HighscoreData = null;
+			this.hi_highscoreNumbersFormat = null;
 		}
 		
 	}

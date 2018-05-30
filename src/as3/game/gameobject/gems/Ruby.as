@@ -6,11 +6,9 @@ package as3.game.gameobject.gems
 
 	public class Ruby extends Gem{
 		
-		//private var m_skin:RubyGFX;
-		
 		public function Ruby(player){
 			super(player);
-			value = 25;
+			value = 30;
 		}
 		
 		override public function init():void{
@@ -40,6 +38,7 @@ package as3.game.gameobject.gems
 		
 		override public function dispose():void{
 			this.m_skin = null;
+			hitBox = null;
 		}
 		
 	}

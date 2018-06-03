@@ -7,12 +7,19 @@ package as3.game.gameobject.platforms{
 		private var delay:int;
 		private var callback:Function;
 		
+		/**
+		 * 
+		 * Constructor
+		 * 
+		 * @param Array
+		 * @param Function
+		 * 
+		 */
 		public function SpPlatform(pos:Array, callback:Function){
 			super(pos);
 			this.callback = callback;
 			this.setLifespan();
 		}
-		
 		
 		private function setLifespan():void{
 			this.delay = Math.floor(Math.random() * (10000 - 4000) + 4000);

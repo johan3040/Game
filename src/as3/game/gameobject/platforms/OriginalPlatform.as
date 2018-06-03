@@ -6,6 +6,13 @@
 		
 		public var platform:OrgPlatGFX;
 		
+		/**
+		 * 
+		 * Constructor
+		 * 
+		 * @param Array
+		 * 
+		 */
 		public function OriginalPlatform(pos:Array) {
 			super(pos);
 			this.pos = pos;

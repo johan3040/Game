@@ -17,6 +17,14 @@
 		private const BREAK_AUDIO:Class;
 		private var breakAudioSound:SoundObject;
 		
+		/**
+		 * 
+		 * Constructor
+		 * 
+		 * @param Array
+		 * @param Function
+		 * 
+		 */
 		public function WeakPlatform(pos:Array, callback:Function) {
 			super(pos);
 			this.callback = callback;
@@ -49,13 +57,25 @@
 			this.breakAudioSound = Session.sound.soundChannel.get("platformBreak", true, true);
 			
 		}
-			
+		
+		/**
+		 * 
+		 * Gets called when player steps on weak platform
+		 * 
+		 * Plays breaking movieclip
+		 * 
+		 */
 		public function removePlat():void{
 			this.breakAudioSound.play();
 			this.exists = false;
 			this.platform.gotoAndPlay(2);
-			}
+		}
 		
+		/**
+		 * 
+		 * When movieclip is played and comes to an end, reposition platform
+		 * 
+		 */
 		override public function update():void{
 		
 			if(this.platform.currentFrame == this.platform.totalFrames){

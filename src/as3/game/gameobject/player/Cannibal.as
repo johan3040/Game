@@ -6,6 +6,15 @@
 	
 	public class Cannibal extends Player{
 		
+		/**
+		 * 
+		 * Constructor for player 2 in MP
+		 * 
+		 * @param int
+		 * @param Function
+		 * @param DisplayStateLayer
+		 * 
+		 */
 		public function Cannibal(ctrl:int, push:Function, meterLayer:DisplayStateLayer){
 			super(ctrl, push, meterLayer);
 			this.initCannibal();

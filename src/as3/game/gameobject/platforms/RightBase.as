@@ -7,15 +7,18 @@ package as3.game.gameobject.platforms{
 		
 		private var platform:island2;
 		
+		/**
+		 * 
+		 * Constructor
+		 * Right Island for SP-mode
+		 * 
+		 * @param Array
+		 * 
+		 */
 		public function RightBase(pos:Array){
 			super(pos);
 			initRightBase();
 		}
-		
-		/*override protected function setData():void{
-			this.x = 500;
-			this.y = 550;
-		}*/
 		
 		private function initRightBase():void{
 			

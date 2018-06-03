@@ -1,9 +1,8 @@
 package as3.game.gameobject.gems{
+	
 	import assets.gameObjects.EmeraldGFX;
 	
 	public class Emerald extends Gem{
-		
-		//private var m_skin:EmeraldGFX;
 		
 		public function Emerald(player){
 			super(player);

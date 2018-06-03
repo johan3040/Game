@@ -28,6 +28,14 @@ package as3.game.UI{
 					embedAsCFF="false")]
 		private var myEmbeddedFont:Class;
 		
+		
+		/**
+		 * 
+		 * Constructor for shown game-points in SP
+		 * 
+		 * @param Player
+		 * 
+		 */
 		public function GameBonusPoints(player:Player){
 			super();
 			this.player = player;

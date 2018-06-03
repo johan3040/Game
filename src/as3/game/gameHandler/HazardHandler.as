@@ -19,6 +19,13 @@ package as3.game.gameHandler
 		private var coco:Coconut;
 		private var hazards:Vector.<Hazard>;
 		
+		/**
+		 * 
+		 * Constructor
+		 * 
+		 * @param Game
+		 * 
+		 */
 		public function HazardHandler(game:Game){
 			super();
 			this.game = game;
@@ -67,12 +74,6 @@ package as3.game.gameHandler
 		private function getPlayerAsTarget():Player{
 			return this.game.playerVector[0];
 			
-		}
-		
-		public function setGameState():void{
-			/*for (var i:int = 0; i<this.hazards.length; i++){
-				this.hazards[i].setGameOver();
-			}*/
 		}
 		
 		public function dispose():void{

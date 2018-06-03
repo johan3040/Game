@@ -6,6 +6,13 @@ package as3.game.gameobject.platforms{
 		
 		private var plat:ArenaBottom;
 		
+		/**
+		 * 
+		 * Constructor
+		 * 
+		 * @param Array
+		 * 
+		 */
 		public function MpGround(pos:Array){
 			super(pos);
 			this.initGround();

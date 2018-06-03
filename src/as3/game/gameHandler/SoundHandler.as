@@ -27,9 +27,13 @@ package as3.game.gameHandler{
 		private const POINT_AUDIO:Class;						// ..gets saved in this const
 		private var pointAudio:SoundObject;
 		
-		//
-		// @param 1 = singleplayer mode, 2 = multiplayer mode
-		//
+		/**
+		 * 
+		 * Constructor
+		 * 
+		 * @param int (1 == singleplayer, 2 == multiplayer)
+		 * 
+		 */
 		public function SoundHandler(mode:int){
 			this.init();
 			mode == 1 ? this.initSpAudio() : this.initMpAudio();

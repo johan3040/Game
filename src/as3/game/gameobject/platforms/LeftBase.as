@@ -7,15 +7,18 @@ package as3.game.gameobject.platforms{
 		
 		private var platform:island1;
 		
+		/**
+		 * 
+		 * Constructor
+		 * Left Island for SP-mode
+		 * 
+		 * @param Array
+		 * 
+		 */
 		public function LeftBase(pos:Array){
 			super(pos);
 			initLeftBase();
 		}
-		
-		/*override protected function setData():void{
-			this.x = 140;
-			this.y = 550;
-		}*/
 		
 		private function initLeftBase():void{
 		

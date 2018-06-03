@@ -6,6 +6,16 @@
 	
 	public class Explorer extends Player{
 		
+		
+		/**
+		 * 
+		 * Constructor for player 1
+		 * 
+		 * @param int
+		 * @param Function
+		 * @param DisplayStateLayer
+		 * 
+		 */
 		public function Explorer(ctrl:int,push:Function, meterLayer:DisplayStateLayer) {
 			super(ctrl, push, meterLayer);
 			this.initExplorer();

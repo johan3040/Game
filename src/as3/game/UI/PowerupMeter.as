@@ -18,6 +18,15 @@ package as3.game.UI{
 		private var duration:Number;
 		private var yPos:int;
 		
+		/**
+		 * 
+		 * Constructor
+		 * 
+		 * @param PowerUp
+		 * @param Function
+		 * @param Player
+		 * 
+		 */
 		public function PowerupMeter(pw:PowerUp, callback:Function, player:Player){
 			this.duration = pw.duration;
 			this.callback = callback;
@@ -37,6 +46,7 @@ package as3.game.UI{
 		}
 		
 		public function updateMeters(i:int):void{
+			//Sets Y-position of meter, depending on how many active power-ups a player has
 			i == 0 ? this.y = this.owner.y-12 : this.y = this.owner.y-18;
 			this.x = this.owner.x - this.owner.width/2;
 			var x:Number = 1 - (this.timer.elapsed() / this.duration);

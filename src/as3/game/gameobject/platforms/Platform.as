@@ -8,6 +8,15 @@
 		private var yVal:int;
 		public var pos:Array;
 		
+		/**
+		 * 
+		 * Constructor
+		 * 
+		 * Superclass for all platforms
+		 * 
+		 * @param Array
+		 * 
+		 */
 		public function Platform(pos:Array){
 			super();
 			this.setData(pos);

@@ -116,20 +116,21 @@ package scene{
 		 * Adds Ruby-object to game-layer
 		 * Calls position method for that object
 		 * 
+		 * 
 		 */
 		private function initRuby():void{
 			
 			this.gem_ruby = new Ruby(this.player1);
 			this.positionGems(this.gem_ruby);
 			this.gameLayer.addChild(this.gem_ruby);
-			this.hazardVector.push(this.gem_ruby);
-			this.collidableObjects.push(this.gem_ruby);
+			this.addGemToVector(this.gem_ruby);
 		}
 		
 		/**
 		 * 
 		 * Adds Sapphire-object to game-layer
 		 * Calls position method for that object
+		 * 
 		 * 
 		 */
 		private function initSapphire():void{

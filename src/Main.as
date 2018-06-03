@@ -17,7 +17,7 @@ package
 		this.initBackgroundColor = 0x000000;
 		this.initDebugger = false;
 		this.initDisplayState = IntroScene;
-		//this.initExternalDatabaseLocation = "http://cactuar.lnu.se/lab/stickos";
+		this.initExternalDatabaseLocation = "http://cactuar.lnu.se/lab/stickos";
 	}
 	}
 }

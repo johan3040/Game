@@ -7,8 +7,6 @@ package as3.game.gameobject.gems
 	
 	import se.lnu.stickossdk.system.Session;
 	import se.lnu.stickossdk.tween.easing.Back;
-
-	//import se.lnu.stickossdk.tween.easing.Bounce;
 	
 	public class Gem extends GameObject{
 		
@@ -20,6 +18,14 @@ package as3.game.gameobject.gems
 		private var player:Explorer;
 		public var value:int;
 		
+		
+		/**
+		 * 
+		 * Constructor
+		 * 
+		 * @param Explorer
+		 * 
+		 */
 		public function Gem(player:Explorer){
 			
 			super();
@@ -58,6 +64,14 @@ package as3.game.gameobject.gems
 			return this.yCoor;
 		}
 		
+		/**
+		 * 
+		 * Positions gem outside of playing field
+		 * Sets timeout to reposition Gem
+		 * 
+		 * @Param Function
+		 * 
+		 */
 		public function prepareReposition(callback:Function):void{
 		
 			this.x = -100;
@@ -89,11 +103,20 @@ package as3.game.gameobject.gems
 			});
 		}
 		
+		/**
+		 * 
+		 * Sets delay to play gem's movieclip
+		 * 
+		 */
 		private function setFxTimer():void{
 			var delay:int = (Math.random()*1000) + 1000;
 			Session.timer.create(delay, playClip);
 		}
-		
+		/**
+		 * 
+		 * Plays Gems movieclip
+		 * 
+		 */
 		private function playClip():void{
 			this.m_skin.gotoAndPlay(1);
 		}

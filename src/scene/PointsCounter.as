@@ -14,8 +14,6 @@ package scene
 	import assets.gameObjects.menuPalm;
 	import assets.gameObjects.newHighscoreText;
 	import assets.gameObjects.scoreSign;
-	import assets.gameObjects.sideBarLeft;
-	import assets.gameObjects.sideBarRight;
 	
 	import se.lnu.stickossdk.display.DisplayState;
 	import se.lnu.stickossdk.display.DisplayStateLayer;

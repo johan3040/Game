@@ -36,6 +36,7 @@ package scene
 			this.m_controls = new EvertronControls(0);
 		}
 		
+		//Initierar alla grafiska element i menyn, knappar och bakgrundsmusiken
 		override public function init():void{		
 			this.initLayers();
 			this.initBackground();
@@ -51,6 +52,8 @@ package scene
 			this.m_updatecontrols();
 		}
 		
+		//Funktion för att läsa av vad som ska göras beroende på hur spelar interagerar med menyn
+		//Om de flyttar upp och ner eller klickar
 		private function m_updatecontrols():void{
 			if (Input.keyboard.justPressed(this.m_controls.PLAYER_BUTTON_1)){
 				btnPress();
@@ -69,6 +72,7 @@ package scene
 			this.m_menuLayer = this.layers.add("menu");
 		}
 		
+		//Placerar den gradienta bakgrunden
 		private function initBackground():void {
 			this.m_background = new GradientBack();
 			
@@ -78,6 +82,7 @@ package scene
 			this.m_menuLayer.addChild(this.m_background);
 		}
 		
+		//Vattnet ritas ut
 		private function initWater():void {
 			this.m_water = new Sprite();
 			
@@ -88,6 +93,8 @@ package scene
 			this.m_menuLayer.addChild(this.m_water);
 		}
 		
+		//Knapparna initieras, och ser till att menyvalet högst upp är markerat från början,
+		//vilket görs genom label "single"
 		private function initMenuBtns():void {		
 			this.m_btns = new menuBtns();
 			
@@ -129,12 +136,14 @@ package scene
 			this.m_menuLayer.addChild(this.m_logo);
 		}
 		
+		//Startar bakgrundsmusiken, som loopas upp till 9999 gånger
 		private function initAudio():void{
 			Session.sound.soundChannel.sources.add("menuMusic", MENU_AUDIO);
 			this.menuAudio = Session.sound.soundChannel.get("menuMusic", true, true);
 			this.menuAudio.play(9999);
 		}
-		
+
+		//När spelaren flyttar upp med joysticken i menyn
 		private function menuMoveUp():void {
 			if (m_btns.currentLabel == "multi") {
 				this.m_btns.gotoAndStop("single");
@@ -144,7 +153,8 @@ package scene
 				this.m_btns.gotoAndStop("multi");
 			}
 		}
-		
+
+		//När spelaren flyttar ner med joysticken i menyn
 		private function menuMoveDown():void {
 			if (m_btns.currentLabel == "multi") {
 				this.m_btns.gotoAndStop("highscore");
@@ -154,7 +164,8 @@ package scene
 				this.m_btns.gotoAndStop("multi");
 			}
 		}
-		
+
+		//När spelaren trycker på knappen, så aktiveras läget beroende på vilket "mode" som är valt i menyn
 		private function btnPress():void {
 			if (m_btns.currentLabel == "single") {
 				Session.application.displayState = new TutorialSP;

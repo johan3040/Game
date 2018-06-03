@@ -28,6 +28,8 @@ package scene
 			this.in_controls = new EvertronControls(0);
 		}
 		
+		//Initierar animation och ljud
+		//Sätter en timer på 8 sekunder innan den byter till funktionen som kallar på startmenyn
 		override public function init():void{
 			this.initLayers();
 			this.initAnimationAudio();
@@ -42,6 +44,7 @@ package scene
 			
 		}
 		
+		//Initierar och placerar ut animationen
 		private function initAnimation():void
 		{
 			this.in_animation = new introAnimation;
@@ -52,6 +55,7 @@ package scene
 			this.in_Layer.addChild(this.in_animation);
 		}
 		
+		//Läser in och startar ljudet som spelar under animationen
 		private function initAnimationAudio():void
 		{
 			Session.sound.soundChannel.sources.add("IN_MAIN", IN_MAIN_AUDIO);
@@ -61,6 +65,7 @@ package scene
 			this.inAudio.volume = 0.6;
 		}
 		
+		//Byter till startmenyn
 		private function initMenu():void {
 			Session.application.displayState = new Menu;
 		}

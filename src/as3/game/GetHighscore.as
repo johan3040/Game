@@ -24,12 +24,18 @@ package as3.game
 			this.GetHighscoreData();
 		}
 		
+		//Hämtar och läser av highscore informationen från databasen
+		//Skickar in denna data i createHighscoreArray när detta är klart
 		public function GetHighscoreData():void
 		{
 			Session.highscore.receive(1, 10, function(data:XML):void{CreateHighscoreArray(data)});
 			
 		}
 		
+		//Skapar 3 arrays. 1 för antal positioner som är i highscorelistan
+		//1 med alla namn från högsta till lägsta
+		//1 med alla poäng från högsta till lägsta
+		//Kallar på highscoreToString när detta är klart
 		private function CreateHighscoreArray(data:XML):void
 		{
 			HighscoreData = data;
@@ -54,6 +60,8 @@ package as3.game
 			
 		}
 		
+		//Konverterar position, namn och poäng arrays till strängar för att senare kunna placera ut dem
+		//I textfält när den återvänder till antingen gameover eller highscore skärmarna
 		private function HighscoreToString():void
 		{
 			
@@ -61,6 +69,9 @@ package as3.game
 			this.highscoreNames = new String;
 			this.highscorePositions = new String;			
 			
+			//Lägger till så den bryter till en ny rad efter varje punkt i arrayen
+			//Detta är för att highscore placeras ut i 3 separata vertikala textfält i gameover och highscore
+			//En för position, en för namn, och en för poäng
 			for (var i:int = 0; i < hl_position.length; i++) {
 				highscorePositions += hl_position[i] + "." + "\n";
 			}
@@ -73,6 +84,8 @@ package as3.game
 				highscoreScores += hl_scores[o] + "\n";
 			}
 			
+			//Gör en callback till den funktion som specificerades när denna klass kallades på från början,
+			//i gameover är denna recieveHighscore och i Highscore är det recieveHighscoreInfo
 			this.callback();
 		}
 		

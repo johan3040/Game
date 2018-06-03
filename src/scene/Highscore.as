@@ -40,6 +40,7 @@ package scene
 			this.hi_controls = new EvertronControls(0);
 		}
 		
+		//Initierar grafik, text, knappar och hämtar highscore
 		override public function init():void{		
 			this.initLayers();
 			this.initBackground();
@@ -51,26 +52,36 @@ package scene
 			this.initHighscore();
 		}
 		
+		//Startar klassen GetHighscore() där XML datan med alla highscore resultat läses av och hanteras
+		//När GetHighscore klassen är klar så görs en callback till recieveHighscoreInfo vilket defineras här
 		private function initHighscore():void{			
 			this.hi_HighscoreData = new GetHighscore(this.recieveHighscoreInfo);
 		}
 		
+		//Denna funktion aktiveras när spelet skickas tillbaka hit efter att GetHighscore är klart
 		private function recieveHighscoreInfo():void {
 			placeHighscoreElements();
 		}
 		
+		//Placerar ut den information som hanterades i GetHighscore()
 		private function placeHighscoreElements():void
 		{
 			
 			//Om spelare väljer att byta state innan highscore-data har hämtats lämnas metoden utan att spelet kraschar
 			if(hi_HighscoreData == null) return;
 			
+			//Skapar textfältet som har alla positioner i highscorelistan
+			//Sätter innehållet i denna textfield från vad som genererats i GetHighscore()
 			this.hi_highscoreNumbers = new TextField();
 			hi_highscoreNumbers.text += hi_HighscoreData.highscorePositions;
 			
+			//Skapar textfältet som har alla namn i highscorelistan
+			//Sätter innehållet i denna textfield från vad som genererats i GetHighscore()
 			this.hi_highscoreNames = new TextField();
 			hi_highscoreNames.text += hi_HighscoreData.highscoreNames;
 			
+			//Skapar textfältet som har alla poäng i highscorelistan
+			//Sätter innehållet i denna textfield från vad som genererats i GetHighscore()
 			this.hi_highscoreScores = new TextField();
 			hi_highscoreScores.text += hi_HighscoreData.highscoreScores;
 			
@@ -109,6 +120,8 @@ package scene
 			this.hi_updatecontrols();
 		}
 		
+		//Avgör vad som ska hända när spelaren interagerar med menyn
+		//Flyttar upp/ner eller klickar
 		private function hi_updatecontrols():void{
 			if (Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_1)){
 				btnPress();
@@ -127,6 +140,7 @@ package scene
 			this.hi_menuLayer = this.layers.add("menu");
 		}
 		
+		//Ritar ut bakgrunden
 		private function initBackground():void {
 			this.hi_background = new Sprite();
 			
@@ -148,6 +162,8 @@ package scene
 			this.hi_menuLayer.addChild(this.hi_book);
 		}
 		
+		//Knapparna initieras, och ser till att menyvalet högst upp är markerat från början,
+		//vilket görs genom label "menu"
 		private function initHighscoreBtns():void {		
 			this.hi_btns = new highscoreBtns();
 			
@@ -177,18 +193,21 @@ package scene
 			this.hi_menuLayer.addChild(this.hi_highscoreTitle);
 		}
 		
+		//När spelaren flyttar upp med joysticken i menyn
 		private function menuMoveUp():void {
 			if (hi_btns.currentLabel == "credits") {
 				this.hi_btns.gotoAndStop("menu");
 			}
 		}
 		
+		//När spelaren flyttar ner med joysticken i menyn
 		private function menuMoveDown():void {
 			if (hi_btns.currentLabel == "menu") {
 				this.hi_btns.gotoAndStop("credits");
 			}
 		}
 		
+		//När spelaren trycker på knappen, så aktiveras läget beroende på vilket "mode" som är valt i menyn
 		private function btnPress():void {
 			if (hi_btns.currentLabel == "menu") {
 				Session.application.displayState = new Menu;

@@ -54,6 +54,9 @@ package scene
 		private var score:int = 0;
 		private var submitted:Boolean = false;
 		
+		//---------------------------------------
+		// Highscore elements
+		//---------------------------------------
 		private var go_HighscoreData:GetHighscore;
 		private var go_highscoreNumbers:TextField;
 		private var go_highscoreNames:TextField;
@@ -63,6 +66,9 @@ package scene
 		private var go_highscoreTitle:TextField;
 		private var go_highscoreTitleFormat:TextFormat;
 		
+		//---------------------------------------
+		// Font
+		//---------------------------------------
 		[Embed(source="../../assets/font/PaintyPaint.TTF",
 					fontName = "FontyFont",
 					mimeType = "application/x-font",
@@ -70,6 +76,10 @@ package scene
 					embedAsCFF="false")]
 		private var myEmbeddedFont:Class;
 		
+		
+		//---------------------------------------
+		// Musik
+		//---------------------------------------
 		[Embed(source = "../../assets/audio/gameoverMusicAU.mp3")] 	// <-- this data..
 		private const GO_MAIN_AUDIO:Class;					// ..gets saved in this const
 		private var goAudio:SoundObject;
@@ -81,6 +91,8 @@ package scene
 			this.go_controls = new EvertronControls(0);
 		}
 		
+		//Initierar grafik och musiken. Kollar sedan om spelläget som den kommer ifrån är Sp eller Mp.
+		//Beroende på vilket läge det är så aktiverar den olika funktioner
 		override public function init():void{		
 			this.initLayers();
 			this.initBackground();
@@ -93,6 +105,8 @@ package scene
 			if (this.mode != 1) this.go_updatecontrols();
 		}
 		
+		//Funktion för att läsa av vad som ska göras beroende på hur spelar interagerar med menyn
+		//Om de flyttar upp och ner eller klickar
 		private function go_updatecontrols():void{
 			if (Input.keyboard.justPressed(this.go_controls.PLAYER_BUTTON_1)){
 				btnPress();
@@ -111,6 +125,7 @@ package scene
 			this.go_menuLayer = this.layers.add("gameover");
 		}
 		
+		//Skapar den färg som ligger i bakgrunden av både Mp och Sp gameover
 		private function initBackground():void {
 			this.go_background = new Sprite();
 			
@@ -121,6 +136,7 @@ package scene
 			this.go_menuLayer.addChild(this.go_background);
 		}
 		
+		//Initierar musiken. Loopar musiken 9999 gånger för att den ska fortsätta loopa
 		private function initMusic():void {
 			Session.sound.soundChannel.sources.add("GO_MAIN", GO_MAIN_AUDIO);
 			this.goAudio = Session.sound.soundChannel.get("GO_MAIN", true, true);
@@ -129,16 +145,22 @@ package scene
 			this.goAudio.volume = 1;
 		}
 		
+		//Efter att game over initieras så skickas den hit om spelläget är Sp.
+		//Ser till att score har samma värde som spelarens slutpoäng
 		private function go_Sp():void{
 			this.score = this.player.bonusPoints;
 			//Kod för Gameover single player
 			checkHighscore();
 		}
 		
+		//Använder smartsend för att kolla om det är highscore, och skicka in poängen om detta är sant.
+		//Går till onSubmitComplete när detta är klart
 		private function checkHighscore():void{
 			Session.highscore.smartSend(this.TABLE, this.score, this.RANGE, onSubmitComplete);
 		}
 		
+		//Initierar grafiken i bakgrunden för Sp
+		//Det är i denna funktion som XML datan från smartsend tas emot för att sedan kunna initiera highscore
 		private function onSubmitComplete(data:XML):void {
 			
 			this.initBottom();
@@ -152,25 +174,35 @@ package scene
 			this.initHighscoreTitle();
 		}
 		
+		//Startar klassen GetHighscore() där XML datan med alla highscore resultat läses av och hanteras
+		//När GetHighscore klassen är klar så görs en callback till recieveHighscore vilket defineras här
 		private function initHighscore():void{			
 			this.go_HighscoreData = new GetHighscore(this.recieveHighScore);
 		}
 		
+		//Denna funktion aktiveras när spelet skickas tillbaka hit efter att GetHighscore är klart
 		private function recieveHighScore():void{
 			this.placeHighscoreElements();
 		}
 		
+		//Placerar ut den information som hanterades i GetHighscore()
 		private function placeHighscoreElements():void{
 			
 			//Om spelare väljer att starta nytt spel innan highscore-data har hämtats lämnas metoden utan att spelet kraschar
 			if(go_HighscoreData == null) return;
 			
+			//Skapar textfältet som har alla positioner i highscorelistan
+			//Sätter innehållet i denna textfield från vad som genererats i GetHighscore()
 			this.go_highscoreNumbers = new TextField();
 			go_highscoreNumbers.text = go_HighscoreData.highscorePositions;
 			
+			//Skapar textfältet som har alla namn i highscorelistan
+			//Sätter innehållet i denna textfield från vad som genererats i GetHighscore()
 			this.go_highscoreNames = new TextField();
 			go_highscoreNames.text = go_HighscoreData.highscoreNames;
 			
+			//Skapar textfältet som har alla poäng i highscorelistan
+			//Sätter innehållet i denna textfield från vad som genererats i GetHighscore()
 			this.go_highscoreScores = new TextField();
 			go_highscoreScores.text = go_HighscoreData.highscoreScores;
 			
@@ -208,7 +240,7 @@ package scene
 			this.go_menuLayer.addChild(this.go_highscoreScores);
 		}
 		
-		
+		//Skapar den titel som visas över highscorelistan
 		private function initHighscoreTitle():void{
 			this.go_highscoreTitle = new TextField();
 			this.go_highscoreTitleFormat = new TextFormat("FontyFont", 38, 0xFFFFFF);
@@ -224,6 +256,9 @@ package scene
 			this.go_menuLayer.addChild(this.go_highscoreTitle);
 		}
 		
+		//Efter att game over initieras så skickas den hit om spelläget är Mp
+		//Knapparna initieras, och ser till att menyvalet högst upp är markerat från början,
+		//vilket görs genom label "replay"
 		private function go_Mp():void{
 			//Kod för Gameover multi player			
 			this.initGameoverBtns();
@@ -237,6 +272,8 @@ package scene
 			}
 		}
 		
+		// För MP
+		//Initierar botten grafiken om P1 vinner
 		private function initMpBottomP1():void{
 			// Skapa & visa grafik när P1 är vinnare
 			
@@ -248,7 +285,9 @@ package scene
 			this.go_menuLayer.addChild(this.go_mpP1);
 			
 		}
-		
+
+		// För MP
+		//Initierar botten grafiken om P2 vinner		
 		private function initMpBottomP2():void{
 			// Skapa & visa grafik när P2 är vinnare
 			
@@ -261,6 +300,8 @@ package scene
 			
 		}
 		
+		// För MP
+		//Initierar titeln om P1 vinner
 		private function initP1WinnerText():void{
 			this.go_mpTitleP1 = new gameoverTitleP1();
 			
@@ -270,6 +311,8 @@ package scene
 			this.go_menuLayer.addChild(this.go_mpTitleP1);
 		}
 		
+		// För MP
+		//initierar titeln om P2 vinner
 		private function initP2WinnerText():void{
 			this.go_mpTitleP2 = new gameoverTitleP2();
 			
@@ -279,6 +322,7 @@ package scene
 			this.go_menuLayer.addChild(this.go_mpTitleP2);
 		}
 		
+		// För MP
 		private function initBottom():void {	
 			this.go_bottom = new gameoverBottom();
 			
@@ -288,7 +332,9 @@ package scene
 			this.go_menuLayer.addChild(this.go_bottom);
 		}
 		
-		
+		// För SP
+		//Knapparna initieras, och ser till att menyvalet högst upp är markerat från början,
+		//vilket görs genom label "replay"
 		private function initGameoverBtns():void {		
 			this.go_btns = new gameoverBtns();
 			
@@ -300,7 +346,7 @@ package scene
 			this.go_menuLayer.addChild(this.go_btns);
 		}
 		
-		// För SP
+		// För SP titel
 		private function initTitle():void {		
 			this.go_title = new gameoverTitle();
 			
@@ -310,7 +356,7 @@ package scene
 			this.go_menuLayer.addChild(this.go_title);
 		}
 		
-		// För SP
+		// Initierar det grafiska som highscoren sedan placeras ut på
 		private function initHighscoreDisplay():void {		
 			this.go_highscoreDisplay = new gameoverHighscoreDisplay();
 			
@@ -320,18 +366,21 @@ package scene
 			this.go_menuLayer.addChild(this.go_highscoreDisplay);
 		}
 		
+		//När spelaren flyttar upp med joysticken i menyn
 		private function menuMoveUp():void {
 			if (go_btns.currentLabel == "menu") {
 				this.go_btns.gotoAndStop("replay");
 			}
 		}
 		
+		//När spelaren flyttar ner med joysticken i menyn
 		private function menuMoveDown():void {
 			if (go_btns.currentLabel == "replay") {
 				this.go_btns.gotoAndStop("menu");
 			}
 		}
 		
+		//När spelaren trycker på knappen, så aktiveras läget beroende på vilket "mode" som är valt i menyn
 		private function btnPress():void {
 			if (go_btns.currentLabel == "replay") {
 				if(mode == 1) Session.application.displayState = new SingleplayerGame(mode);

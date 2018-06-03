@@ -46,7 +46,8 @@ package scene
 			super();
 			this.cr_controls = new EvertronControls(0);
 		}
-		
+
+		//Initierar grafik, knappar och text
 		override public function init():void{		
 			this.initLayers();
 			this.initBackground();
@@ -63,7 +64,9 @@ package scene
 		override public function update():void{
 			this.cr_updatecontrols();
 		}
-		
+
+		//Funktion för att läsa av vad som ska göras beroende på hur spelar interagerar med menyn
+		//Om de flyttar upp och ner eller klickar
 		private function cr_updatecontrols():void{
 			if (Input.keyboard.justPressed(this.cr_controls.PLAYER_BUTTON_1)){
 				btnPress();
@@ -82,6 +85,7 @@ package scene
 			this.cr_menuLayer = this.layers.add("menu");
 		}
 		
+		//Ritar upp bakgrunden
 		private function initBackground():void {
 			this.cr_background = new Sprite();
 			
@@ -92,6 +96,7 @@ package scene
 			this.cr_menuLayer.addChild(this.cr_background);
 		}
 		
+		//Initierar bok-grafiken
 		private function initBackBook():void {
 			this.cr_book = new HighscoreBook();
 			
@@ -103,6 +108,8 @@ package scene
 			this.cr_menuLayer.addChild(this.cr_book);
 		}
 		
+		//Knapparna initieras, och ser till att menyvalet högst upp är markerat från början,
+		//vilket görs genom label "menu"		
 		private function initCreditsBtns():void {		
 			this.cr_btns = new creditsBtns();
 			
@@ -114,6 +121,7 @@ package scene
 			this.cr_menuLayer.addChild(this.cr_btns);
 		}
 		
+		//Initierar, skriver och placerar ut titel för skärmen
 		private function initTitle():void {
 			this.cr_creditsTitle = new TextField;
 			
@@ -132,9 +140,12 @@ package scene
 			this.cr_menuLayer.addChild(this.cr_creditsTitle);
 		}
 		
+		//Initierar, skriver och placerar ut alla credits för utvecklare och designer
 		private function initMainCredits():void {
+			//Credits för programmering
 			this.cr_mainCreditsDeveloperTitle = new TextField;
 			this.cr_mainCreditsDeveloper = new TextField;
+			//Credits för design
 			this.cr_mainCreditsDesignerTitle = new TextField;
 			this.cr_mainCreditsDesigner = new TextField;
 			
@@ -177,6 +188,7 @@ package scene
 			this.cr_menuLayer.addChild(this.cr_mainCreditsDesigner);
 		}
 		
+		//Credits för fonten
 		private function initFontCredits():void {
 			this.cr_fontCreditsTitle = new TextField;		
 			this.cr_fontCredits = new TextField;
@@ -206,6 +218,7 @@ package scene
 			this.cr_menuLayer.addChild(this.cr_fontCredits);
 		}
 		
+		//Credits för de ljudeffekter som används
 		private function initSoundCredits():void {
 			this.cr_soundCreditsTitle = new TextField;		
 			this.cr_soundCredits = new TextField;
@@ -235,18 +248,21 @@ package scene
 			this.cr_menuLayer.addChild(this.cr_soundCredits);
 		}
 		
+		//När spelaren flyttar upp med joysticken i menyn
 		private function menuMoveUp():void {
 			if (cr_btns.currentLabel == "highscore") {
 				this.cr_btns.gotoAndStop("menu");
 			}
 		}
 		
+		//När spelaren flyttar upp ner joysticken i menyn
 		private function menuMoveDown():void {
 			if (cr_btns.currentLabel == "menu") {
 				this.cr_btns.gotoAndStop("highscore");
 			}
 		}
 		
+		//När spelaren trycker på knappen, så aktiveras läget beroende på vilket "mode" som är valt i menyn
 		private function btnPress():void {
 			if (cr_btns.currentLabel == "menu") {
 				Session.application.displayState = new Menu;

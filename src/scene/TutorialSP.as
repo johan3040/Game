@@ -22,6 +22,7 @@ package scene
 			this.hi_controls = new EvertronControls(0);
 		}
 		
+		//Initierar bakgrunden och boken med spelets tutorial
 		override public function init():void{		
 			this.initLayers();
 			this.initBackground();
@@ -36,6 +37,7 @@ package scene
 			
 		}
 		
+		//Om spelaren klickar på någon av knapparna så aktiveras btnPress()
 		private function hi_updatecontrols():void{
 			if (Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_1) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_2) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_3) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_4) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_5) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_6) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_7) || Input.keyboard.justPressed(this.hi_controls.PLAYER_BUTTON_8)){
 				btnPress();
@@ -58,6 +60,7 @@ package scene
 			this.tsp_Layer.addChild(this.tsp_book);
 		}
 		
+		//Ritar upp bakgrunden
 		private function initBackground():void {
 			this.tsp_background = new Sprite();
 			
@@ -68,6 +71,7 @@ package scene
 			this.tsp_Layer.addChild(this.tsp_background);
 		}
 		
+		//Om någon av knapparna har klickats på så går den in i spelet
 		private function btnPress():void {
 			Session.application.displayState = new SingleplayerGame(1);
 		}
